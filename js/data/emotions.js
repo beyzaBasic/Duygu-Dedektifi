@@ -15,7 +15,7 @@ export const GROUPS = [
     family: 'Öfke Ailesi',
     emotions: [
       'Nefret', 'Kızgınlık', 'Arzu', 'Sabırsızlık', 'İnat',
-      'İsyan', 'Hınç', 'Tutku', 'Hırs', 'Rekabet'
+      'İsyan', 'Hınç', 'Tutku', 'Hırs', 'Aşk'
     ]
   },
   {
@@ -60,7 +60,7 @@ export const GROUPS = [
     family: 'Kararlılık Ailesi',
     emotions: [
       'Kararlılık', 'Hayranlık', 'Sadakat', 'Sorumluluk', 'Kıskançlık',
-      'Adalet', 'Suçluluk', 'Kibir', 'Onur', 'Sıkışmışlık'
+      'Adalet', 'Suçluluk', 'Kibir', 'Onur', 'Rekabet'
     ]
   },
   {
