@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duygu Dedektifi</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ============ HEADER ============ -->
+    <header class="app-header">
+      <div class="brand-mark">Duygu <em>Dedektifi</em></div>
+      <div class="brand-meta">Sahne · Duygu · Tahmin</div>
+    </header>
+
+    <!-- ============ MAIN ============ -->
+    <main class="app-main">
+      <div class="stage">
+
+        <!-- Adım göstergesi -->
+        <div class="steps">
+          <span class="dot" data-step="1"></span>
+          <span class="dot" data-step="2"></span>
+        </div>
+
+        <!-- ===== FAZ 1: DUYGU KARTI ===== -->
+        <section class="phase" data-phase="emotion">
+
+          <div class="instruction">
+            <h1>Duygunu çek.</h1>
+            <p>Rastgele bir duygu atanacak. Kart bulanık gelir — sadece sen görebilirsin.</p>
+          </div>
+
+          <!-- Çekim öncesi: deste -->
+          <div class="deck" data-emotion-deck>
+            <div class="deck-card"></div>
+            <div class="deck-card"></div>
+            <div class="deck-card">
+              <div class="deck-card-inner">
+                <div class="deck-icon">?</div>
+                <div class="deck-label">Duygu<br>Destesi</div>
+                <div class="deck-sub">70 Kart</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Çekim sonrası: flip kart -->
+          <div class="emotion-card-wrapper hidden" data-emotion-card-wrapper>
+            <div class="emotion-card" data-emotion-card>
+
+              <!-- Arka yüz -->
+              <div class="card-face card-back">
+                <div class="card-back-symbol">?</div>
+                <div class="card-back-title">Senin <em>duygun</em></div>
+                <div class="card-back-hint">Çevirmek için dokun</div>
+              </div>
+
+              <!-- Ön yüz: bulanık, dokun & tut -->
+              <div class="card-face card-front is-blurred" data-emotion-front>
+                <div class="front-content">
+                  <div class="emotion-name" data-emotion-name>—</div>
+                </div>
+                <div class="reveal-overlay">
+                  <div class="eye-icon"></div>
+                  <span>Görmek için<br>dokun &amp; tut</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Aksiyonlar -->
+          <div class="actions">
+            <button class="btn" data-action="draw-emotion">Duygu Kartı Çek</button>
+            <button class="btn btn-ghost hidden" data-action="redraw-emotion">Başka Kart</button>
+            <button class="btn hidden" data-action="go-scene">Sahne Zamanı →</button>
+          </div>
+
+        </section>
+
+        <!-- ===== FAZ 2: SAHNE KARTI ===== -->
+        <section class="phase hidden" data-phase="scene">
+
+          <div class="mini-emotion is-hidden hidden" data-mini-emotion title="Basılı tut">
+            <span class="mini-chip" data-mini-chip></span>
+            <span class="mini-label" data-mini-label>—</span>
+          </div>
+
+          <div class="instruction">
+            <h1>Sahneyi aç.</h1>
+            <p>Sahneyi oku, duyguyu üzerine giydir, soruyu cevapla. Diğerleri duyguyu tahmin etsin.</p>
+          </div>
+
+          <!-- Sahne destesi -->
+          <div class="deck" data-scene-deck>
+            <div class="deck-card"></div>
+            <div class="deck-card"></div>
+            <div class="deck-card">
+              <div class="deck-card-inner">
+                <div class="deck-icon">◨</div>
+                <div class="deck-label">Sahne<br>Destesi</div>
+                <div class="deck-sub">25 Kart</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sahne kartı -->
+          <article class="scene-card hidden" data-scene-card>
+            <div class="scene-number" data-scene-number>SAHNE №—</div>
+            <h2 class="scene-title" data-scene-title>—</h2>
+            <p class="scene-body" data-scene-body>—</p>
+            <div class="scene-divider"></div>
+            <p class="scene-question" data-scene-question>—</p>
+          </article>
+
+          <!-- Aksiyonlar -->
+          <div class="actions">
+            <button class="btn" data-action="draw-scene">Sahne Kartı Aç</button>
+            <button class="btn btn-ghost hidden" data-action="redraw-scene">Başka Sahne</button>
+            <button class="btn btn-ghost hidden" data-action="restart">Yeni Tur</button>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="app-footer">
+      70 duygu · 25 sahne
+    </footer>
+
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

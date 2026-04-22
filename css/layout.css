@@ -1,0 +1,139 @@
+/* ============================================================
+   LAYOUT.CSS — Header, main, footer
+   ============================================================ */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============ HEADER ============ */
+.app-header {
+  padding: 28px 32px;
+  text-align: center;
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(24px, 4vw, 32px);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.brand-mark em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-dim);
+}
+
+.brand-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* ============ MAIN ============ */
+.app-main {
+  flex: 1;
+  padding: 24px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+.phase {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+/* ============ STEP INDICATOR ============ */
+.steps {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.steps .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  opacity: 0.3;
+  transition: opacity 0.3s, transform 0.3s, background 0.3s;
+}
+
+.steps .dot.is-active { opacity: 1; transform: scale(1.5); background: var(--ink); }
+.steps .dot.is-done   { opacity: 0.7; background: var(--ink-dim); }
+
+/* ============ INSTRUCTION ============ */
+.instruction {
+  text-align: center;
+  max-width: 440px;
+}
+
+.instruction h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(24px, 5vw, 34px);
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.instruction p {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-dim);
+  line-height: 1.6;
+}
+
+/* ============ ACTIONS ============ */
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ============ FOOTER ============ */
+.app-footer {
+  padding: 20px 32px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 520px) {
+  .app-header { padding: 20px 20px 16px; }
+  .app-main { padding: 16px 16px 40px; }
+  .app-footer { padding: 16px 20px; font-size: 9px; }
+  .stage, .phase { gap: 28px; }
+}

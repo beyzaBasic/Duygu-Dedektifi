@@ -1,0 +1,380 @@
+/* ============================================================
+   COMPONENTS.CSS — Kart, buton, deste, sahne bileşenleri
+   ============================================================ */
+
+/* ============ BUTTON ============ */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  background: var(--ink);
+  color: var(--surface);
+  border-radius: 100px;
+  font-weight: 700;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-dim);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ============ DECK (deste görünümü) ============ */
+.deck {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 5 / 7;
+  cursor: pointer;
+}
+
+.deck-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.deck-card:nth-child(1) { transform: rotate(-5deg) translate(-8px, 4px); opacity: 0.6; }
+.deck-card:nth-child(2) { transform: rotate(4deg) translate(6px, 2px); opacity: 0.8; }
+.deck-card:nth-child(3) {
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s var(--ease);
+}
+
+.deck:hover .deck-card:nth-child(3) {
+  transform: translateY(-6px);
+}
+
+.deck-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.deck-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 28px;
+}
+
+.deck-label {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.deck-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* ============ EMOTION CARD (flip kart) ============ */
+.emotion-card-wrapper {
+  perspective: 1200px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.emotion-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  transform-style: preserve-3d;
+  transition: transform 0.8s var(--ease-out);
+  cursor: pointer;
+}
+
+.emotion-card.is-flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Arka yüz — kapalı kart */
+.card-back {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.15);
+  gap: 20px;
+  padding: 32px;
+}
+
+.card-back-symbol {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 40px;
+}
+
+.card-back-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.card-back-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-dim);
+}
+
+.card-back-hint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* Ön yüz — duygu kartı, SADECE renk + duygu adı */
+.card-front {
+  transform: rotateY(180deg);
+  color: white;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25);
+}
+
+.card-front.is-blurred .front-content {
+  filter: blur(24px);
+}
+
+.card-front .front-content {
+  transition: filter 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ön yüz renk varyantları */
+.card-front[data-color="Kırmızı"]  { background: var(--grad-red); }
+.card-front[data-color="Turuncu"]  { background: var(--grad-orange); }
+.card-front[data-color="Sarı"]     { background: var(--grad-yellow); color: #3a2a00; }
+.card-front[data-color="Yeşil"]    { background: var(--grad-green); }
+.card-front[data-color="Mavi"]     { background: var(--grad-blue); }
+.card-front[data-color="Lacivert"] { background: var(--grad-navy); }
+.card-front[data-color="Mor"]      { background: var(--grad-purple); }
+
+.emotion-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(38px, 8vw, 58px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+/* Bulanıklık overlay — "dokun & tut" uyarısı */
+.reveal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  transition: opacity 0.3s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-front[data-color="Sarı"] .reveal-overlay {
+  color: rgba(58, 42, 0, 0.75);
+}
+
+.reveal-overlay .eye-icon {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal-overlay .eye-icon::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.card-front:not(.is-blurred) .reveal-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============ MINI EMOTION (sahne fazında hatırlatıcı) ============ */
+.mini-emotion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px 8px 8px;
+  border-radius: 100px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.2s;
+  user-select: none;
+}
+
+.mini-emotion:hover {
+  border-color: var(--ink);
+}
+
+.mini-emotion:active {
+  transform: scale(0.98);
+}
+
+.mini-chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: filter 0.3s;
+}
+
+.mini-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+  transition: filter 0.3s;
+}
+
+.mini-emotion.is-hidden .mini-chip  { filter: blur(8px); }
+.mini-emotion.is-hidden .mini-label { filter: blur(6px); }
+
+/* Mini chip renk varyantları */
+.mini-chip[data-color="Kırmızı"]  { background: var(--grad-red); }
+.mini-chip[data-color="Turuncu"]  { background: var(--grad-orange); }
+.mini-chip[data-color="Sarı"]     { background: var(--grad-yellow); }
+.mini-chip[data-color="Yeşil"]    { background: var(--grad-green); }
+.mini-chip[data-color="Mavi"]     { background: var(--grad-blue); }
+.mini-chip[data-color="Lacivert"] { background: var(--grad-navy); }
+.mini-chip[data-color="Mor"]      { background: var(--grad-purple); }
+
+/* ============ SCENE CARD ============ */
+.scene-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.1);
+}
+
+.scene-number {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.scene-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(24px, 5vw, 32px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.scene-body {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(16px, 2.5vw, 18px);
+  line-height: 1.6;
+  color: var(--ink-dim);
+  margin-bottom: 24px;
+}
+
+.scene-divider {
+  width: 32px;
+  height: 2px;
+  background: var(--ink);
+  margin-bottom: 20px;
+}
+
+.scene-question {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(17px, 3vw, 20px);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+@media (max-width: 520px) {
+  .scene-card { padding: 32px 24px; border-radius: 16px; }
+}

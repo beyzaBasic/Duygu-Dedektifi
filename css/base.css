@@ -1,0 +1,101 @@
+/* ============================================================
+   BASE.CSS — Reset, CSS değişkenleri, tipografi
+   Sade tema: nötr krem zemin, canlı duygu renkleri
+   ============================================================ */
+
+:root {
+  /* === Duygu renkleri — canlı === */
+  --red:     #FF4757;
+  --orange:  #FF8C42;
+  --yellow:  #FFC93C;
+  --green:   #2ED573;
+  --blue:    #2E9CFF;
+  --navy:    #3D5AFE;
+  --purple:  #B14AED;
+
+  /* Kart gradyanları — parlak, oyuncu */
+  --grad-red:     linear-gradient(155deg, #FF6B7A, #E63946);
+  --grad-orange:  linear-gradient(155deg, #FFA552, #FF6B00);
+  --grad-yellow:  linear-gradient(155deg, #FFD95E, #FFB300);
+  --grad-green:   linear-gradient(155deg, #4FE88F, #14B859);
+  --grad-blue:    linear-gradient(155deg, #5FB8FF, #0B7ED8);
+  --grad-navy:    linear-gradient(155deg, #667BFE, #2235C4);
+  --grad-purple:  linear-gradient(155deg, #C674FF, #8A2BE2);
+
+  /* Zemin tonları — duygu çekildiğinde body'ye uygulanır */
+  --tint-red:     #FFF0F2;
+  --tint-orange:  #FFF3E8;
+  --tint-yellow:  #FFF9E5;
+  --tint-green:   #E8FBF0;
+  --tint-blue:    #E8F4FE;
+  --tint-navy:    #ECEEFF;
+  --tint-purple:  #F5EBFE;
+
+  /* Tema */
+  --bg:         #FAF7F2;
+  --surface:    #FFFFFF;
+  --ink:        #1A1A1A;
+  --ink-dim:    #5A5A5A;
+  --ink-faint:  #A0A0A0;
+  --border:     rgba(0, 0, 0, 0.08);
+
+  /* Tipografi */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-mono:    'Space Mono', 'Courier New', monospace;
+
+  /* Geçişler */
+  --ease:     cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg);
+  transition: background 0.8s var(--ease);
+}
+
+/* Zemin renk sınıfları — JS ekler */
+body.tint-red     { background: var(--tint-red); }
+body.tint-orange  { background: var(--tint-orange); }
+body.tint-yellow  { background: var(--tint-yellow); }
+body.tint-green   { background: var(--tint-green); }
+body.tint-blue    { background: var(--tint-blue); }
+body.tint-navy    { background: var(--tint-navy); }
+body.tint-purple  { background: var(--tint-purple); }
+
+/* Tipografi */
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+.hidden { display: none !important; }
+
+.enter {
+  animation: enter 0.5s var(--ease) both;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
