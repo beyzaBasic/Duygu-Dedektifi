@@ -102,6 +102,11 @@ export class GameController {
 
     // Yumuşak scroll
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Sahne fazına geçer geçmez sahneyi otomatik aç
+    if (phase === 'scene' && !this.currentScene) {
+      this.drawScene();
+    }
   }
 
   drawEmotion() {
