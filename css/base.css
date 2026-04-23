@@ -39,9 +39,9 @@
   --ink-faint:  #A0A0A0;
   --border:     rgba(0, 0, 0, 0.08);
 
-  /* Tipografi */
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-mono:    'Space Mono', 'Courier New', monospace;
+  /* Tipografi — Nunito (yuvarlak, dostça, tek aile) */
+  --font-display: 'Nunito', system-ui, sans-serif;
+  --font-mono:    'Nunito', system-ui, sans-serif;
 
   /* Geçişler */
   --ease:     cubic-bezier(0.2, 0.8, 0.2, 1);

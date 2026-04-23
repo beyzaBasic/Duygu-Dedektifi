@@ -30,26 +30,36 @@ export class GameController {
   }
 
   /**
-   * Tüm [data-action] butonlarını yakalar.
+   * Tüm [data-action] butonlarını ve deste tıklamalarını yakalar.
    */
   _bindActions() {
+    // Buton tıklamaları (data-action)
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-action]');
       if (!btn) return;
       const action = btn.dataset.action;
 
       switch (action) {
-        case 'draw-emotion':   this.drawEmotion(); break;
         case 'redraw-emotion': this.redrawEmotion(); break;
         case 'go-scene':       this.goTo('scene'); break;
-        case 'draw-scene':     this.drawScene(); break;
         case 'redraw-scene':   this.redrawScene(); break;
         case 'restart':        this.restart(); break;
       }
     });
 
-    // Kart çevrildiğinde → "Sahne Zamanı" butonunu göster
-    this.emotionCard.onFlipped(() => {
+    // Deste tıklamaları — buton yerine artık deste tıklanarak kart çekiliyor
+    const emotionDeckEl = document.querySelector('[data-emotion-deck]');
+    const sceneDeckEl   = document.querySelector('[data-scene-deck]');
+
+    if (emotionDeckEl) {
+      emotionDeckEl.addEventListener('click', () => this.drawEmotion());
+    }
+    if (sceneDeckEl) {
+      sceneDeckEl.addEventListener('click', () => this.drawScene());
+    }
+
+    // Kart gösterilince → "Sahne Zamanı" ve "Başka Kart" butonları gelsin
+    this.emotionCard.onShown(() => {
       this._show('[data-action="go-scene"]');
       this._show('[data-action="redraw-emotion"]');
     });
@@ -95,15 +105,17 @@ export class GameController {
   }
 
   drawEmotion() {
+    // Kart zaten görünürse tekrar çekme (mesela desteye iki kez tıklamasın)
+    if (this.currentEmotion) return;
+
     const emotion = this.emotionDeck.draw();
     if (!emotion) return;
 
     this.currentEmotion = emotion;
     this.emotionCard.show(emotion);
 
-    // Deste düğümü → kartı göster
+    // Desteyi gizle
     this._hide('[data-emotion-deck]');
-    this._hide('[data-action="draw-emotion"]');
 
     // Zemin o duygunun rengine dönüşsün
     this._applyTint(emotion);
@@ -117,7 +129,6 @@ export class GameController {
     // Kartı gizle, desteyi göster
     this.emotionCard.hide();
     this._show('[data-emotion-deck]');
-    this._show('[data-action="draw-emotion"]');
     this._hide('[data-action="redraw-emotion"]');
     this._hide('[data-action="go-scene"]');
 
@@ -125,6 +136,9 @@ export class GameController {
   }
 
   drawScene() {
+    // Sahne zaten açıksa bir daha çekme
+    if (this.currentScene) return;
+
     const scene = this.sceneDeck.draw();
     if (!scene) return;
 
@@ -132,7 +146,6 @@ export class GameController {
     this.sceneCard.show(scene);
 
     this._hide('[data-scene-deck]');
-    this._hide('[data-action="draw-scene"]');
     this._show('[data-action="redraw-scene"]');
     this._show('[data-action="restart"]');
   }
@@ -143,7 +156,6 @@ export class GameController {
 
     this.sceneCard.hide();
     this._show('[data-scene-deck]');
-    this._show('[data-action="draw-scene"]');
     this._hide('[data-action="redraw-scene"]');
     this._hide('[data-action="restart"]');
   }
@@ -161,8 +173,6 @@ export class GameController {
     // Deste görünürlükleri
     this._show('[data-emotion-deck]');
     this._show('[data-scene-deck]');
-    this._show('[data-action="draw-emotion"]');
-    this._show('[data-action="draw-scene"]');
     this._hide('[data-action="redraw-emotion"]');
     this._hide('[data-action="go-scene"]');
     this._hide('[data-action="redraw-scene"]');

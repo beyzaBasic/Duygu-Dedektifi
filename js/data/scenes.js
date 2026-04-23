@@ -161,5 +161,155 @@ export const SCENES = [
     body: 'Eve geldin, kapında küçük bir not: "dönünce konuşalım." El yazısı tanıdık ama kimin olduğunu çıkaramıyorsun. Kapı kilitli, içeride kimse olmadığını biliyorsun.',
     question: 'Bu duygu sende olsa, o an ne yapardın?',
     type: 'self'
+  },
+  {
+    title: 'Metro Vagonu',
+    body: 'Metro vagonunda biri sesli mesaj dinliyor, kulaklığı yok. Üç saniyelik bir mesaj, tekrar tekrar dinliyor. Etraftakiler konuşmayı ezberledi.',
+    question: 'Bu duygu o kişinin iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Uyuyan Laptop',
+    body: 'Masada açık duran laptop uykuya daldı, ekran karardı. Sen kalkmadın, o karar verdi. Klavyede yarım bir cümle duruyor ekranda, az önce vardı.',
+    question: 'Bu duygu o karanlık ekran olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Taksi Şoförü Müziği',
+    body: 'Takside şoför müziği açtı, hiç tanımadığın bir şarkı. İkinci dakikada başını sallamaya başladığını fark ettin. Şoför dikiz aynasından sana bakıyor, gülümsüyor.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Zeytin Tabağı',
+    body: 'Yemekte dayı zeytinleri kendine çekti, üç kez. Halası fark etti, bir şey demedi. Dayı dördüncüsünü alırken halayla göz göze geldi.',
+    question: 'Bu duygu dayının iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Sahaf',
+    body: 'Sahaf vitrininde bir kitap, sayfası açık bırakılmış. Güneş her gün aynı satırın üstünde duruyor, kâğıt o bölgeden sararmış. Satır bir soruyla bitiyor.',
+    question: 'Bu duygu o sararmış satır olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Alışveriş Arabası',
+    body: 'Market çıkışında arabayı bıraktın, sol tekeri inatla sağa çekiyor. Yolun yarısında fark ettin, geri dönmek çok uzak. Bir yaşlı adam "bende aynısı olurdu" dedi sana gülümseyerek.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Ayın Yarısı',
+    body: 'Gece gökyüzüne baktın, ay ikiye bölünmüş. Bir yarısı olması gereken yerde, diğer yarısı şehrin öbür tarafında duruyor, aynı yükseklikte. İkisi arasında hiç yıldız yok.',
+    question: 'Bu duygu o eksik yarı olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Köpek Parkı',
+    body: 'Köpek sahibi tasmayı tutmayı unutmuş, köpek koşuyor. Sahip "gel gel" diyor, ses her seferinde biraz daha tiz çıkıyor. Köpek duruyor, sahibine bakıyor, bir kez daha koşuyor.',
+    question: 'Bu duygu sahibinin iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Pilates Hocası',
+    body: 'Sekiz kişilik grup pilates dersinde hocanın "gülümseyin" dediği an. Yedi kişi gülümsedi. Birisi duydu ama yüzü hiç değişmedi.',
+    question: 'Bu duygu o kişinin iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Dolmuş Kapısı',
+    body: 'Dolmuşa bindin, paranı uzattın, şoför "geçtik onu" dedi. Arkadakiler seni izliyor, sen onları. Şoför devam etti, sen elinde parayla ortada kaldın.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Balon',
+    body: 'Bir çocuğun elinden kaçmış bir balon tavanda takılı kaldı, kafede. Üç gün oldu, hâlâ orada. Her gün biraz inmiş gibi görünüyor ama inmiyor.',
+    question: 'Bu duygu o balon olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Kuaför Aynası',
+    body: 'Kuaförde yeni saçınla ayaktan ilk kez kalktın. Tanımadığın biri sana bakıyor aynadan. Hoşuna gitti mi, bilmiyorsun, yüzün henüz karar vermedi.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Oto Tamircisi',
+    body: 'Tamirci arabanın motoruna eğilmiş, bir dakikadır hiç hareket etmiyor. Sonunda doğruldu, ellerini sildi, arabaya baktı, bir daha eğildi. Tek kelime etmedi.',
+    question: 'Bu duygu tamircinin iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Parktaki Salıncak',
+    body: 'Park boş, salıncağa oturdun, on yıldır oturmamıştın. Ayaklar yerde kalıyor, artık küçük geldi. Yine de bir iki kez ittin kendini.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Donmuş Havuz',
+    body: 'Bir bahçede havuz donmuş, yaz ortasında. Buzun altında yaprakların yavaşça döndüğünü görüyorsun, akıntı gibi. Hiç ses yok.',
+    question: 'Bu duygu o buz olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Banka Kuyruğu',
+    body: 'Bankada numara 47, şu an 32\'de. Önündeki kadın sıra geldikçe sıradan çıkıyor, tekrar giriyor, yine çıkıyor. Hiç numarası değişmedi.',
+    question: 'Bu duygu kadının iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Paket İçindeki Not',
+    body: 'Sipariş verdiğin pantolon geldi, paketin içinde küçük bir el yazısı not: "umarım seversin, iyi günlerde giy." Kargocunun yazısı değil. Üreticinin de değil.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Kahve Poşeti',
+    body: 'Kahve poşetinin köşesinde bir delik var, farkında değildin. Çekmecede her yer kahve izi — üç gündür dökülüyor. Poşet hâlâ yarı dolu.',
+    question: 'Bu duygu o delik olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Garson',
+    body: 'Kalabalık restoranda garson altıncı masaya sipariş getiriyor, yanlış masa. "Affedersiniz" diyor, geri dönüyor. Mutfağa girmeden önce bir saniye durup nefes aldı.',
+    question: 'Bu duygu garsonun iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Büfe Ağacı',
+    body: 'Sahilde bir ağaç, dallarında plastik su şişeleri asılı, meyve gibi. Hepsi dolu, hepsi kapalı. Kimsenin bilmediği bir bahçıvan her sabah yenilerini takıyor olmalı.',
+    question: 'Bu duygu o ağaç olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Eve Giren Kedi',
+    body: 'Kapıyı açtın, tanımadığın bir kedi içeri daldı, doğruca mutfağa gitti. Kedi mama tabağının önünde durdu, sana baktı, bekliyor. Sende kedi bile yok.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Fakülte Bahçesi',
+    body: 'Fakülte bahçesinde bir adam bankta tek başına yemek yiyor. Her lokma arasında defterine bir şey yazıyor, sonra etrafına bakıyor. Defteri kapattı, bir daha açtı.',
+    question: 'Bu duygu adamın iç sesi olsa, ona ne derdi?',
+    type: 'person'
+  },
+  {
+    title: 'Hep Aynı Saat',
+    body: 'Bütün gün saate her baktığında aynı saat: 14:47. Telefon, duvar saati, mikrodalga. İnsanlar normal hareket ediyor, trafik akıyor, sadece saatler duruyor.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
+  },
+  {
+    title: 'Market Müziği',
+    body: 'Marketin müziği birdenbire bir saniye durdu, sonra devam etti. Sadece sen fark ettin. Aynı noktada yine duracakmış gibi bir his var, duruyorsun, bekliyorsun.',
+    question: 'Bu duygu o sessizlik olsa, sana ne derdi?',
+    type: 'object'
+  },
+  {
+    title: 'Ortak Fotoğraf',
+    body: 'On yıl önce çekilmiş bir fotoğrafta sensin, yanında hatırlamadığın biri var. Yüzü tanıdık değil, kolun omzunda, ikiniz de gülüyorsunuz. Fotoğrafın arkasında tarih yazıyor, başka bir şey yok.',
+    question: 'Bu duygu sende olsa, o an ne yapardın?',
+    type: 'self'
   }
 ];

@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -54,34 +54,21 @@
             </div>
           </div>
 
-          <!-- Çekim sonrası: flip kart -->
+          <!-- Çekim sonrası: bulanık duygu kartı (flip yok) -->
           <div class="emotion-card-wrapper hidden" data-emotion-card-wrapper>
-            <div class="emotion-card" data-emotion-card>
-
-              <!-- Arka yüz -->
-              <div class="card-face card-back">
-                <div class="card-back-symbol">?</div>
-                <div class="card-back-title">Senin <em>duygun</em></div>
-                <div class="card-back-hint">Çevirmek için dokun</div>
+            <div class="emotion-card is-blurred" data-emotion-card data-emotion-front>
+              <div class="front-content">
+                <div class="emotion-name" data-emotion-name>—</div>
               </div>
-
-              <!-- Ön yüz: bulanık, dokun & tut -->
-              <div class="card-face card-front is-blurred" data-emotion-front>
-                <div class="front-content">
-                  <div class="emotion-name" data-emotion-name>—</div>
-                </div>
-                <div class="reveal-overlay">
-                  <div class="eye-icon"></div>
-                  <span>Görmek için<br>dokun &amp; tut</span>
-                </div>
+              <div class="reveal-overlay">
+                <div class="eye-icon"></div>
+                <span>Görmek için<br>dokun &amp; tut</span>
               </div>
-
             </div>
           </div>
 
           <!-- Aksiyonlar -->
           <div class="actions">
-            <button class="btn" data-action="draw-emotion">Duygu Kartı Çek</button>
             <button class="btn btn-ghost hidden" data-action="redraw-emotion">Başka Kart</button>
             <button class="btn hidden" data-action="go-scene">Sahne Zamanı →</button>
           </div>
@@ -109,7 +96,7 @@
               <div class="deck-card-inner">
                 <div class="deck-icon">◨</div>
                 <div class="deck-label">Sahne<br>Destesi</div>
-                <div class="deck-sub">25 Kart</div>
+                <div class="deck-sub">50 Kart</div>
               </div>
             </div>
           </div>
@@ -125,7 +112,6 @@
 
           <!-- Aksiyonlar -->
           <div class="actions">
-            <button class="btn" data-action="draw-scene">Sahne Kartı Aç</button>
             <button class="btn btn-ghost hidden" data-action="redraw-scene">Başka Sahne</button>
             <button class="btn btn-ghost hidden" data-action="restart">Yeni Tur</button>
           </div>
@@ -137,7 +123,7 @@
 
     <!-- ============ FOOTER ============ -->
     <footer class="app-footer">
-      70 duygu · 25 sahne
+      70 duygu · 50 sahne
     </footer>
 
   </div>

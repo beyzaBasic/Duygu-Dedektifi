@@ -106,9 +106,8 @@
   text-transform: uppercase;
 }
 
-/* ============ EMOTION CARD (flip kart) ============ */
+/* ============ EMOTION CARD (tek yüz, bulanık) ============ */
 .emotion-card-wrapper {
-  perspective: 1200px;
   width: 100%;
   max-width: 280px;
 }
@@ -117,86 +116,25 @@
   position: relative;
   width: 100%;
   aspect-ratio: 5 / 7;
-  transform-style: preserve-3d;
-  transition: transform 0.8s var(--ease-out);
-  cursor: pointer;
-}
-
-.emotion-card.is-flipped { transform: rotateY(180deg); }
-
-.card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
   border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-/* Arka yüz — kapalı kart */
-.card-back {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.15);
-  gap: 20px;
-  padding: 32px;
-}
-
-.card-back-symbol {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 40px;
-}
-
-.card-back-title {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 24px;
-  color: var(--ink);
-  text-align: center;
-  line-height: 1.1;
-}
-
-.card-back-title em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--ink-dim);
-}
-
-.card-back-hint {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.25em;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-}
-
-/* Ön yüz — duygu kartı, SADECE renk + duygu adı */
-.card-front {
-  transform: rotateY(180deg);
   color: white;
   padding: 32px;
   text-align: center;
-  position: relative;
+  cursor: pointer;
+  user-select: none;
   box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25);
 }
 
-.card-front.is-blurred .front-content {
+.emotion-card.is-blurred .front-content {
   filter: blur(24px);
 }
 
-.card-front .front-content {
+.emotion-card .front-content {
   transition: filter 0.4s;
   display: flex;
   align-items: center;
@@ -206,13 +144,13 @@
 }
 
 /* Ön yüz renk varyantları */
-.card-front[data-color="Kırmızı"]  { background: var(--grad-red); }
-.card-front[data-color="Turuncu"]  { background: var(--grad-orange); }
-.card-front[data-color="Sarı"]     { background: var(--grad-yellow); color: #3a2a00; }
-.card-front[data-color="Yeşil"]    { background: var(--grad-green); }
-.card-front[data-color="Mavi"]     { background: var(--grad-blue); }
-.card-front[data-color="Lacivert"] { background: var(--grad-navy); }
-.card-front[data-color="Mor"]      { background: var(--grad-purple); }
+.emotion-card[data-color="Kırmızı"]  { background: var(--grad-red); }
+.emotion-card[data-color="Turuncu"]  { background: var(--grad-orange); }
+.emotion-card[data-color="Sarı"]     { background: var(--grad-yellow); color: #3a2a00; }
+.emotion-card[data-color="Yeşil"]    { background: var(--grad-green); }
+.emotion-card[data-color="Mavi"]     { background: var(--grad-blue); }
+.emotion-card[data-color="Lacivert"] { background: var(--grad-navy); }
+.emotion-card[data-color="Mor"]      { background: var(--grad-purple); }
 
 .emotion-name {
   font-family: var(--font-display);
@@ -221,6 +159,19 @@
   line-height: 1;
   letter-spacing: -0.02em;
   text-align: center;
+  padding: 0 8px;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Uzun duygu adları için dinamik boyut varyantları */
+.emotion-name.size-md {
+  font-size: clamp(30px, 6.5vw, 46px);
+}
+
+.emotion-name.size-sm {
+  font-size: clamp(24px, 5.5vw, 36px);
+  letter-spacing: -0.01em;
 }
 
 /* Bulanıklık overlay — "dokun & tut" uyarısı */
@@ -243,7 +194,7 @@
   user-select: none;
 }
 
-.card-front[data-color="Sarı"] .reveal-overlay {
+.emotion-card[data-color="Sarı"] .reveal-overlay {
   color: rgba(58, 42, 0, 0.75);
 }
 
@@ -265,7 +216,7 @@
   background: currentColor;
 }
 
-.card-front:not(.is-blurred) .reveal-overlay {
+.emotion-card:not(.is-blurred) .reveal-overlay {
   opacity: 0;
   pointer-events: none;
 }
