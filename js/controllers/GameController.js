@@ -128,16 +128,20 @@ export class GameController {
 
   redrawEmotion() {
     // Mevcut duyguyu desteye geri koy
-    this.emotionDeck.putBack(this.currentEmotion);
-    this.currentEmotion = null;
+    if (this.currentEmotion) {
+      this.emotionDeck.putBack(this.currentEmotion);
+      this.currentEmotion = null;
+    }
 
-    // Kartı gizle, desteyi göster
-    this.emotionCard.hide();
-    this._show('[data-emotion-deck]');
-    this._hide('[data-action="redraw-emotion"]');
-    this._hide('[data-action="go-scene"]');
+    // Yeni bir duygu çek — kart ekranda kalır, sadece içeriği değişir
+    const emotion = this.emotionDeck.draw();
+    if (!emotion) return;
 
-    this._clearTint();
+    this.currentEmotion = emotion;
+    this.emotionCard.show(emotion);
+
+    // Zemin rengi yeni duygunun rengine geç
+    this._applyTint(emotion);
   }
 
   drawScene() {
@@ -156,13 +160,18 @@ export class GameController {
   }
 
   redrawScene() {
-    this.sceneDeck.putBack(this.currentScene);
-    this.currentScene = null;
+    // Mevcut sahneyi desteye geri koy
+    if (this.currentScene) {
+      this.sceneDeck.putBack(this.currentScene);
+      this.currentScene = null;
+    }
 
-    this.sceneCard.hide();
-    this._show('[data-scene-deck]');
-    this._hide('[data-action="redraw-scene"]');
-    this._hide('[data-action="restart"]');
+    // Yeni bir sahne çek — kart ekranda kalır, içeriği değişir
+    const scene = this.sceneDeck.draw();
+    if (!scene) return;
+
+    this.currentScene = scene;
+    this.sceneCard.show(scene);
   }
 
   restart() {

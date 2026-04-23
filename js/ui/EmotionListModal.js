@@ -170,8 +170,11 @@ export class EmotionListModal {
       tab.classList.toggle('is-active', i === index);
     });
 
-    // Aile etiketi
+    // Sekme container'ına aktif renk bilgisi (Sarı'da noktalar koyu olsun)
     const color = COLOR_ORDER[index];
+    this._tabs.setAttribute('data-current', color);
+
+    // Aile etiketi
     const group = this.groups.find(g => g.name === color);
     if (group && this._familyLabel) {
       this._familyLabel.textContent = `${color} · ${group.family}`;

@@ -12,37 +12,49 @@
 .app-header {
   padding: 28px 32px;
   text-align: center;
-  position: relative;
 }
 
-/* Sağ üst: gökkuşağı butonu */
+/* Sağ üst sabit: iç içe geçmiş renk halkaları — her ekranda görünür */
 .rainbow-btn {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
-  display: flex;
-  gap: 3px;
-  align-items: center;
-  padding: 8px 10px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 100px;
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-}
-
-.rainbow-btn:hover {
-  transform: translateY(-1px);
-  border-color: var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
   box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.1);
 }
 
-.rainbow-btn:active { transform: translateY(0); }
+.rainbow-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.15);
+}
 
-.rainbow-dot {
-  width: 8px;
-  height: 8px;
+.rainbow-btn:active { transform: scale(0.95); }
+
+/* Halkalar: ortada küçük bir daire + dışa doğru büyüyen renkli halkalar
+   (box-shadow'ları içten dışa sıralıyoruz; en içteki gerçek background rengi) */
+.rainbow-rings {
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  display: inline-block;
+  background: var(--red);
+  box-shadow:
+    0 0 0 2px var(--orange),
+    0 0 0 4px var(--yellow),
+    0 0 0 6px var(--green),
+    0 0 0 8px var(--blue),
+    0 0 0 10px var(--navy),
+    0 0 0 12px var(--purple);
 }
 
 .brand-mark {

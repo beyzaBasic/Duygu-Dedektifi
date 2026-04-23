@@ -67,9 +67,57 @@
   transform: rotate(90deg);
 }
 
-/* ============ SLIDER (tüm ekran) ============ */
+/* ============ COLOR TABS — üstte renk noktaları (slide navigasyonu) ============ */
 .color-tabs {
-  display: none; /* Sekmeler kaldırıldı, sade kalsın */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 22px 24px;
+  pointer-events: none; /* Tek tek butonlar tıklanabilir, container değil */
+}
+
+.color-tab {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  padding: 0;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.color-tab:hover {
+  opacity: 0.75;
+  transform: scale(1.2);
+}
+
+.color-tab.is-active {
+  opacity: 1;
+  transform: scale(1.4);
+  background: white;
+  border-color: white;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+/* Sarı sayfada noktalar koyu olsun — beyaz görünmez çünkü */
+.emotion-slide[data-color="Sarı"] ~ .color-tabs .color-tab,
+.color-tabs[data-current="Sarı"] .color-tab {
+  border-color: rgba(58, 42, 0, 0.5);
+  background: rgba(58, 42, 0, 0.25);
+}
+
+.color-tabs[data-current="Sarı"] .color-tab.is-active {
+  background: #3a2a00;
+  border-color: #3a2a00;
+  box-shadow: 0 0 0 3px rgba(58, 42, 0, 0.2);
 }
 
 .emotion-slider {
@@ -96,7 +144,7 @@
   flex: 0 0 100%;
   height: 100%;
   overflow-y: auto;
-  padding: 80px 32px 40px;
+  padding: 80px 32px 40px; /* üstte 80px sekme barı + kapat butonu için yer */
   display: flex;
   flex-direction: column;
   align-items: center;
