@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/modal.css">
 </head>
 <body>
 
@@ -19,6 +20,17 @@
 
     <!-- ============ HEADER ============ -->
     <header class="app-header">
+      <!-- Sağ üst: duygu listesi butonu -->
+      <button class="rainbow-btn" data-open-emotion-list aria-label="Duygu listesini aç">
+        <span class="rainbow-dot" style="background: var(--red);"></span>
+        <span class="rainbow-dot" style="background: var(--orange);"></span>
+        <span class="rainbow-dot" style="background: var(--yellow);"></span>
+        <span class="rainbow-dot" style="background: var(--green);"></span>
+        <span class="rainbow-dot" style="background: var(--blue);"></span>
+        <span class="rainbow-dot" style="background: var(--navy);"></span>
+        <span class="rainbow-dot" style="background: var(--purple);"></span>
+      </button>
+
       <div class="brand-mark">Duygu <em>Dedektifi</em></div>
       <div class="brand-meta">Sahne · Duygu · Tahmin</div>
     </header>
@@ -126,6 +138,38 @@
       70 duygu · 50 sahne
     </footer>
 
+  </div>
+
+  <!-- ============ DUYGU LİSTESİ MODAL'I ============ -->
+  <div class="modal hidden" data-emotion-list-modal aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+
+    <div class="modal-panel" data-emotion-panel>
+
+      <header class="modal-header">
+        <div class="modal-title">Duygu Havuzu</div>
+        <button class="modal-close" data-modal-close aria-label="Kapat">×</button>
+      </header>
+
+      <!-- Renk sekmeleri -->
+      <div class="color-tabs" data-color-tabs>
+        <!-- JS doldurur -->
+      </div>
+
+      <!-- Slide viewport -->
+      <div class="emotion-slider" data-emotion-slider>
+        <div class="emotion-slider-track" data-slider-track>
+          <!-- JS doldurur, 7 slide -->
+        </div>
+      </div>
+
+      <!-- Alt meta -->
+      <div class="modal-footer">
+        <span data-current-family>—</span>
+        <span class="modal-hint">← →</span>
+      </div>
+
+    </div>
   </div>
 
   <script type="module" src="js/main.js"></script>

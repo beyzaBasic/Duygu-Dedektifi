@@ -22,6 +22,7 @@ import { Deck } from './models/Deck.js';
 import { EmotionCard } from './ui/EmotionCard.js';
 import { SceneCard } from './ui/SceneCard.js';
 import { MiniEmotion } from './ui/MiniEmotion.js';
+import { EmotionListModal } from './ui/EmotionListModal.js';
 
 import { GameController } from './controllers/GameController.js';
 
@@ -46,6 +47,16 @@ const SELECTORS = {
     root:  '[data-mini-emotion]',
     chip:  '[data-mini-chip]',
     label: '[data-mini-label]'
+  },
+  emotionListModal: {
+    modal:       '[data-emotion-list-modal]',
+    panel:       '[data-emotion-panel]',
+    tabs:        '[data-color-tabs]',
+    slider:      '[data-emotion-slider]',
+    track:       '[data-slider-track]',
+    familyLabel: '[data-current-family]',
+    openBtn:     '[data-open-emotion-list]',
+    closeBtn:    '[data-modal-close]'
   }
 };
 
@@ -66,6 +77,12 @@ function boot() {
   const sceneCard = new SceneCard(SELECTORS.sceneCard);
   const miniEmotion = new MiniEmotion(SELECTORS.miniEmotion);
 
+  // Duygu listesi modal'ı — GROUPS'u direkt alıyor (Emotion modeli yerine ham veri)
+  const emotionListModal = new EmotionListModal({
+    groups: GROUPS,
+    selectors: SELECTORS.emotionListModal
+  });
+
   // 4. Controller
   const game = new GameController({
     emotionDeck,
@@ -80,6 +97,7 @@ function boot() {
 
   // Geliştirme rahatlığı için global'e koy — istersen sil
   window.__game = game;
+  window.__modal = emotionListModal;
 }
 
 // DOM hazır olunca boot et
