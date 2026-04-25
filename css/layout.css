@@ -2,12 +2,6 @@
    LAYOUT.CSS — Header, main, footer
    ============================================================ */
 
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 /* ============ HEADER ============ */
 .app-header {
   padding: 28px 32px;

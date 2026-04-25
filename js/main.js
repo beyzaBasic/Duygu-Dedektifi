@@ -5,11 +5,8 @@
  *   1. Veri dosyaları import edilir
  *   2. Model nesneleri üretilir (Emotion'lar, Scene'ler)
  *   3. Desteler oluşturulur
- *   4. UI bileşenleri DOM seçicileriyle bağlanır
- *   5. GameController kurulur ve start() edilir
- *
- * Tek bir yerden tüm bağımlılıklar görülebilsin diye
- * dependency-injection tarzı kullanılıyor.
+ *   4. UI bileşenleri ve view'ler kurulur
+ *   5. ViewManager ve GameController başlatılır
  */
 
 import { GROUPS } from './data/emotions.js';
@@ -22,12 +19,13 @@ import { Deck } from './models/Deck.js';
 import { EmotionCard } from './ui/EmotionCard.js';
 import { SceneCard } from './ui/SceneCard.js';
 import { MiniEmotion } from './ui/MiniEmotion.js';
-import { EmotionListModal } from './ui/EmotionListModal.js';
+import { EmotionListView } from './ui/EmotionListView.js';
 
+import { ViewManager } from './controllers/ViewManager.js';
 import { GameController } from './controllers/GameController.js';
 
 /* ============================================================
-   DOM seçicileri — HTML'deki data-* attribute'larına karşılık
+   DOM seçicileri
    ============================================================ */
 const SELECTORS = {
   emotionCard: {
@@ -48,15 +46,15 @@ const SELECTORS = {
     chip:  '[data-mini-chip]',
     label: '[data-mini-label]'
   },
-  emotionListModal: {
-    modal:       '[data-emotion-list-modal]',
-    panel:       '[data-emotion-panel]',
-    tabs:        '[data-color-tabs]',
-    slider:      '[data-emotion-slider]',
-    track:       '[data-slider-track]',
-    familyLabel: '[data-current-family]',
-    openBtn:     '[data-open-emotion-list]',
-    closeBtn:    '[data-modal-close]'
+  emotionListView: {
+    view:     '[data-view="emotions"]',
+    tabs:     '[data-color-tabs]',
+    slider:   '[data-emotion-slider]',
+    track:    '[data-slider-track]',
+    tapPrev:  '[data-tap-prev]',
+    tapNext:  '[data-tap-next]',
+    openBtn:  '[data-open-emotion-list]',
+    closeBtn: '[data-close-emotion-list]'
   }
 };
 
@@ -64,7 +62,7 @@ const SELECTORS = {
    Boot
    ============================================================ */
 function boot() {
-  // 1. Model listelerini üret — bu çağrılar Adım 2'de çalışır hale gelecek
+  // 1. Model listeleri
   const emotions = Emotion.allFromGroups(GROUPS);
   const scenes = Scene.fromRawList(SCENES);
 
@@ -77,13 +75,17 @@ function boot() {
   const sceneCard = new SceneCard(SELECTORS.sceneCard);
   const miniEmotion = new MiniEmotion(SELECTORS.miniEmotion);
 
-  // Duygu listesi modal'ı — GROUPS'u direkt alıyor (Emotion modeli yerine ham veri)
-  const emotionListModal = new EmotionListModal({
+  // 4. View Manager
+  const viewManager = new ViewManager();
+
+  // 5. Duygu listesi view'i
+  const emotionListView = new EmotionListView({
     groups: GROUPS,
-    selectors: SELECTORS.emotionListModal
+    viewManager,
+    selectors: SELECTORS.emotionListView
   });
 
-  // 4. Controller
+  // 6. Game Controller
   const game = new GameController({
     emotionDeck,
     sceneDeck,
@@ -92,17 +94,37 @@ function boot() {
     miniEmotion
   });
 
-  // 5. Başlat
+  // 7. Başlangıç view'ini ayarla ve oyunu başlat
+  viewManager.show('game');
   game.start();
 
-  // Geliştirme rahatlığı için global'e koy — istersen sil
+  // Geliştirme rahatlığı için
   window.__game = game;
-  window.__modal = emotionListModal;
+  window.__view = emotionListView;
+  window.__vm   = viewManager;
 }
 
-// DOM hazır olunca boot et
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', boot);
 } else {
   boot();
 }
+
+/* ============================================================
+   Kopyala/yapıştır/seç engelleme
+   ============================================================ */
+// Sağ tık menüsünü engelle
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Cmd/Ctrl+A ile tüm metni seçmeyi engelle
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && (e.key === 'a' || e.key === 'A')) {
+    e.preventDefault();
+  }
+});
+
+// Sürükle bırak (drag) engelle
+document.addEventListener('dragstart', (e) => e.preventDefault());
+
+// Kopyalamayı engelle (yine de Cmd+C basılırsa)
+document.addEventListener('copy', (e) => e.preventDefault());

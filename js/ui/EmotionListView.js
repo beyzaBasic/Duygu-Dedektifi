@@ -1,39 +1,41 @@
 /**
- * EmotionListModal — Duygu havuzu listesini gösteren modal.
+ * EmotionListView — Duygu havuzu listesi view'i.
  *
  * Sorumluluklar:
  *   - 7 renk × 10 duygu listesini render eder
- *   - Sağa/sola kaydırma (swipe) ile renkler arası geçiş
- *   - Üstteki renk sekmelerine tıklayınca da geçiş
+ *   - Sağa/sola swipe veya tap-zone ile renk geçişi
+ *   - Üstteki renk noktalarına tıklayınca da geçiş
  *   - Klavye okları ile geçiş
- *   - Backdrop'a ya da × butonuna tıklayınca kapanır
- *   - ESC tuşu ile kapanır
+ *   - Açma/kapama ViewManager üzerinden
+ *
+ * View, ViewManager tarafından açılıp kapanır; bu sınıf sadece içerikten ve
+ * navigasyondan sorumludur.
  */
 
 const COLOR_ORDER = ['Kırmızı', 'Turuncu', 'Sarı', 'Yeşil', 'Mavi', 'Lacivert', 'Mor'];
 
-export class EmotionListModal {
+export class EmotionListView {
   /**
    * @param {Object} opts
-   * @param {Array}  opts.groups    - emotions.js GROUPS dizisi (ham veri)
-   * @param {Object} opts.selectors - DOM seçicileri
+   * @param {Array}  opts.groups       - GROUPS dizisi
+   * @param {Object} opts.viewManager  - ViewManager nesnesi
+   * @param {Object} opts.selectors    - DOM seçicileri
    */
-  constructor({ groups, selectors }) {
+  constructor({ groups, viewManager, selectors }) {
     this.groups = groups;
+    this.viewManager = viewManager;
 
-    this._modal       = document.querySelector(selectors.modal);
-    this._panel       = document.querySelector(selectors.panel);
+    this._view        = document.querySelector(selectors.view);
     this._tabs        = document.querySelector(selectors.tabs);
     this._slider      = document.querySelector(selectors.slider);
     this._track       = document.querySelector(selectors.track);
-    this._familyLabel = document.querySelector(selectors.familyLabel);
+    this._tapPrev     = document.querySelector(selectors.tapPrev);
+    this._tapNext     = document.querySelector(selectors.tapNext);
     this._openBtns    = document.querySelectorAll(selectors.openBtn);
     this._closeBtns   = document.querySelectorAll(selectors.closeBtn);
 
-    /** Aktif slide indeksi (0-6) */
     this._index = 0;
 
-    /** Sürükleme durumu */
     this._drag = {
       active: false,
       startX: 0,
@@ -72,14 +74,10 @@ export class EmotionListModal {
       slide.className = 'emotion-slide';
       slide.setAttribute('data-color', color);
 
-      group.emotions.forEach((name, i) => {
+      group.emotions.forEach((name) => {
         const row = document.createElement('div');
         row.className = 'emotion-row';
-        row.innerHTML = `
-          <span class="emotion-row-index">${String(i + 1).padStart(2, '0')}</span>
-          <span class="emotion-row-dot" data-color="${color}"></span>
-          <span>${name}</span>
-        `;
+        row.textContent = name;
         slide.appendChild(row);
       });
 
@@ -88,75 +86,73 @@ export class EmotionListModal {
   }
 
   _bindEvents() {
-    // Aç
+    // Aç butonları (rainbow buton)
     this._openBtns.forEach(btn => {
       btn.addEventListener('click', () => this.open());
     });
 
-    // Kapat (× ve backdrop)
+    // Kapat (×)
     this._closeBtns.forEach(btn => {
       btn.addEventListener('click', () => this.close());
     });
 
-    // Sekme tıklaması
+    // Renk noktalarına tıklama
     this._tabs.addEventListener('click', (e) => {
       const tab = e.target.closest('.color-tab');
       if (!tab) return;
       this.goTo(Number(tab.dataset.index));
     });
 
-    // Klavye okları + ESC
+    // Tap zone'lar (sol/sağ tıklama)
+    if (this._tapPrev) {
+      this._tapPrev.addEventListener('click', () => this.prev());
+      this._tapPrev.addEventListener('pointerdown', (e) => e.stopPropagation());
+    }
+    if (this._tapNext) {
+      this._tapNext.addEventListener('click', () => this.next());
+      this._tapNext.addEventListener('pointerdown', (e) => e.stopPropagation());
+    }
+
+    // Klavye okları + ESC (sadece view aktifken çalışsın)
     document.addEventListener('keydown', (e) => {
-      if (this._modal.classList.contains('hidden')) return;
+      if (this.viewManager.current !== 'emotions') return;
       if (e.key === 'Escape')     this.close();
       if (e.key === 'ArrowRight') this.next();
       if (e.key === 'ArrowLeft')  this.prev();
     });
 
-    // Swipe (pointer events)
+    // Swipe
     this._slider.addEventListener('pointerdown',  (e) => this._onDragStart(e));
     this._slider.addEventListener('pointermove',  (e) => this._onDragMove(e));
     this._slider.addEventListener('pointerup',    (e) => this._onDragEnd(e));
     this._slider.addEventListener('pointercancel', (e) => this._onDragEnd(e));
-    // Yatay drag: Chrome'un default image-drag'ini engelle
     this._slider.addEventListener('dragstart', (e) => e.preventDefault());
   }
 
   /* ===== Aç/Kapa ===== */
 
   open() {
-    this._modal.classList.remove('hidden');
-    this._modal.setAttribute('aria-hidden', 'false');
+    this.viewManager.show('emotions');
     document.body.style.overflow = 'hidden';
-    // Açılışta 0'a dön
+    // Açılışta 0'a dön (animasyonsuz)
     this.goTo(0, { instant: true });
   }
 
   close() {
-    this._modal.classList.add('hidden');
-    this._modal.setAttribute('aria-hidden', 'true');
+    this.viewManager.show('game');
     document.body.style.overflow = '';
   }
 
   /* ===== Slide navigasyonu ===== */
 
-  /**
-   * Belirli bir slide'a geçer.
-   * @param {number} index
-   * @param {Object} [opts]
-   * @param {boolean} [opts.instant] - true ise animasyonsuz
-   */
   goTo(index, opts = {}) {
-    // Sınırla
     index = Math.max(0, Math.min(COLOR_ORDER.length - 1, index));
     this._index = index;
 
-    // Transform
     if (opts.instant) {
       this._track.style.transition = 'none';
       requestAnimationFrame(() => {
         this._track.style.transform = `translateX(-${index * 100}%)`;
-        // transition'ı bir sonraki frame'de geri aç
         requestAnimationFrame(() => {
           this._track.style.transition = '';
         });
@@ -170,15 +166,9 @@ export class EmotionListModal {
       tab.classList.toggle('is-active', i === index);
     });
 
-    // Sekme container'ına aktif renk bilgisi (Sarı'da noktalar koyu olsun)
-    const color = COLOR_ORDER[index];
-    this._tabs.setAttribute('data-current', color);
-
-    // Aile etiketi
-    const group = this.groups.find(g => g.name === color);
-    if (group && this._familyLabel) {
-      this._familyLabel.textContent = `${color} · ${group.family}`;
-    }
+    // Tap zone'ları sınır durumlarda gizle
+    if (this._tapPrev) this._tapPrev.classList.toggle('is-disabled', index === 0);
+    if (this._tapNext) this._tapNext.classList.toggle('is-disabled', index === COLOR_ORDER.length - 1);
   }
 
   next() { this.goTo(this._index + 1); }
@@ -187,7 +177,6 @@ export class EmotionListModal {
   /* ===== Swipe ===== */
 
   _onDragStart(e) {
-    // Sadece ana buton veya dokunma
     if (e.button !== undefined && e.button !== 0) return;
 
     this._drag.active = true;
@@ -202,8 +191,8 @@ export class EmotionListModal {
     if (!this._drag.active) return;
 
     this._drag.deltaX = e.clientX - this._drag.startX;
+    if (Math.abs(this._drag.deltaX) < 5) return;
 
-    // Kenarda direnç uygula (ilk/son slide'da fazla gitmesin)
     let delta = this._drag.deltaX;
     if (this._index === 0 && delta > 0) delta = delta * 0.3;
     if (this._index === COLOR_ORDER.length - 1 && delta < 0) delta = delta * 0.3;
@@ -217,16 +206,16 @@ export class EmotionListModal {
     this._drag.active = false;
     this._track.classList.remove('is-dragging');
 
-    // Stil'e tekrar % cinsinden dönmek için transform'u temizle
+    const threshold = this._drag.width * 0.2;
+    const delta = this._drag.deltaX;
+
     this._track.style.transform = '';
 
-    const threshold = this._drag.width * 0.2; // %20 yeterli
-    if (this._drag.deltaX < -threshold) {
+    if (delta < -threshold && this._index < COLOR_ORDER.length - 1) {
       this.next();
-    } else if (this._drag.deltaX > threshold) {
+    } else if (delta > threshold && this._index > 0) {
       this.prev();
     } else {
-      // Yetersizse mevcut sayfaya geri
       this.goTo(this._index);
     }
   }

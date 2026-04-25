@@ -12,24 +12,25 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/view.css">
 </head>
 <body>
 
-  <!-- Sağ üstte sabit: gökkuşağı butonu (her ekranda görünür) -->
+  <!-- Sağ üstte sabit: gökkuşağı butonu (her view'de görünür) -->
   <button class="rainbow-btn" data-open-emotion-list aria-label="Duygu listesini aç">
     <span class="rainbow-rings"></span>
   </button>
 
-  <div class="app">
+  <!-- ============================================================
+       VIEW 1: Ana Oyun Ekranı
+       ============================================================ -->
+  <div class="view view-game is-active" data-view="game">
 
-    <!-- ============ HEADER ============ -->
     <header class="app-header">
       <div class="brand-mark">Duygu <em>Dedektifi</em></div>
       <div class="brand-meta">Sahne · Duygu · Tahmin</div>
     </header>
 
-    <!-- ============ MAIN ============ -->
     <main class="app-main">
       <div class="stage">
 
@@ -47,7 +48,6 @@
             <p>Rastgele bir duygu atanacak. Kart bulanık gelir — sadece sen görebilirsin.</p>
           </div>
 
-          <!-- Çekim öncesi: deste -->
           <div class="deck" data-emotion-deck>
             <div class="deck-card"></div>
             <div class="deck-card"></div>
@@ -60,7 +60,6 @@
             </div>
           </div>
 
-          <!-- Çekim sonrası: bulanık duygu kartı (flip yok) -->
           <div class="emotion-card-wrapper hidden" data-emotion-card-wrapper>
             <div class="emotion-card is-blurred" data-emotion-card data-emotion-front>
               <div class="front-content">
@@ -73,7 +72,6 @@
             </div>
           </div>
 
-          <!-- Aksiyonlar -->
           <div class="actions">
             <button class="btn btn-ghost hidden" data-action="redraw-emotion">Başka Kart</button>
             <button class="btn hidden" data-action="go-scene">Sahne Zamanı →</button>
@@ -94,7 +92,6 @@
             <p>Sahneyi oku, duyguyu üzerine giydir, soruyu cevapla. Diğerleri duyguyu tahmin etsin.</p>
           </div>
 
-          <!-- Sahne destesi -->
           <div class="deck" data-scene-deck>
             <div class="deck-card"></div>
             <div class="deck-card"></div>
@@ -107,7 +104,6 @@
             </div>
           </div>
 
-          <!-- Sahne kartı -->
           <article class="scene-card hidden" data-scene-card>
             <div class="scene-number" data-scene-number>SAHNE №—</div>
             <h2 class="scene-title" data-scene-title>—</h2>
@@ -116,7 +112,6 @@
             <p class="scene-question" data-scene-question>—</p>
           </article>
 
-          <!-- Aksiyonlar -->
           <div class="actions">
             <button class="btn btn-ghost hidden" data-action="redraw-scene">Başka Sahne</button>
             <button class="btn btn-ghost hidden" data-action="restart">Yeni Tur</button>
@@ -127,43 +122,35 @@
       </div>
     </main>
 
-    <!-- ============ FOOTER ============ -->
     <footer class="app-footer">
       70 duygu · 50 sahne
     </footer>
 
   </div>
 
-  <!-- ============ DUYGU LİSTESİ MODAL'I ============ -->
-  <div class="modal hidden" data-emotion-list-modal aria-hidden="true">
-    <div class="modal-backdrop" data-modal-close></div>
+  <!-- ============================================================
+       VIEW 2: Duygu Havuzu (renk listesi)
+       ============================================================ -->
+  <div class="view view-emotions" data-view="emotions">
 
-    <div class="modal-panel" data-emotion-panel>
+    <header class="emotion-view-header">
+      <button class="emotion-view-close" data-close-emotion-list aria-label="Kapat">×</button>
+    </header>
 
-      <header class="modal-header">
-        <div class="modal-title">Duygu Havuzu</div>
-        <button class="modal-close" data-modal-close aria-label="Kapat">×</button>
-      </header>
-
-      <!-- Renk sekmeleri -->
-      <div class="color-tabs" data-color-tabs>
-        <!-- JS doldurur -->
-      </div>
-
-      <!-- Slide viewport -->
-      <div class="emotion-slider" data-emotion-slider>
-        <div class="emotion-slider-track" data-slider-track>
-          <!-- JS doldurur, 7 slide -->
-        </div>
-      </div>
-
-      <!-- Alt meta -->
-      <div class="modal-footer">
-        <span data-current-family>—</span>
-        <span class="modal-hint">← →</span>
-      </div>
-
+    <!-- Renk sekmeleri (üstte noktalar) -->
+    <div class="color-tabs" data-color-tabs>
+      <!-- JS doldurur -->
     </div>
+
+    <!-- Slide viewport -->
+    <div class="emotion-slider" data-emotion-slider>
+      <button class="tap-zone tap-zone-left"  data-tap-prev aria-label="Önceki renk"></button>
+      <button class="tap-zone tap-zone-right" data-tap-next aria-label="Sonraki renk"></button>
+      <div class="emotion-slider-track" data-slider-track>
+        <!-- JS doldurur, 7 slide -->
+      </div>
+    </div>
+
   </div>
 
   <script type="module" src="js/main.js"></script>
