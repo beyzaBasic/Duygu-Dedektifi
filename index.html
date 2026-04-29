@@ -3,157 +3,685 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Duygu Dedektifi</title>
-
+  <title>Duygu Dedektifi — Redesign</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/view.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100vh;
+      background: #EDEBE7;
+      font-family: 'Nunito', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #root {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 40px 20px;
+    }
+  </style>
 </head>
 <body>
+<div id="root"></div>
+<script type="text/babel">
 
-  <!-- Sağ üstte sabit: gökkuşağı butonu (her view'de görünür) -->
-  <button class="rainbow-btn" data-open-emotion-list aria-label="Duygu listesini aç">
-    <span class="rainbow-rings"></span>
-  </button>
+/* ─── PHONE FRAME ─────────────────────────────────────────── */
+function PhoneFrame({ children }) {
+  return (
+    <div style={{
+      width: 390, flexShrink: 0,
+      background: '#1A1A1A',
+      borderRadius: 52,
+      padding: 12,
+      boxShadow: '0 0 0 1px #333, 0 40px 80px -20px rgba(0,0,0,0.5), inset 0 0 0 1px #444',
+    }}>
+      {/* Screen */}
+      <div style={{
+        borderRadius: 42, overflow: 'hidden',
+        height: 844, display: 'flex', flexDirection: 'column',
+        background: '#FAF7F2', position: 'relative',
+      }}>
+        {/* Status bar */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '14px 28px 0', flexShrink: 0, position: 'relative', zIndex: 10,
+        }}>
+          <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.02em' }}>9:41</span>
+          {/* Dynamic island */}
+          <div style={{
+            position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 12,
+            width: 120, height: 34, background: '#1A1A1A', borderRadius: 20,
+          }}/>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+              <rect x="0" y="6" width="3" height="6" rx="0.8" fill="#1A1A1A"/>
+              <rect x="4.5" y="4" width="3" height="8" rx="0.8" fill="#1A1A1A"/>
+              <rect x="9" y="2" width="3" height="10" rx="0.8" fill="#1A1A1A"/>
+              <rect x="13.5" y="0" width="3" height="12" rx="0.8" fill="#1A1A1A"/>
+            </svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+              <path d="M8 2.5C10.5 2.5 12.7 3.6 14.2 5.3L15.5 4C13.6 1.9 11 0.5 8 0.5C5 0.5 2.4 1.9 0.5 4L1.8 5.3C3.3 3.6 5.5 2.5 8 2.5Z" fill="#1A1A1A"/>
+              <path d="M8 5.5C9.7 5.5 11.2 6.2 12.3 7.4L13.6 6.1C12.1 4.6 10.2 3.5 8 3.5C5.8 3.5 3.9 4.6 2.4 6.1L3.7 7.4C4.8 6.2 6.3 5.5 8 5.5Z" fill="#1A1A1A"/>
+              <circle cx="8" cy="10" r="1.8" fill="#1A1A1A"/>
+            </svg>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>100%</div>
+          </div>
+        </div>
+        {/* Content */}
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          {children}
+        </div>
+        {/* Home indicator */}
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 10px', flexShrink: 0 }}>
+          <div style={{ width: 134, height: 5, background: '#1A1A1A', borderRadius: 3, opacity: 0.18 }}/>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-  <!-- ============================================================
-       VIEW 1: Ana Oyun Ekranı
-       ============================================================ -->
-  <div class="view view-game is-active" data-view="game">
+/* ─── DATA ─────────────────────────────────────────────────── */
+const GROUPS = [
+  { key:'red',    name:'Kırmızı', family:'Öfke Ailesi',     grad:'linear-gradient(155deg,#FF6B7A,#E63946)', tint:'#FFF0F2', text:'white',
+    emotions:['Nefret','Kızgınlık','Arzu','Sabırsızlık','İnat','İsyan','Hınç','Tutku','Hırs','Aşk'] },
+  { key:'orange', name:'Turuncu', family:'Heyecan Ailesi',   grad:'linear-gradient(155deg,#FFA552,#FF6B00)', tint:'#FFF3E8', text:'white',
+    emotions:['Heyecan','Coşku','Merak','Cesaret','Şaşkınlık','Heves','İlham','Yaratıcılık','Şevk','Büyülenme'] },
+  { key:'yellow', name:'Sarı',    family:'Mutluluk Ailesi',  grad:'linear-gradient(155deg,#FFD95E,#FFB300)', tint:'#FFF9E5', text:'#3a2a00',
+    emotions:['Mutluluk','Neşe','Umut','Gurur','Özgürlük','Tatmin','Keyif','Rahatlama','Özgüven','Zafer'] },
+  { key:'green',  name:'Yeşil',   family:'Sevgi Ailesi',     grad:'linear-gradient(155deg,#4FE88F,#14B859)', tint:'#E8FBF0', text:'white',
+    emotions:['Sevgi','Şefkat','Güven','Merhamet','Şükran','Huzur','Bağışlama','Aidiyet','Empati','Sakinlik'] },
+  { key:'blue',   name:'Mavi',    family:'Üzüntü Ailesi',    grad:'linear-gradient(155deg,#5FB8FF,#0B7ED8)', tint:'#E8F4FE', text:'white',
+    emotions:['Üzüntü','Özlem','Yalnızlık','Pişmanlık','Hayal Kırıklığı','Dışlanmışlık','Boşluk','Tükenmişlik','Çaresizlik','Melankoli'] },
+  { key:'navy',   name:'Lacivert',family:'Kararlılık Ailesi',grad:'linear-gradient(155deg,#667BFE,#2235C4)', tint:'#ECEEFF', text:'white',
+    emotions:['Kararlılık','Hayranlık','Sadakat','Sorumluluk','Kıskançlık','Adalet','Suçluluk','Kibir','Onur','Rekabet'] },
+  { key:'purple', name:'Mor',     family:'Korku Ailesi',     grad:'linear-gradient(155deg,#C674FF,#8A2BE2)', tint:'#F5EBFE', text:'white',
+    emotions:['Korku','Kaygı','Utanç','Kafa Karışıklığı','Güvensizlik','Gözü Kalmak','Yetersizlik','Mahcubiyet','Tedirginlik','Panik'] },
+];
 
-    <header class="app-header">
-      <div class="brand-mark">Duygu <em>Dedektifi</em></div>
-      <div class="brand-meta">Sahne · Duygu · Tahmin</div>
-    </header>
+const SCENES = [
+  { no:1,  title:'Taksici ve Navigasyon', body:'Taksi durdu. Şoför dikiz aynasından sana bakıyor.', q:'Bu duygu şoförün iç sesi olsa, ona ne derdi?' },
+  { no:2,  title:'Buzdolabı Mıknatısı',   body:'Buzdolabında bir mıknatıs eğik duruyor.',            q:'Bu duygu o mıknatıs olsa, sana ne derdi?' },
+  { no:3,  title:'Yanlış Kat',            body:'Anahtar kilide girmiyor. Yanlış kattasın.',           q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:4,  title:'Düğün Fotoğrafçısı',    body:'Fotoğrafçı kareyi hazırladı. Kimse gülümsemiyor.',   q:'Bu duygu fotoğrafçının iç sesi olsa, ona ne derdi?' },
+  { no:5,  title:'Balkon Çiçeği',         body:'Balkonda bir çiçek açmış. Kimse fark etmemiş.',       q:'Bu duygu o çiçek olsa, sana ne derdi?' },
+  { no:6,  title:'Market Kuyruğu',        body:'Kuyruktasın. Arkandaki kişi iç çekiyor.',             q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:7,  title:'Çamaşır Makinesi',      body:'Beyaz çamaşırların arasına bir kırmızı çorap karışmış.', q:'Bu duygu o çorap olsa, sana ne derdi?' },
+  { no:8,  title:'Asansör Muhabbeti',     body:'Asansörde komşuyla yalnızsın. "Hava değişti" demiş.',q:'Bu duygu komşunun iç sesi olsa, ona ne derdi?' },
+  { no:9,  title:'Aile Yemeği',           body:'Teyze masanın ucundan sordu: "tadı nasıl olmuş?"',   q:'Bu duygu teyzenin iç sesi olsa, ona ne derdi?' },
+  { no:10, title:'Göl Ortasındaki Masa',  body:'Bir gölün ortasında masa duruyor. İki sandalye.',     q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:11, title:'Berber',                body:'Berber makası durdurdu, aynaya bakıyor.',              q:'Bu duygu berberin iç sesi olsa, ona ne derdi?' },
+  { no:12, title:'Kargo',                 body:'Kargocu paketi uzattı. Sipariş vermemiştin.',          q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:13, title:'Kahve Lekesi',          body:'Gömleğinin üstünde bir kahve lekesi. Tam kalbinin üstünde.', q:'Bu duygu o leke olsa, sana ne derdi?' },
+  { no:14, title:'Gece Bahçesi',          body:'Gece bir bahçedesin. Çiçekler ışık saçıyor.',          q:'Bu duygu o ışık olsa, sana ne derdi?' },
+  { no:15, title:'Çocuk Parkı',           body:'Çocuk kaydıraktan iniyor: "Anne, bak!"',               q:'Bu duygu annenin iç sesi olsa, ona ne derdi?' },
+  { no:16, title:'Toplantı',              body:'Toplantıda biri defterine kuş çiziyor.',               q:'Bu duygu çizenin iç sesi olsa, ona ne derdi?' },
+  { no:17, title:'Kapıdaki Not',          body:'Kapında bir not: "dönünce konuşalım."',                q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:18, title:'Dans Eden Adam',        body:'Durakta bir adam gözleri kapalı, kendi kendine dans ediyor.', q:'Bu duygu adamın iç sesi olsa, ona ne derdi?' },
+  { no:19, title:'Kitapçı',              body:'Raftan bir kitap hafifçe çıkmış. Diğerleri hizada.',    q:'Bu duygu o kitap olsa, sana ne derdi?' },
+  { no:20, title:'Metro Vagonu',          body:'Metroda biri aynı sesli mesajı tekrar tekrar dinliyor.',q:'Bu duygu o kişinin iç sesi olsa, ona ne derdi?' },
+  { no:21, title:'Parktaki Salıncak',     body:'Salıncağa oturdun. Ayakların yere değiyor.',           q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:22, title:'Çay Bardağı',           body:'Masada iki çay bardağı. İkisine de dokunulmamış.',     q:'Bu duygu o bardak olsa, sana ne derdi?' },
+  { no:23, title:'Balon',                 body:'Kafenin tavanında bir balon takılı kalmış.',            q:'Bu duygu o balon olsa, sana ne derdi?' },
+  { no:24, title:'Hep Aynı Saat',         body:'Saate her baktığında aynı saat: 14:47.',               q:'Bu duygu sende olsa, o an ne yapardın?' },
+  { no:25, title:'Ortak Fotoğraf',        body:'Eski bir fotoğrafta sen ve hatırlamadığın biri.',      q:'Bu duygu sende olsa, o an ne yapardın?' },
+];
 
-    <main class="app-main">
-      <div class="stage">
+function shuffle(arr) {
+  const a = [...arr]; for (let i = a.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a;
+}
+function pickRandom(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
 
-        <!-- Adım göstergesi -->
-        <div class="steps">
-          <span class="dot" data-step="1"></span>
-          <span class="dot" data-step="2"></span>
+/* ─── RAINBOW RINGS ────────────────────────────────────────── */
+function RainbowRings({ size = 14 }) {
+  return (
+    <span style={{
+      display:'inline-block', width:size, height:size, borderRadius:'50%',
+      background:'#FF4757',
+      boxShadow:`0 0 0 ${size*0.18}px #FF8C42,0 0 0 ${size*0.35}px #FFC93C,0 0 0 ${size*0.53}px #2ED573,0 0 0 ${size*0.71}px #2E9CFF,0 0 0 ${size*0.88}px #3D5AFE,0 0 0 ${size*1.05}px #B14AED`
+    }} />
+  );
+}
+
+/* ─── DECK VISUAL ──────────────────────────────────────────── */
+function DeckVisual({ label, sub, icon, onClick, faded = false }) {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position:'relative', width:200, height:280,
+        cursor:'pointer', userSelect:'none',
+        opacity: faded ? 0 : 1,
+        transition:'opacity 0.4s',
+      }}
+    >
+      {/* Background cards */}
+      {[
+        { r:-6, tx:-10, ty:6, op:0.45 },
+        { r: 4, tx: 8,  ty:3, op:0.65 },
+      ].map((c,i) => (
+        <div key={i} style={{
+          position:'absolute', inset:0, borderRadius:20,
+          background:'#fff', border:'1px solid rgba(0,0,0,0.07)',
+          transform:`rotate(${c.r}deg) translate(${c.tx}px,${c.ty}px)`,
+          opacity:c.op,
+        }}/>
+      ))}
+      {/* Top card */}
+      <div style={{
+        position:'absolute', inset:0, borderRadius:20,
+        background:'#fff', border:'1px solid rgba(0,0,0,0.06)',
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:14,
+        boxShadow:'0 24px 48px -16px rgba(0,0,0,0.14)',
+        transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
+        transition:'transform 0.3s cubic-bezier(0.2,0.8,0.2,1)',
+      }}>
+        <div style={{
+          width:60, height:60, borderRadius:'50%',
+          background:'#1A1A1A', color:'#fff',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          fontSize:26, fontWeight:900, fontFamily:'Nunito',
+        }}>{icon}</div>
+        <div style={{ textAlign:'center' }}>
+          <div style={{ fontWeight:900, fontSize:20, color:'#1A1A1A', lineHeight:1.1 }}>{label}</div>
+          <div style={{ fontSize:9, letterSpacing:'0.25em', color:'#A0A0A0', textTransform:'uppercase', marginTop:8 }}>{sub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── EMOTION CARD ─────────────────────────────────────────── */
+function EmotionCard({ emotion, group, onShown }) {
+  const [revealed, setRevealed] = React.useState(false);
+  const [entered, setEntered] = React.useState(false);
+
+  React.useEffect(() => {
+    const t = setTimeout(() => { setEntered(true); if (onShown) onShown(); }, 50);
+    return () => clearTimeout(t);
+  }, []);
+
+  const fontSize = emotion.length > 10 ? 30 : emotion.length > 7 ? 38 : 48;
+
+  return (
+    <div
+      onMouseDown={() => setRevealed(true)}
+      onMouseUp={() => setRevealed(false)}
+      onMouseLeave={() => setRevealed(false)}
+      onTouchStart={() => setRevealed(true)}
+      onTouchEnd={() => setRevealed(false)}
+      style={{
+        width:220, height:308, borderRadius:24,
+        background: group.grad,
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        position:'relative', overflow:'hidden',
+        boxShadow:'0 32px 64px -24px rgba(0,0,0,0.3)',
+        userSelect:'none', cursor:'pointer', touchAction:'none',
+        transform: entered ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.96)',
+        opacity: entered ? 1 : 0,
+        transition:'transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.5s',
+      }}
+    >
+      {/* Emotion name */}
+      <div style={{
+        color: group.text, fontWeight:900, fontSize, lineHeight:1, textAlign:'center', padding:'0 20px',
+        filter: revealed ? 'blur(0)' : 'blur(20px)',
+        transition: revealed ? 'filter 0.15s' : 'filter 0.4s',
+      }}>{emotion}</div>
+
+      {/* Reveal overlay */}
+      <div style={{
+        position:'absolute', inset:0,
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:10,
+        opacity: revealed ? 0 : 1,
+        transition:'opacity 0.2s',
+        pointerEvents:'none',
+      }}>
+        <div style={{
+          width:40, height:40, borderRadius:'50%',
+          border:`1.5px solid ${group.text === 'white' ? 'rgba(255,255,255,0.8)' : 'rgba(58,42,0,0.6)'}`,
+          display:'flex', alignItems:'center', justifyContent:'center',
+        }}>
+          <div style={{
+            width:11, height:11, borderRadius:'50%',
+            background: group.text === 'white' ? 'rgba(255,255,255,0.8)' : 'rgba(58,42,0,0.6)',
+          }}/>
+        </div>
+        <div style={{
+          fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', textAlign:'center',
+          color: group.text === 'white' ? 'rgba(255,255,255,0.85)' : 'rgba(58,42,0,0.65)',
+          lineHeight:1.5,
+        }}>Görmek için<br />dokun &amp; tut</div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── MINI CHIP ────────────────────────────────────────────── */
+function MiniChip({ emotion, group }) {
+  const [peeking, setPeeking] = React.useState(false);
+  return (
+    <div
+      onMouseDown={() => setPeeking(true)} onMouseUp={() => setPeeking(false)} onMouseLeave={() => setPeeking(false)}
+      onTouchStart={() => setPeeking(true)} onTouchEnd={() => setPeeking(false)}
+      style={{
+        display:'flex', alignItems:'center', gap:10,
+        padding:'8px 18px 8px 8px', borderRadius:100,
+        background:'#fff', border:'1px solid rgba(0,0,0,0.09)',
+        cursor:'pointer', userSelect:'none', touchAction:'none',
+        boxShadow:'0 4px 12px -4px rgba(0,0,0,0.08)',
+      }}
+    >
+      <div style={{
+        width:34, height:34, borderRadius:'50%', background:group.grad, flexShrink:0,
+        filter: peeking ? 'blur(0)' : 'blur(8px)',
+        transition: peeking ? 'filter 0.1s' : 'filter 0.3s',
+      }}/>
+      <span style={{
+        fontWeight:700, fontStyle:'italic', fontSize:16, color:'#1A1A1A',
+        filter: peeking ? 'blur(0)' : 'blur(5px)',
+        transition: peeking ? 'filter 0.1s' : 'filter 0.3s',
+      }}>{emotion}</span>
+    </div>
+  );
+}
+
+/* ─── SCENE CARD ───────────────────────────────────────────── */
+function SceneCard({ scene, visible }) {
+  const [entered, setEntered] = React.useState(false);
+  React.useEffect(() => {
+    if (visible) { const t = setTimeout(() => setEntered(true), 60); return () => clearTimeout(t); }
+    else setEntered(false);
+  }, [visible, scene]);
+
+  return (
+    <div style={{
+      background:'#fff', borderRadius:24, padding:'28px 24px',
+      boxShadow:'0 16px 40px -16px rgba(0,0,0,0.1)',
+      width:'100%',
+      transform: entered ? 'translateY(0)' : 'translateY(16px)',
+      opacity: entered ? 1 : 0,
+      transition:'transform 0.45s cubic-bezier(0.2,0.8,0.2,1), opacity 0.45s',
+    }}>
+      <div style={{ fontSize:9, letterSpacing:'0.25em', color:'#A0A0A0', textTransform:'uppercase', marginBottom:10 }}>
+        SAHNE №{String(scene.no).padStart(2,'0')}
+      </div>
+      <h2 style={{ fontWeight:900, fontSize:22, lineHeight:1.15, letterSpacing:'-0.01em', color:'#1A1A1A', marginBottom:14 }}>
+        {scene.title}
+      </h2>
+      <p style={{ fontSize:16, lineHeight:1.65, color:'#5A5A5A', marginBottom:20 }}>
+        {scene.body}
+      </p>
+      <div style={{ width:28, height:2.5, background:'#1A1A1A', borderRadius:2, marginBottom:18 }}/>
+      <p style={{ fontSize:16, lineHeight:1.6, color:'#1A1A1A', fontStyle:'italic', fontWeight:600 }}>
+        {scene.q}
+      </p>
+    </div>
+  );
+}
+
+/* ─── EMOTION LIST OVERLAY ─────────────────────────────────── */
+function EmotionListOverlay({ onClose }) {
+  const [activeGroup, setActiveGroup] = React.useState(0);
+  const [visible, setVisible] = React.useState(false);
+  React.useEffect(() => { const t = setTimeout(() => setVisible(true), 30); return () => clearTimeout(t); }, []);
+
+  const g = GROUPS[activeGroup];
+
+  return (
+    <div style={{
+      position:'absolute', inset:0, borderRadius:52,
+      background:'#FAF7F2', overflow:'hidden', display:'flex', flexDirection:'column',
+      transform: visible ? 'translateY(0)' : 'translateY(100%)',
+      transition:'transform 0.4s cubic-bezier(0.2,0.8,0.2,1)',
+      zIndex:100,
+    }}>
+      {/* Header */}
+      <div style={{ padding:'16px 20px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ fontWeight:900, fontSize:18, color:'#1A1A1A' }}>Duygu Havuzu</div>
+        <button onClick={onClose} style={{
+          width:36, height:36, borderRadius:'50%', background:'rgba(0,0,0,0.07)',
+          border:'none', fontSize:18, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+          color:'#1A1A1A',
+        }}>×</button>
+      </div>
+
+      {/* Color tabs */}
+      <div style={{ display:'flex', gap:8, padding:'16px 20px 12px', overflowX:'auto' }}>
+        {GROUPS.map((gr, i) => (
+          <button key={i} onClick={() => setActiveGroup(i)} style={{
+            flexShrink:0, padding:'7px 14px', borderRadius:100,
+            background: activeGroup===i ? gr.grad : 'transparent',
+            border: activeGroup===i ? 'none' : '1px solid rgba(0,0,0,0.12)',
+            color: activeGroup===i ? gr.text : '#5A5A5A',
+            fontWeight:700, fontSize:12, cursor:'pointer',
+            fontFamily:'Nunito',
+          }}>{gr.name}</button>
+        ))}
+      </div>
+
+      {/* Family label */}
+      <div style={{ padding:'0 20px 14px' }}>
+        <span style={{
+          fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700,
+        }}>{g.family} · {g.emotions.length} duygu</span>
+      </div>
+
+      {/* Emotions grid */}
+      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 24px', display:'flex', flexWrap:'wrap', gap:10, alignContent:'flex-start' }}>
+        {g.emotions.map((e, i) => (
+          <div key={i} style={{
+            padding:'10px 16px', borderRadius:100,
+            background: g.grad,
+            color: g.text,
+            fontWeight:700, fontSize:15,
+          }}>{e}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── BTN ──────────────────────────────────────────────────── */
+function Btn({ children, onClick, ghost, small }) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        fontFamily:'Nunito', fontWeight:700, cursor:'pointer',
+        fontSize: small ? 10 : 11,
+        letterSpacing:'0.18em', textTransform:'uppercase',
+        padding: small ? '11px 20px' : '14px 28px',
+        borderRadius:100,
+        background: ghost ? 'transparent' : '#1A1A1A',
+        color: ghost ? '#5A5A5A' : '#fff',
+        border: ghost ? '1px solid rgba(0,0,0,0.13)' : 'none',
+        transform: hov ? 'translateY(-2px)' : 'translateY(0)',
+        transition:'transform 0.2s, box-shadow 0.2s',
+        boxShadow: hov && !ghost ? '0 8px 20px -6px rgba(0,0,0,0.35)' : 'none',
+      }}
+    >{children}</button>
+  );
+}
+
+/* ─── SCREENS ──────────────────────────────────────────────── */
+
+function WelcomeScreen({ onStart }) {
+  return (
+    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', flex:1, gap:0, padding:'32px 28px' }}>
+      {/* Logo area */}
+      <div style={{ marginBottom:36, display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
+        <RainbowRings size={18} />
+        <div style={{ textAlign:'center' }}>
+          <div style={{ fontWeight:900, fontSize:34, letterSpacing:'-0.025em', color:'#1A1A1A', lineHeight:1 }}>
+            Duygu
+          </div>
+          <div style={{ fontWeight:400, fontStyle:'italic', fontSize:34, letterSpacing:'-0.01em', color:'#5A5A5A', lineHeight:1 }}>
+            Dedektifi
+          </div>
+        </div>
+        <div style={{ fontSize:10, letterSpacing:'0.22em', color:'#A0A0A0', textTransform:'uppercase' }}>
+          Sahne · Duygu · Tahmin
+        </div>
+      </div>
+
+      {/* Color swatches preview */}
+      <div style={{ display:'flex', gap:6, marginBottom:48 }}>
+        {GROUPS.map((g,i) => (
+          <div key={i} style={{
+            width:28, height:28, borderRadius:'50%',
+            background: g.grad,
+            boxShadow:'0 4px 10px -3px rgba(0,0,0,0.2)',
+          }}/>
+        ))}
+      </div>
+
+      {/* How to play */}
+      <div style={{ background:'#fff', borderRadius:20, padding:'22px 20px', marginBottom:40, width:'100%' }}>
+        <div style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', marginBottom:14, fontWeight:700 }}>Nasıl oynanır</div>
+        {[
+          ['1', 'Duygu çek', 'Kart bulanık gelir — sadece sen görürsün'],
+          ['2', 'Sahneyi oku', 'Sahneyi duygunla yorumla, soruyu cevapla'],
+          ['3', 'Tahmin', 'Diğerleri senin duygunun ne olduğunu bulmalı'],
+        ].map(([n, t, d]) => (
+          <div key={n} style={{ display:'flex', gap:12, alignItems:'flex-start', marginBottom: n==='3' ? 0 : 14 }}>
+            <div style={{
+              width:26, height:26, borderRadius:'50%', background:'#1A1A1A',
+              color:'#fff', fontSize:12, fontWeight:900,
+              display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+            }}>{n}</div>
+            <div>
+              <div style={{ fontWeight:800, fontSize:14, color:'#1A1A1A' }}>{t}</div>
+              <div style={{ fontSize:12, color:'#5A5A5A', marginTop:2, lineHeight:1.4 }}>{d}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Btn onClick={onStart}>Oyuna Başla</Btn>
+    </div>
+  );
+}
+
+function EmotionScreen({ onScenePhase, onListOpen }) {
+  const [phase, setPhase] = React.useState('deck'); // deck | drawn | ready
+  const [emotion, setEmotion] = React.useState(null);
+  const [group, setGroup] = React.useState(null);
+  const [shuffled] = React.useState(() => {
+    const all = GROUPS.flatMap(g => g.emotions.map(e => ({ emotion:e, group:g })));
+    return shuffle(all);
+  });
+  const [idx, setIdx] = React.useState(0);
+
+  function draw() {
+    const item = shuffled[idx % shuffled.length];
+    setEmotion(item.emotion); setGroup(item.group); setPhase('drawn');
+  }
+  function redraw() {
+    const next = (idx + 1) % shuffled.length;
+    setIdx(next);
+    const item = shuffled[next];
+    setEmotion(item.emotion); setGroup(item.group); setPhase('drawn');
+  }
+  function goScene() { onScenePhase({ emotion, group }); }
+
+  const bgColor = group ? group.tint : '#FAF7F2';
+
+  return (
+    <div style={{
+      display:'flex', flexDirection:'column', flex:1,
+      background: bgColor,
+      transition:'background 0.8s cubic-bezier(0.2,0.8,0.2,1)',
+      position:'relative',
+    }}>
+      {/* Header */}
+      <div style={{ padding:'16px 20px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div>
+          <div style={{ fontWeight:900, fontSize:18, letterSpacing:'-0.02em', color:'#1A1A1A' }}>
+            Duygu <em style={{ fontWeight:400, color:'#5A5A5A' }}>Dedektifi</em>
+          </div>
+        </div>
+        <button onClick={onListOpen} style={{
+          width:40, height:40, borderRadius:'50%',
+          background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          cursor:'pointer', boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)',
+        }}>
+          <RainbowRings size={12} />
+        </button>
+      </div>
+
+      {/* Step dots */}
+      <div style={{ display:'flex', gap:8, justifyContent:'center', padding:'14px 0 0' }}>
+        <div style={{ width:7, height:7, borderRadius:'50%', background:'#1A1A1A', transform:'scale(1.4)', transition:'all 0.3s' }}/>
+        <div style={{ width:7, height:7, borderRadius:'50%', background:'#1A1A1A', opacity:0.2 }}/>
+      </div>
+
+      {/* Main content */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'20px 24px', gap:28 }}>
+
+        {/* Instruction */}
+        <div style={{ textAlign:'center' }}>
+          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:28, color:'#1A1A1A', marginBottom:8, lineHeight:1 }}>
+            {phase === 'deck' ? 'Duygunu çek.' : 'Duygunla hazırlan.'}
+          </h1>
+          <p style={{ fontSize:12, color:'#5A5A5A', lineHeight:1.6, maxWidth:260 }}>
+            {phase === 'deck'
+              ? 'Desteye dokun, rastgele bir duygu atansın.'
+              : 'Basılı tutarak sadece sen görebilirsin.'}
+          </p>
         </div>
 
-        <!-- ===== FAZ 1: DUYGU KARTI ===== -->
-        <section class="phase" data-phase="emotion">
-
-          <div class="instruction">
-            <h1>Duygunu çek.</h1>
-            <p>Rastgele bir duygu atanacak. Kart bulanık gelir — sadece sen görebilirsin.</p>
-          </div>
-
-          <div class="deck" data-emotion-deck>
-            <div class="deck-card"></div>
-            <div class="deck-card"></div>
-            <div class="deck-card">
-              <div class="deck-card-inner">
-                <div class="deck-icon">?</div>
-                <div class="deck-label">Duygu<br>Destesi</div>
-                <div class="deck-sub">70 Kart</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="emotion-card-wrapper hidden" data-emotion-card-wrapper>
-            <div class="emotion-card is-blurred" data-emotion-card data-emotion-front>
-              <div class="front-content">
-                <div class="emotion-name" data-emotion-name>—</div>
-              </div>
-              <div class="reveal-overlay">
-                <div class="eye-icon"></div>
-                <span>Görmek için<br>dokun &amp; tut</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-ghost hidden" data-action="redraw-emotion">Başka Kart</button>
-            <button class="btn hidden" data-action="go-scene">Sahne Zamanı →</button>
-          </div>
-
-        </section>
-
-        <!-- ===== FAZ 2: SAHNE KARTI ===== -->
-        <section class="phase hidden" data-phase="scene">
-
-          <div class="mini-emotion is-hidden hidden" data-mini-emotion title="Basılı tut">
-            <span class="mini-chip" data-mini-chip></span>
-            <span class="mini-label" data-mini-label>—</span>
-          </div>
-
-          <div class="instruction">
-            <h1>Sahneyi aç.</h1>
-            <p>Sahneyi oku, duyguyu üzerine giydir, soruyu cevapla. Diğerleri duyguyu tahmin etsin.</p>
-          </div>
-
-          <div class="deck" data-scene-deck>
-            <div class="deck-card"></div>
-            <div class="deck-card"></div>
-            <div class="deck-card">
-              <div class="deck-card-inner">
-                <div class="deck-icon">◨</div>
-                <div class="deck-label">Sahne<br>Destesi</div>
-                <div class="deck-sub">50 Kart</div>
-              </div>
-            </div>
-          </div>
-
-          <article class="scene-card hidden" data-scene-card>
-            <div class="scene-number" data-scene-number>SAHNE №—</div>
-            <h2 class="scene-title" data-scene-title>—</h2>
-            <p class="scene-body" data-scene-body>—</p>
-            <div class="scene-divider"></div>
-            <p class="scene-question" data-scene-question>—</p>
-          </article>
-
-          <div class="actions">
-            <button class="btn btn-ghost hidden" data-action="redraw-scene">Başka Sahne</button>
-            <button class="btn btn-ghost hidden" data-action="restart">Yeni Tur</button>
-          </div>
-
-        </section>
-
+        {/* Card or deck */}
+        {phase === 'deck' ? (
+          <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} />
+        ) : (
+          <EmotionCard emotion={emotion} group={group} onShown={() => setPhase('ready')} />
+        )}
       </div>
-    </main>
 
-    <footer class="app-footer">
-      70 duygu · 50 sahne
-    </footer>
-
-  </div>
-
-  <!-- ============================================================
-       VIEW 2: Duygu Havuzu (renk listesi)
-       ============================================================ -->
-  <div class="view view-emotions" data-view="emotions">
-
-    <header class="emotion-view-header">
-      <button class="emotion-view-close" data-close-emotion-list aria-label="Kapat">×</button>
-    </header>
-
-    <!-- Renk sekmeleri (üstte noktalar) -->
-    <div class="color-tabs" data-color-tabs>
-      <!-- JS doldurur -->
-    </div>
-
-    <!-- Slide viewport -->
-    <div class="emotion-slider" data-emotion-slider>
-      <button class="tap-zone tap-zone-left"  data-tap-prev aria-label="Önceki renk"></button>
-      <button class="tap-zone tap-zone-right" data-tap-next aria-label="Sonraki renk"></button>
-      <div class="emotion-slider-track" data-slider-track>
-        <!-- JS doldurur, 7 slide -->
+      {/* Actions */}
+      <div style={{ padding:'0 24px 28px', display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
+        {phase === 'ready' && (
+          <>
+            <Btn ghost small onClick={redraw}>Başka Kart</Btn>
+            <Btn small onClick={goScene}>Sahne Zamanı →</Btn>
+          </>
+        )}
       </div>
     </div>
+  );
+}
 
-  </div>
+function SceneScreen({ emotionData, onRestart, onListOpen }) {
+  const { emotion, group } = emotionData;
+  const [shuffled] = React.useState(() => shuffle(SCENES));
+  const [idx, setIdx] = React.useState(0);
+  const scene = shuffled[idx % shuffled.length];
+  const [key, setKey] = React.useState(0);
 
-  <script type="module" src="js/main.js"></script>
+  function redraw() { setIdx(i => i+1); setKey(k => k+1); }
 
+  return (
+    <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2', position:'relative' }}>
+
+      {/* Header */}
+      <div style={{ padding:'16px 20px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div>
+          <div style={{ fontWeight:900, fontSize:18, letterSpacing:'-0.02em', color:'#1A1A1A' }}>
+            Duygu <em style={{ fontWeight:400, color:'#5A5A5A' }}>Dedektifi</em>
+          </div>
+        </div>
+        <button onClick={onListOpen} style={{
+          width:40, height:40, borderRadius:'50%',
+          background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          cursor:'pointer', boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)',
+        }}>
+          <RainbowRings size={12} />
+        </button>
+      </div>
+
+      {/* Step dots */}
+      <div style={{ display:'flex', gap:8, justifyContent:'center', padding:'14px 0 0' }}>
+        <div style={{ width:7, height:7, borderRadius:'50%', background:'#1A1A1A', opacity:0.4 }}/>
+        <div style={{ width:7, height:7, borderRadius:'50%', background:'#1A1A1A', transform:'scale(1.4)', transition:'all 0.3s' }}/>
+      </div>
+
+      {/* Scrollable content */}
+      <div style={{ flex:1, overflowY:'auto', padding:'20px 20px 0', display:'flex', flexDirection:'column', gap:16 }}>
+
+        {/* Mini chip */}
+        <div style={{ display:'flex', justifyContent:'center' }}>
+          <MiniChip emotion={emotion} group={group} />
+        </div>
+
+        {/* Instruction */}
+        <div style={{ textAlign:'center' }}>
+          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:26, color:'#1A1A1A', marginBottom:6, lineHeight:1 }}>
+            Sahneyi aç.
+          </h1>
+          <p style={{ fontSize:12, color:'#5A5A5A', lineHeight:1.55 }}>
+            Sahneyi oku, duyguyu üzerine giydir,<br/>soruyu cevapla.
+          </p>
+        </div>
+
+        {/* Scene card */}
+        <SceneCard key={key} scene={scene} visible={true} />
+
+        <div style={{ height:16 }}/>
+      </div>
+
+      {/* Actions */}
+      <div style={{ padding:'12px 24px 24px', display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap',
+        borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2' }}>
+        <Btn ghost small onClick={redraw}>Başka Sahne</Btn>
+        <Btn ghost small onClick={onRestart}>Yeni Tur</Btn>
+      </div>
+    </div>
+  );
+}
+
+/* ─── APP ──────────────────────────────────────────────────── */
+function App() {
+  const [screen, setScreen] = React.useState('welcome'); // welcome | emotion | scene
+  const [emotionData, setEmotionData] = React.useState(null);
+  const [showList, setShowList] = React.useState(false);
+
+  function goScene(data) { setEmotionData(data); setScreen('scene'); }
+  function restart() { setEmotionData(null); setScreen('emotion'); }
+
+  return (
+    <PhoneFrame>
+      <div style={{
+        display:'flex', flexDirection:'column',
+        width:'100%', height:'100%',
+        background:'#FAF7F2',
+        fontFamily:'Nunito, system-ui, sans-serif',
+        overflow:'hidden', position:'relative',
+      }}>
+        {screen === 'welcome' && (
+          <WelcomeScreen onStart={() => setScreen('emotion')} />
+        )}
+        {screen === 'emotion' && (
+          <EmotionScreen
+            onScenePhase={goScene}
+            onListOpen={() => setShowList(true)}
+          />
+        )}
+        {screen === 'scene' && emotionData && (
+          <SceneScreen
+            emotionData={emotionData}
+            onRestart={restart}
+            onListOpen={() => setShowList(true)}
+          />
+        )}
+
+        {/* Emotion list overlay */}
+        {showList && (
+          <div style={{ position:'absolute', inset:0, zIndex:99 }}>
+            <EmotionListOverlay onClose={() => setShowList(false)} />
+          </div>
+        )}
+      </div>
+    </PhoneFrame>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
