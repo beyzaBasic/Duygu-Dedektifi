@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Duygu Dedektifi — Redesign</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Duygu Dedektifi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
@@ -11,22 +11,34 @@
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      min-height: 100vh;
-      background: #EDEBE7;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      height: 100%;
       font-family: 'Nunito', system-ui, sans-serif;
-      display: flex; align-items: center; justify-content: center;
+      background: #FAF7F2;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
     }
     #root {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; width: 100%; padding: 40px 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
     @keyframes enter {
-      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .enter { animation: enter 0.45s cubic-bezier(0.2,0.8,0.2,1) both; }
+    @keyframes card-in {
+      0%   { opacity: 0; transform: translateY(24px) scale(0.94); }
+      60%  { transform: translateY(-4px) scale(1.02); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .enter    { animation: enter 0.4s cubic-bezier(0.2,0.8,0.2,1) both; }
+    .card-in  { animation: card-in 0.5s cubic-bezier(0.2,0.8,0.2,1) both; }
   </style>
 </head>
 <body>
@@ -83,54 +95,21 @@ function shuffle(arr) {
   const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;
 }
 
-/* ─── PHONE FRAME ───────────────────────────────────────────── */
-function PhoneFrame({ children }) {
-  return (
-    <div style={{
-      width:390, flexShrink:0, background:'#1A1A1A', borderRadius:52, padding:12,
-      boxShadow:'0 0 0 1px #333, 0 40px 80px -20px rgba(0,0,0,0.5), inset 0 0 0 1px #444',
-    }}>
-      <div style={{ borderRadius:42, overflow:'hidden', height:844, display:'flex', flexDirection:'column', background:'#FAF7F2', position:'relative' }}>
-        {/* Status bar */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 28px 0', flexShrink:0, position:'relative', zIndex:10 }}>
-          <span style={{ fontSize:15, fontWeight:700, color:'#1A1A1A', letterSpacing:'-0.02em' }}>9:41</span>
-          <div style={{ position:'absolute', left:'50%', transform:'translateX(-50%)', top:10, width:120, height:34, background:'#1A1A1A', borderRadius:20 }}/>
-          <div style={{ display:'flex', gap:6, alignItems:'center' }}>
-            <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
-              <rect x="0" y="6" width="3" height="6" rx="0.8" fill="#1A1A1A"/>
-              <rect x="4.5" y="4" width="3" height="8" rx="0.8" fill="#1A1A1A"/>
-              <rect x="9" y="2" width="3" height="10" rx="0.8" fill="#1A1A1A"/>
-              <rect x="13.5" y="0" width="3" height="12" rx="0.8" fill="#1A1A1A"/>
-            </svg>
-            <div style={{ fontSize:12, fontWeight:700, color:'#1A1A1A' }}>100%</div>
-          </div>
-        </div>
-        <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
-          {children}
-        </div>
-        <div style={{ display:'flex', justifyContent:'center', padding:'8px 0 10px', flexShrink:0 }}>
-          <div style={{ width:134, height:5, background:'#1A1A1A', borderRadius:3, opacity:0.15 }}/>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ─── RAINBOW RINGS ─────────────────────────────────────────── */
-function RainbowRings({ size = 14 }) {
+function RainbowRings({ size = 12 }) {
   return (
     <span style={{
       display:'inline-block', width:size, height:size, borderRadius:'50%',
-      background:'#FF4757',
-      boxShadow:`0 0 0 ${size*0.18}px #FF8C42,0 0 0 ${size*0.35}px #FFC93C,0 0 0 ${size*0.53}px #2ED573,0 0 0 ${size*0.71}px #2E9CFF,0 0 0 ${size*0.88}px #3D5AFE,0 0 0 ${size*1.05}px #B14AED`
-    }} />
+      background:'#FF4757', flexShrink:0,
+      boxShadow:`0 0 0 ${size*0.2}px #FF8C42,0 0 0 ${size*0.4}px #FFC93C,0 0 0 ${size*0.6}px #2ED573,0 0 0 ${size*0.8}px #2E9CFF,0 0 0 ${size*1.0}px #3D5AFE,0 0 0 ${size*1.2}px #B14AED`
+    }}/>
   );
 }
 
 /* ─── STEP DOTS ─────────────────────────────────────────────── */
 function StepDots({ active }) {
   return (
-    <div style={{ display:'flex', gap:8, justifyContent:'center', padding:'12px 0 0' }}>
+    <div style={{ display:'flex', gap:8, justifyContent:'center', padding:'10px 0 0' }}>
       {[1,2].map(n => (
         <div key={n} style={{
           width:6, height:6, borderRadius:'50%',
@@ -152,11 +131,11 @@ function DeckVisual({ icon, label, sub, onClick }) {
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{ position:'relative', width:200, height:280, cursor:'pointer', userSelect:'none' }}
+      style={{ position:'relative', width:'min(200px, 52vw)', aspectRatio:'5/7', cursor:'pointer', userSelect:'none' }}
     >
       {[
-        { r:-6, tx:-10, ty:6,  op:0.45 },
-        { r: 4, tx: 8,  ty:3,  op:0.65 },
+        { r:-6, tx:-10, ty:6, op:0.45 },
+        { r: 4, tx:  8, ty:3, op:0.65 },
       ].map((c,i) => (
         <div key={i} style={{
           position:'absolute', inset:0, borderRadius:20,
@@ -174,12 +153,11 @@ function DeckVisual({ icon, label, sub, onClick }) {
         transition:'transform 0.3s cubic-bezier(0.2,0.8,0.2,1)',
       }}>
         <div style={{
-          width:60, height:60, borderRadius:'50%', background:'#1A1A1A', color:'#fff',
-          display:'flex', alignItems:'center', justifyContent:'center',
-          fontSize:26, fontWeight:900,
+          width:56, height:56, borderRadius:'50%', background:'#1A1A1A', color:'#fff',
+          display:'flex', alignItems:'center', justifyContent:'center', fontSize:26, fontWeight:900,
         }}>{icon}</div>
         <div style={{ textAlign:'center' }}>
-          <div style={{ fontWeight:900, fontSize:20, color:'#1A1A1A', lineHeight:1.1 }}>{label}</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(16px,4vw,20px)', color:'#1A1A1A', lineHeight:1.1 }}>{label}</div>
           <div style={{ fontSize:9, letterSpacing:'0.25em', color:'#A0A0A0', textTransform:'uppercase', marginTop:8 }}>{sub}</div>
         </div>
       </div>
@@ -188,14 +166,16 @@ function DeckVisual({ icon, label, sub, onClick }) {
 }
 
 /* ─── EMOTION CARD ──────────────────────────────────────────── */
-function EmotionCard({ emotion, group, onShown }) {
+function EmotionCard({ emotion, group, onShown, animKey }) {
   const [revealed, setRevealed] = React.useState(false);
   const [entered, setEntered] = React.useState(false);
   React.useEffect(() => {
-    const t = setTimeout(() => { setEntered(true); if (onShown) onShown(); }, 50);
+    setEntered(false); setRevealed(false);
+    const t = setTimeout(() => { setEntered(true); if (onShown) onShown(); }, 60);
     return () => clearTimeout(t);
-  }, []);
-  const fontSize = emotion.length > 10 ? 30 : emotion.length > 7 ? 38 : 48;
+  }, [animKey]);
+  const fontSize = emotion.length > 10 ? 'clamp(24px,7vw,34px)' : emotion.length > 7 ? 'clamp(30px,9vw,42px)' : 'clamp(36px,11vw,52px)';
+
   return (
     <div
       onMouseDown={() => setRevealed(true)}
@@ -204,13 +184,13 @@ function EmotionCard({ emotion, group, onShown }) {
       onTouchStart={e => { e.preventDefault(); setRevealed(true); }}
       onTouchEnd={() => setRevealed(false)}
       style={{
-        width:220, height:308, borderRadius:24,
+        width:'min(220px, 56vw)', aspectRatio:'5/7', borderRadius:24,
         background:group.grad,
         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
         position:'relative', overflow:'hidden',
         boxShadow:'0 32px 64px -24px rgba(0,0,0,0.3)',
         userSelect:'none', cursor:'pointer', touchAction:'none',
-        transform: entered ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.96)',
+        transform: entered ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.95)',
         opacity: entered ? 1 : 0,
         transition:'transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.5s',
       }}
@@ -224,21 +204,19 @@ function EmotionCard({ emotion, group, onShown }) {
       <div style={{
         position:'absolute', inset:0,
         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:10,
-        opacity: revealed ? 0 : 1,
-        transition:'opacity 0.2s',
-        pointerEvents:'none',
+        opacity: revealed ? 0 : 1, transition:'opacity 0.2s', pointerEvents:'none',
       }}>
         <div style={{
           width:40, height:40, borderRadius:'50%',
-          border:`1.5px solid ${group.text === 'white' ? 'rgba(255,255,255,0.8)' : 'rgba(58,42,0,0.6)'}`,
+          border:`1.5px solid ${group.text==='white'?'rgba(255,255,255,0.8)':'rgba(58,42,0,0.6)'}`,
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>
-          <div style={{ width:11, height:11, borderRadius:'50%', background: group.text === 'white' ? 'rgba(255,255,255,0.8)' : 'rgba(58,42,0,0.6)' }}/>
+          <div style={{ width:11, height:11, borderRadius:'50%', background:group.text==='white'?'rgba(255,255,255,0.8)':'rgba(58,42,0,0.6)' }}/>
         </div>
         <div style={{
           fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', textAlign:'center', lineHeight:1.5,
-          color: group.text === 'white' ? 'rgba(255,255,255,0.85)' : 'rgba(58,42,0,0.65)',
-        }}>Görmek için<br />dokun &amp; tut</div>
+          color:group.text==='white'?'rgba(255,255,255,0.85)':'rgba(58,42,0,0.65)',
+        }}>Görmek için<br/>dokun &amp; tut</div>
       </div>
     </div>
   );
@@ -252,22 +230,25 @@ function MiniChip({ emotion, group }) {
       onMouseDown={() => setPeeking(true)} onMouseUp={() => setPeeking(false)} onMouseLeave={() => setPeeking(false)}
       onTouchStart={e=>{e.preventDefault();setPeeking(true);}} onTouchEnd={() => setPeeking(false)}
       style={{
-        display:'inline-flex', alignItems:'center', gap:10,
-        padding:'8px 18px 8px 8px', borderRadius:100,
-        background:'#fff', border:'1px solid rgba(0,0,0,0.09)',
+        display:'inline-flex', alignItems:'center', gap:14,
+        padding:'12px 24px 12px 12px', borderRadius:100,
+        background: group.grad,
         cursor:'pointer', userSelect:'none', touchAction:'none',
-        boxShadow:'0 4px 12px -4px rgba(0,0,0,0.08)',
+        boxShadow:`0 8px 24px -8px rgba(0,0,0,0.25)`,
       }}
     >
       <div style={{
-        width:34, height:34, borderRadius:'50%', background:group.grad, flexShrink:0,
-        filter: peeking ? 'blur(0)' : 'blur(8px)',
-        transition: peeking ? 'filter 0.1s' : 'filter 0.3s',
-      }}/>
+        width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.25)', flexShrink:0,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        filter: peeking ? 'blur(0)' : 'blur(0)',
+      }}>
+        <div style={{ width:20, height:20, borderRadius:'50%', background:'rgba(255,255,255,0.6)' }}/>
+      </div>
       <span style={{
-        fontWeight:700, fontStyle:'italic', fontSize:16, color:'#1A1A1A',
-        filter: peeking ? 'blur(0)' : 'blur(5px)',
+        fontWeight:900, fontStyle:'italic', fontSize:20, color: group.text,
+        filter: peeking ? 'blur(0)' : 'blur(7px)',
         transition: peeking ? 'filter 0.1s' : 'filter 0.3s',
+        letterSpacing:'-0.01em',
       }}>{emotion}</span>
     </div>
   );
@@ -283,7 +264,7 @@ function SceneCard({ scene, animKey }) {
   }, [animKey]);
   return (
     <div style={{
-      background:'#fff', borderRadius:24, padding:'28px 24px',
+      background:'#fff', borderRadius:24, padding:'clamp(20px,5vw,32px)',
       boxShadow:'0 16px 40px -16px rgba(0,0,0,0.1)', width:'100%',
       transform: entered ? 'translateY(0)' : 'translateY(16px)',
       opacity: entered ? 1 : 0,
@@ -292,14 +273,14 @@ function SceneCard({ scene, animKey }) {
       <div style={{ fontSize:9, letterSpacing:'0.25em', color:'#A0A0A0', textTransform:'uppercase', marginBottom:10, fontWeight:700 }}>
         SAHNE №{String(scene.no).padStart(2,'0')}
       </div>
-      <h2 style={{ fontWeight:900, fontSize:22, lineHeight:1.15, letterSpacing:'-0.01em', color:'#1A1A1A', marginBottom:14 }}>
+      <h2 style={{ fontWeight:900, fontSize:'clamp(18px,5vw,24px)', lineHeight:1.2, letterSpacing:'-0.01em', color:'#1A1A1A', marginBottom:14 }}>
         {scene.title}
       </h2>
-      <p style={{ fontSize:16, lineHeight:1.65, color:'#5A5A5A', marginBottom:20 }}>
+      <p style={{ fontSize:'clamp(14px,4vw,17px)', lineHeight:1.65, color:'#5A5A5A', marginBottom:20 }}>
         {scene.body}
       </p>
       <div style={{ width:28, height:2.5, background:'#1A1A1A', borderRadius:2, marginBottom:18 }}/>
-      <p style={{ fontSize:16, lineHeight:1.6, color:'#1A1A1A', fontStyle:'italic', fontWeight:600 }}>
+      <p style={{ fontSize:'clamp(14px,4vw,17px)', lineHeight:1.6, color:'#1A1A1A', fontStyle:'italic', fontWeight:600 }}>
         {scene.q}
       </p>
     </div>
@@ -316,7 +297,7 @@ function Btn({ children, onClick, ghost, small }) {
       style={{
         fontFamily:'Nunito', fontWeight:700, cursor:'pointer',
         fontSize: small ? 10 : 11, letterSpacing:'0.18em', textTransform:'uppercase',
-        padding: small ? '11px 20px' : '14px 28px', borderRadius:100,
+        padding: small ? '12px 22px' : '14px 28px', borderRadius:100,
         background: ghost ? 'transparent' : '#1A1A1A',
         color: ghost ? '#5A5A5A' : '#fff',
         border: ghost ? '1px solid rgba(0,0,0,0.13)' : 'none',
@@ -331,46 +312,54 @@ function Btn({ children, onClick, ghost, small }) {
 /* ─── WELCOME SCREEN ────────────────────────────────────────── */
 function WelcomeScreen({ onStart }) {
   return (
-    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', flex:1, padding:'32px 28px' }}>
-      <div style={{ marginBottom:36, display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
-        <RainbowRings size={18} />
-        <div style={{ textAlign:'center' }}>
-          <div style={{ fontWeight:900, fontSize:34, letterSpacing:'-0.025em', color:'#1A1A1A', lineHeight:1 }}>Duygu</div>
-          <div style={{ fontWeight:400, fontStyle:'italic', fontSize:34, letterSpacing:'-0.01em', color:'#5A5A5A', lineHeight:1 }}>Dedektifi</div>
-        </div>
-        <div style={{ fontSize:10, letterSpacing:'0.22em', color:'#A0A0A0', textTransform:'uppercase' }}>Sahne · Duygu · Tahmin</div>
-      </div>
-
-      <div style={{ display:'flex', gap:6, marginBottom:48 }}>
-        {GROUPS.map((g,i) => (
-          <div key={i} style={{
-            width:28, height:28, borderRadius:'50%', background:g.grad,
-            boxShadow:'0 4px 10px -3px rgba(0,0,0,0.2)',
-          }}/>
-        ))}
-      </div>
-
-      <div style={{ background:'#fff', borderRadius:20, padding:'22px 20px', marginBottom:40, width:'100%' }}>
-        <div style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', marginBottom:14, fontWeight:700 }}>Nasıl oynanır</div>
-        {[
-          ['1', 'Duygu çek', 'Kart bulanık gelir — sadece sen görürsün'],
-          ['2', 'Sahneyi oku', 'Sahneyi duygunla yorumla, soruyu cevapla'],
-          ['3', 'Tahmin', 'Diğerleri senin duygunun ne olduğunu bulmalı'],
-        ].map(([n, t, d]) => (
-          <div key={n} style={{ display:'flex', gap:12, alignItems:'flex-start', marginBottom: n==='3' ? 0 : 14 }}>
-            <div style={{
-              width:26, height:26, borderRadius:'50%', background:'#1A1A1A', color:'#fff',
-              fontSize:12, fontWeight:900, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-            }}>{n}</div>
-            <div>
-              <div style={{ fontWeight:800, fontSize:14, color:'#1A1A1A' }}>{t}</div>
-              <div style={{ fontSize:12, color:'#5A5A5A', marginTop:2, lineHeight:1.4 }}>{d}</div>
-            </div>
+    <div style={{ display:'flex', flexDirection:'column', flex:1, overflowY:'auto', background:'#FAF7F2' }}>
+      <div style={{
+        flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        padding:'env(safe-area-inset-top, 32px) 28px 0',
+        minHeight:0,
+      }}>
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20, marginBottom:36 }}>
+          <RainbowRings size={18} />
+          <div style={{ textAlign:'center' }}>
+            <div style={{ fontWeight:900, fontSize:'clamp(28px,8vw,40px)', letterSpacing:'-0.025em', color:'#1A1A1A', lineHeight:1 }}>Duygu</div>
+            <div style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(28px,8vw,40px)', letterSpacing:'-0.01em', color:'#5A5A5A', lineHeight:1 }}>Dedektifi</div>
           </div>
-        ))}
+          <div style={{ fontSize:10, letterSpacing:'0.22em', color:'#A0A0A0', textTransform:'uppercase' }}>Sahne · Duygu · Tahmin</div>
+        </div>
+
+        <div style={{ display:'flex', gap:6, marginBottom:40, flexWrap:'wrap', justifyContent:'center' }}>
+          {GROUPS.map((g,i) => (
+            <div key={i} style={{
+              width:28, height:28, borderRadius:'50%', background:g.grad,
+              boxShadow:'0 4px 10px -3px rgba(0,0,0,0.2)',
+            }}/>
+          ))}
+        </div>
+
+        <div style={{ background:'#fff', borderRadius:20, padding:'22px 20px', marginBottom:36, width:'100%', maxWidth:440 }}>
+          <div style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', marginBottom:16, fontWeight:700 }}>Nasıl oynanır</div>
+          {[
+            ['1', 'Duygu çek', 'Kart bulanık gelir — sadece sen görürsün'],
+            ['2', 'Sahneyi oku', 'Sahneyi duygunla yorumla, soruyu cevapla'],
+            ['3', 'Tahmin', 'Diğerleri senin duygunun ne olduğunu bulmalı'],
+          ].map(([n, t, d]) => (
+            <div key={n} style={{ display:'flex', gap:12, alignItems:'flex-start', marginBottom: n==='3' ? 0 : 14 }}>
+              <div style={{
+                width:26, height:26, borderRadius:'50%', background:'#1A1A1A', color:'#fff',
+                fontSize:12, fontWeight:900, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+              }}>{n}</div>
+              <div>
+                <div style={{ fontWeight:800, fontSize:14, color:'#1A1A1A' }}>{t}</div>
+                <div style={{ fontSize:12, color:'#5A5A5A', marginTop:2, lineHeight:1.4 }}>{d}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <Btn onClick={onStart}>Oyuna Başla</Btn>
+      <div style={{ padding:'16px 28px calc(env(safe-area-inset-bottom, 0px) + 28px)', display:'flex', justifyContent:'center' }}>
+        <Btn onClick={onStart}>Oyuna Başla</Btn>
+      </div>
     </div>
   );
 }
@@ -380,6 +369,7 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
   const [phase, setPhase] = React.useState('deck');
   const [emotion, setEmotion] = React.useState(null);
   const [group, setGroup] = React.useState(null);
+  const [animKey, setAnimKey] = React.useState(0);
   const [shuffled] = React.useState(() => {
     const all = GROUPS.flatMap(g => g.emotions.map(e => ({ emotion:e, group:g })));
     return shuffle(all);
@@ -388,26 +378,27 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
 
   function draw() {
     const item = shuffled[idx % shuffled.length];
-    setEmotion(item.emotion); setGroup(item.group); setPhase('drawn');
+    setEmotion(item.emotion); setGroup(item.group); setAnimKey(k=>k+1); setPhase('drawn');
   }
   function redraw() {
-    const next = (idx + 1) % shuffled.length; setIdx(next);
+    const next = (idx+1) % shuffled.length; setIdx(next);
     const item = shuffled[next];
-    setEmotion(item.emotion); setGroup(item.group); setPhase('drawn');
+    setEmotion(item.emotion); setGroup(item.group); setAnimKey(k=>k+1);
   }
 
   const bg = group ? group.tint : '#FAF7F2';
 
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, background:bg, transition:'background 0.8s cubic-bezier(0.2,0.8,0.2,1)' }}>
-      <div style={{ padding:'16px 20px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <div style={{ fontWeight:900, fontSize:18, letterSpacing:'-0.02em', color:'#1A1A1A' }}>
+      {/* Header */}
+      <div style={{ padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ fontWeight:900, fontSize:'clamp(16px,4.5vw,20px)', letterSpacing:'-0.02em', color:'#1A1A1A' }}>
           Duygu <em style={{ fontWeight:400, color:'#5A5A5A' }}>Dedektifi</em>
         </div>
         <button onClick={onListOpen} style={{
-          width:40, height:40, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          width:42, height:42, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
           display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
-          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
         }}>
           <RainbowRings size={12} />
         </button>
@@ -415,12 +406,13 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
 
       <StepDots active={1} />
 
-      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'20px 24px', gap:28 }}>
+      {/* Content */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(16px,4vw,24px)', gap:'clamp(20px,5vw,32px)' }}>
         <div style={{ textAlign:'center' }}>
-          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:28, color:'#1A1A1A', marginBottom:8, lineHeight:1 }}>
+          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(22px,6vw,30px)', color:'#1A1A1A', marginBottom:8, lineHeight:1 }}>
             {phase === 'deck' ? 'Duygunu çek.' : 'Duygunla hazırlan.'}
           </h1>
-          <p style={{ fontSize:12, color:'#5A5A5A', lineHeight:1.6, maxWidth:260 }}>
+          <p style={{ fontSize:'clamp(11px,3vw,13px)', color:'#5A5A5A', lineHeight:1.6, maxWidth:280 }}>
             {phase === 'deck'
               ? 'Desteye dokun, rastgele bir duygu atansın.'
               : 'Basılı tutarak sadece sen görebilirsin.'}
@@ -430,11 +422,12 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
         {phase === 'deck' ? (
           <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} />
         ) : (
-          <EmotionCard key={idx} emotion={emotion} group={group} onShown={() => setPhase('ready')} />
+          <EmotionCard emotion={emotion} group={group} animKey={animKey} onShown={() => setPhase('ready')} />
         )}
       </div>
 
-      <div style={{ padding:'0 24px 28px', display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', minHeight:60 }}>
+      {/* Actions */}
+      <div style={{ padding:'0 clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 24px)', display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', minHeight:64 }}>
         {phase === 'ready' && (
           <>
             <Btn ghost small onClick={redraw}>Başka Kart</Btn>
@@ -455,14 +448,15 @@ function SceneScreen({ emotionData, onRestart, onListOpen }) {
 
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2' }}>
-      <div style={{ padding:'16px 20px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <div style={{ fontWeight:900, fontSize:18, letterSpacing:'-0.02em', color:'#1A1A1A' }}>
+      {/* Header */}
+      <div style={{ padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ fontWeight:900, fontSize:'clamp(16px,4.5vw,20px)', letterSpacing:'-0.02em', color:'#1A1A1A' }}>
           Duygu <em style={{ fontWeight:400, color:'#5A5A5A' }}>Dedektifi</em>
         </div>
         <button onClick={onListOpen} style={{
-          width:40, height:40, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          width:42, height:42, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
           display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
-          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
         }}>
           <RainbowRings size={12} />
         </button>
@@ -470,24 +464,30 @@ function SceneScreen({ emotionData, onRestart, onListOpen }) {
 
       <StepDots active={2} />
 
-      <div style={{ flex:1, overflowY:'auto', padding:'16px 20px 0', display:'flex', flexDirection:'column', gap:14 }}>
+      {/* Scrollable */}
+      <div style={{ flex:1, overflowY:'auto', padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 0', display:'flex', flexDirection:'column', gap:14 }}>
         <div style={{ display:'flex', justifyContent:'center' }}>
           <MiniChip emotion={emotion} group={group} />
         </div>
         <div style={{ textAlign:'center' }}>
-          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:26, color:'#1A1A1A', marginBottom:5, lineHeight:1 }}>
+          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(20px,5.5vw,28px)', color:'#1A1A1A', marginBottom:5, lineHeight:1 }}>
             Sahneyi aç.
           </h1>
-          <p style={{ fontSize:12, color:'#5A5A5A', lineHeight:1.6 }}>
-            Sahneyi oku, duyguyu üzerine giydir,<br/>soruyu cevapla.
+          <p style={{ fontSize:'clamp(11px,3vw,13px)', color:'#5A5A5A', lineHeight:1.6 }}>
+            Sahneyi oku, duyguyu üzerine giydir, soruyu cevapla.
           </p>
         </div>
         <SceneCard scene={scene} animKey={idx} />
         <div style={{ height:8 }}/>
       </div>
 
-      <div style={{ padding:'12px 24px 24px', display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2' }}>
-        <Btn ghost small onClick={() => setIdx(i => i+1)}>Başka Sahne</Btn>
+      {/* Actions */}
+      <div style={{
+        padding:'12px clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 20px)',
+        display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap',
+        borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2',
+      }}>
+        <Btn ghost small onClick={() => setIdx(i=>i+1)}>Başka Sahne</Btn>
         <Btn ghost small onClick={onRestart}>Yeni Tur</Btn>
       </div>
     </div>
@@ -501,25 +501,25 @@ function EmotionListOverlay({ onClose }) {
 
   return (
     <div style={{
-      position:'absolute', inset:0, borderRadius:42,
-      background:'#FAF7F2', overflow:'hidden', display:'flex', flexDirection:'column',
+      position:'fixed', inset:0,
+      background:'#FAF7F2', display:'flex', flexDirection:'column',
       transform: visible ? 'translateY(0)' : 'translateY(100%)',
       transition:'transform 0.4s cubic-bezier(0.2,0.8,0.2,1)',
       zIndex:100,
     }}>
-      <div style={{ padding:'16px 20px 12px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+      <div style={{ padding:'clamp(16px,5vw,24px) clamp(16px,5vw,24px) 12px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
         <div>
-          <div style={{ fontWeight:900, fontSize:18, color:'#1A1A1A' }}>Duygu Havuzu</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(18px,5vw,22px)', color:'#1A1A1A' }}>Duygu Havuzu</div>
           <div style={{ fontSize:10, letterSpacing:'0.18em', textTransform:'uppercase', color:'#A0A0A0', marginTop:3, fontWeight:700 }}>70 duygu · 7 renk ailesi</div>
         </div>
         <button onClick={onClose} style={{
-          width:36, height:36, borderRadius:'50%', background:'rgba(0,0,0,0.07)',
+          width:38, height:38, borderRadius:'50%', background:'rgba(0,0,0,0.07)',
           border:'none', fontSize:20, cursor:'pointer',
           display:'flex', alignItems:'center', justifyContent:'center', color:'#1A1A1A', fontFamily:'Nunito',
         }}>×</button>
       </div>
 
-      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 24px' }}>
+      <div style={{ flex:1, overflowY:'auto', padding:'0 clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 24px)' }}>
         {GROUPS.map((g, gi) => (
           <div key={gi} style={{ marginBottom:28 }}>
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
@@ -532,8 +532,7 @@ function EmotionListOverlay({ onClose }) {
               {g.emotions.map((e, ei) => (
                 <div key={ei} style={{
                   padding:'9px 16px', borderRadius:100,
-                  background:g.grad, color:g.text,
-                  fontWeight:700, fontSize:14,
+                  background:g.grad, color:g.text, fontWeight:700, fontSize:14,
                 }}>{e}</div>
               ))}
             </div>
@@ -551,29 +550,23 @@ function App() {
   const [showList, setShowList] = React.useState(false);
 
   return (
-    <PhoneFrame>
-      <div style={{ display:'flex', flexDirection:'column', width:'100%', height:'100%', position:'relative', overflow:'hidden' }}>
-        {screen === 'welcome' && <WelcomeScreen onStart={() => setScreen('emotion')} />}
-        {screen === 'emotion' && (
-          <EmotionScreen
-            onScenePhase={d => { setEmotionData(d); setScreen('scene'); }}
-            onListOpen={() => setShowList(true)}
-          />
-        )}
-        {screen === 'scene' && emotionData && (
-          <SceneScreen
-            emotionData={emotionData}
-            onRestart={() => { setEmotionData(null); setScreen('emotion'); }}
-            onListOpen={() => setShowList(true)}
-          />
-        )}
-        {showList && (
-          <div style={{ position:'absolute', inset:0, zIndex:99 }}>
-            <EmotionListOverlay onClose={() => setShowList(false)} />
-          </div>
-        )}
-      </div>
-    </PhoneFrame>
+    <div style={{ display:'flex', flexDirection:'column', height:'100%', position:'relative' }}>
+      {screen === 'welcome' && <WelcomeScreen onStart={() => setScreen('emotion')} />}
+      {screen === 'emotion' && (
+        <EmotionScreen
+          onScenePhase={d => { setEmotionData(d); setScreen('scene'); }}
+          onListOpen={() => setShowList(true)}
+        />
+      )}
+      {screen === 'scene' && emotionData && (
+        <SceneScreen
+          emotionData={emotionData}
+          onRestart={() => { setEmotionData(null); setScreen('emotion'); }}
+          onListOpen={() => setShowList(true)}
+        />
+      )}
+      {showList && <EmotionListOverlay onClose={() => setShowList(false)} />}
+    </div>
   );
 }
 
