@@ -12,306 +12,307 @@
  *
  * Tasarım prensibi: Askıda bir an, tek bir kıpırtı, duyguya alan bırakan nötr sahne.
  */
+// data.js
 
 export const SCENES = [
   {
-    title: 'Taksici ve Navigasyon',
-    body: 'Taksi durdu. Şoför dikiz aynasından sana bakıyor.',
-    question: 'Bu duygu şoförün iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Kütüphane Masası",
+    body: "Kütüphanede arkadaşınla yan yana oturuyorsunuz. İkiniz de sessizsiniz.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Buzdolabı Mıknatısı',
-    body: 'Buzdolabında bir mıknatıs eğik duruyor.',
-    question: 'Bu duygu o mıknatıs olsa, sana ne derdi?',
-    type: 'object'
+    title: "Bekleme Salonu",
+    body: "Hastane bekleme salonunda oturuyorsun. Yanındaki kişi sana sürekli sorular soruyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Yanlış Kat',
-    body: 'Anahtar kilide girmiyor. Yanlış kattasın.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Asansördeki Ayna",
+    body: "Asansörde ayna karşısında duruyorsun. Işıklar bir anlığına yanıp sönüyor.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Düğün Fotoğrafçısı',
-    body: 'Fotoğrafçı kareyi hazırladı. Kimse gülümsemiyor.',
-    question: 'Bu duygu fotoğrafçının iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Kasadaki Bant",
+    body: "Süpermarket kasasında bant hareket etmiyor. Arkanda uzun bir kuyruk oluştu.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Balkon Çiçeği',
-    body: 'Balkonda bir çiçek açmış. Kimse fark etmemiş.',
-    question: 'Bu duygu o çiçek olsa, sana ne derdi?',
-    type: 'object'
+    title: "Eski Kare",
+    body: "Eski bir fotoğrafı elinde tutuyorsun. Görüntüdeki detaylar çok net.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Market Kuyruğu',
-    body: 'Kuyruktasın. Arkandaki kişi iç çekiyor.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Boş Cüzdan",
+    body: "Hesap geldi ve cüzdanın boş olduğunu fark ettin. Garson masanın başında bekliyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Kumaş Oda',
-    body: 'Bir odadasın, duvarlar kumaş ve dalgalanıyor.',
-    question: 'Bu duygu o kumaş olsa, sana ne derdi?',
-    type: 'object'
+    title: "Kaçan Bilet",
+    body: "Piyango biletine bakıyorsun, ikramiye tek rakamla kaçtı.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Asansör Muhabbeti',
-    body: 'Asansörde komşuyla yalnızsın. "Hava değişti" demiş.',
-    question: 'Bu duygu komşunun iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Boş Bagaj",
+    body: "Havalimanında bagaj bandının önündesin. Herkes gitti, senin valizin gelmedi.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Yengeç',
-    body: 'Sahilde bir yengeç seninle yürüyor.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Yanlış Mesaj",
+    body: "Telefonunda bir mesaj gönderdin ve mesajı alan kişi tam karşında oturuyor.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Aile Yemeği',
-    body: 'Teyze masanın ucundan sordu: "tadı nasıl olmuş?"',
-    question: 'Bu duygu teyzenin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Kapı Zili",
+    body: "Kapı çalıyor. Komşu kapıda durmuş, sana bir şeyler anlatmaya çalışıyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Çamaşır Makinesi',
-    body: 'Beyaz çamaşırların arasına bir kırmızı çorap karışmış.',
-    question: 'Bu duygu o çorap olsa, sana ne derdi?',
-    type: 'object'
+    title: "Restoran Masası",
+    body: "Restoranda karşındaki kişi önemli bir itirafta bulunmak üzere.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Göl Ortasındaki Masa',
-    body: 'Bir gölün ortasında masa duruyor. İki sandalye.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Gece Otobüsü",
+    body: "Son otobüsü kaçırdın ve yağmur başlamak üzere.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Berber',
-    body: 'Berber makası durdurdu, aynaya bakıyor.',
-    question: 'Bu duygu berberin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Sürpriz Parti",
+    body: "Sürpriz parti hazırlıyorsun ama kutlama yapılacak kişi kapıda göründü.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Kargo',
-    body: 'Kargocu paketi uzattı. Sipariş vermemiştin.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Kayıp Anahtar",
+    body: "Eve geldin ama anahtarların yerinde olmadığını fark ettin.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Kahve Lekesi',
-    body: 'Gömleğinin üstünde bir kahve lekesi. Tam kalbinin üstünde.',
-    question: 'Bu duygu o leke olsa, sana ne derdi?',
-    type: 'object'
+    title: "Yanlış Tren",
+    body: "Trende yanlış yöne gittiğini anonsu duyduğunda anladın.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Gece Bahçesi',
-    body: 'Gece bir bahçedesin. Çiçekler ışık saçıyor.',
-    question: 'Bu duygu o ışık olsa, sana ne derdi?',
-    type: 'object'
+    title: "Fırtınalı Kulübe",
+    body: "Dışarıda fırtına var, sen eski bir kulübede mahsur kaldın.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Çocuk Parkı',
-    body: 'Çocuk kaydıraktan iniyor: "Anne, bak!"',
-    question: 'Bu duygu annenin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Mülakat Kapısı",
+    body: "İş mülakatı için ismin okundu. İçeri girmek üzeresin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Ayakkabı',
-    body: 'Ayakkabının teki bir numara büyük gelmiş.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Trafik Sıkışması",
+    body: "Trafikte bir saattir santim ilerlemedin ve önemli bir randevun var.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Toplantı',
-    body: 'Toplantıda biri defterine kuş çiziyor.',
-    question: 'Bu duygu çizenin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Kamp Ateşi",
+    body: "Ormanda ateşin etrafında oturuyorsun. Karanlığın içinden bir ses geldi.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Otel Kahvaltısı',
-    body: 'Karşı masada biri seninle aynı tabağı yapmış.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Sınav Sonucu",
+    body: "Ekranda sınav sonuçları sayfasını açtın, yüklenmesini bekliyorsun.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Büyüyen Merdiven',
-    body: 'Bir merdiven çıkıyorsun. Her basamakta bir yenisi ekleniyor.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "İptal Olan Uçuş",
+    body: "Uçuşun iptal edildiği anons edildi. Bir sonraki uçak yarına.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Çay Bardağı',
-    body: 'Masada iki çay bardağı. İkisine de dokunulmamış.',
-    question: 'Bu duygu o bardak olsa, sana ne derdi?',
-    type: 'object'
+    title: "Komşu Yemeği",
+    body: "Komşun sana bir yemek ikram etti ama tadı beklediğinden çok farklı.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Dans Eden Adam',
-    body: 'Durakta bir adam gözleri kapalı, kendi kendine dans ediyor.',
-    question: 'Bu duygu adamın iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Kayıp İlanı",
+    body: "Sokakta kayıp bir evcil hayvan ilanı görüyorsun.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Kitapçı',
-    body: 'Raftan bir kitap hafifçe çıkmış. Diğerleri hizada.',
-    question: 'Bu duygu o kitap olsa, sana ne derdi?',
-    type: 'object'
+    title: "İndirimli Ürün",
+    body: "Reyondaki son indirimli ürüne seninle aynı anda biri daha uzandı.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Kapıdaki Not',
-    body: 'Kapında bir not: "dönünce konuşalım."',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Cam Asansör",
+    body: "Cam asansör 30. katta aniden durdu.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Metro Vagonu',
-    body: 'Metroda biri aynı sesli mesajı tekrar tekrar dinliyor.',
-    question: 'Bu duygu o kişinin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Karantina Balkonu",
+    body: "Balkonda oturmuş boş sokağı izliyorsun.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Uyuyan Laptop',
-    body: 'Laptop uykuya daldı. Yarım bir cümle kalmıştı ekranda.',
-    question: 'Bu duygu o ekran olsa, sana ne derdi?',
-    type: 'object'
+    title: "Yarışma Finali",
+    body: "Yarışmanın final sorusu soruldu. Cevabı biliyorsun ama emin değilsin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Taksi Şoförü Müziği',
-    body: 'Takside bilmediğin bir şarkı çalıyor. Başını sallıyorsun.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Havalimanı Vedası",
+    body: "Güvenlik kapısından geçmeden önce son kez arkana bakıyorsun.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Zeytin Tabağı',
-    body: 'Dayı zeytin tabağını kendine çekti. Hala fark etti.',
-    question: 'Bu duygu dayının iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Gizli Hediye",
+    body: "Çalışma masanda isimsiz bir hediye buldun.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Sahaf',
-    body: 'Sahaf vitrininde bir kitap açık. Güneş aynı satırda.',
-    question: 'Bu duygu o satır olsa, sana ne derdi?',
-    type: 'object'
+    title: "Spor Salonu",
+    body: "Salondaki bir aleti ilk kez kullanmaya çalışıyorsun ve herkes sana bakıyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Alışveriş Arabası',
-    body: 'Market arabasının tekeri sürekli sağa çekiyor.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Deniz Kenarı",
+    body: "Sahilde tek başına otururken ayağına bir dalga çarpıyor.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Ayın Yarısı',
-    body: 'Gökyüzünde ay iki yarıma bölünmüş.',
-    question: 'Bu duygu o yarım olsa, sana ne derdi?',
-    type: 'object'
+    title: "Kitap Kulübü",
+    body: "Kitap kulübünde herkes kitaba hayran kaldı ama sen hiç beğenmedin.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Köpek Parkı',
-    body: 'Köpek kaçtı. Sahibi "gel" diyor.',
-    question: 'Bu duygu sahibinin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Doktor Bekleme",
+    body: "Doktorun kapısında isminin yazılı olduğu tabelaya bakıyorsun.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Pilates Hocası',
-    body: 'Hoca "gülümseyin" dedi. Bir kişinin yüzü değişmedi.',
-    question: 'Bu duygu o kişinin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Yeni Ev",
+    body: "Yeni evinde, henüz kutuların açılmadığı boş bir odanın ortasındasın.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Dolmuş Kapısı',
-    body: 'Dolmuşta para elinde uzanmış. Şoför "geçtik onu" dedi.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Tiyatro Sahnesi",
+    body: "Sahnedesin ve söyleyeceğin ilk kelimeyi unuttun.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Balon',
-    body: 'Kafenin tavanında bir balon takılı kalmış.',
-    question: 'Bu duygu o balon olsa, sana ne derdi?',
-    type: 'object'
+    title: "Son Bilet",
+    body: "Gişedeki görevli 'bu son bilet' diyerek sana uzatıyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Kuaför Aynası',
-    body: 'Kuaförden çıktın. Aynada tanımadığın biri.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Buz Pisti",
+    body: "Buz pistinde dengeni kaybettin ve herkesin içinde düştün.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Oto Tamircisi',
-    body: 'Tamirci motora eğildi. Hiç kıpırdamıyor.',
-    question: 'Bu duygu tamircinin iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Otel Odası",
+    body: "Otelde kartını okuttun ve kapıyı açtın ama içeride başkası var.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Parktaki Salıncak',
-    body: 'Salıncağa oturdun. Ayakların yere değiyor.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "İş Teklifi",
+    body: "Hiç beklemediğin bir yerden çok iyi bir iş teklifi içeren e-posta aldın.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Donmuş Havuz',
-    body: 'Yaz ortası, havuz donmuş. Buzun altında yapraklar dönüyor.',
-    question: 'Bu duygu o buz olsa, sana ne derdi?',
-    type: 'object'
+    title: "Kayıp Telefon",
+    body: "Çantanda telefonunu arıyorsun ama bulamıyorsun.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Banka Kuyruğu',
-    body: 'Bankada önündeki kadın sıradan çıkıp giriyor.',
-    question: 'Bu duygu kadının iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Düğün Masası",
+    body: "Düğünde daha önce hiç görmediğin akrabaların olduğu bir masaya oturtuldun.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Paket İçindeki Not',
-    body: 'Paketin içinde bir el yazısı not: "umarım seversin."',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Tıkış Tıkış Otobüs",
+    body: "Otobüste kollarının arasında sıkışıp kaldın, kimse kımıldayamıyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Kahve Poşeti',
-    body: 'Kahve poşetinin köşesinde ufak bir delik.',
-    question: 'Bu duygu o delik olsa, sana ne derdi?',
-    type: 'object'
+    title: "Selfie Kazası",
+    body: "Çektiğin bir fotoğrafı yanlışlıkla tüm rehbere gönderdin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Garson',
-    body: 'Garson siparişi yanlış masaya getirdi. Mutfağa dönüyor.',
-    question: 'Bu duygu garsonun iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Sinema Sessizliği",
+    body: "Sinemada en sessiz sahnede elindeki mısır kutusunu yere düşürdün.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Büfe Ağacı',
-    body: 'Bir ağacın dallarında plastik su şişeleri asılı.',
-    question: 'Bu duygu o ağaç olsa, sana ne derdi?',
-    type: 'object'
+    title: "Yanlış Toplantı",
+    body: "Bir ofis binasında yanlış toplantı odasına girdin ve herkes sana bakıyor.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Eve Giren Kedi',
-    body: 'Tanımadığın bir kedi kapıdan girdi. Sende kedi yok.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Piknik Yağmuru",
+    body: "Piknik örtüsünü yeni serdin ve aniden sağanak yağmur başladı.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Fakülte Bahçesi',
-    body: 'Bankta bir adam yemek yiyor. Defter açık.',
-    question: 'Bu duygu adamın iç sesi olsa, ona ne derdi?',
-    type: 'person'
+    title: "Canlı Yayın",
+    body: "Yanlışlıkla sosyal medyada canlı yayın başlattın.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Hep Aynı Saat',
-    body: 'Saate her baktığında aynı saat: 14:47.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Yanlış Kargo",
+    body: "Kapına gelen kargo senin değil ama üzerinde senin adın yazıyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   },
   {
-    title: 'Market Müziği',
-    body: 'Marketin müziği bir saniye durdu. Kimse fark etmedi.',
-    question: 'Bu duygu o sessizlik olsa, sana ne derdi?',
-    type: 'object'
+    title: "Sisli Yol",
+    body: "Yolda yürürken aniden bastıran yoğun sis yüzünden önünü göremiyorsun.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
   },
   {
-    title: 'Ortak Fotoğraf',
-    body: 'Eski bir fotoğrafta sen ve hatırlamadığın biri.',
-    question: 'Bu duygu sende olsa, o an ne yapardın?',
-    type: 'self'
+    title: "Eski Sevgili",
+    body: "Kafede otururken eski sevgilin yanındaki boş sandalyeye oturdu.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
   }
 ];
