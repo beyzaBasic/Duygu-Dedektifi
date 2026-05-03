@@ -43,53 +43,9 @@
 </head>
 <body>
 <div id="root"></div>
+<script src="js/data/emotions.js"></script>
+<script src="js/data/scenes.js"></script>
 <script type="text/babel">
-
-/* ─── DATA ─────────────────────────────────────────────────── */
-const GROUPS = [
-  { key:'red',    name:'Kırmızı', grad:'linear-gradient(155deg,#FF6B7A,#E63946)', tint:'#FFF0F2', text:'white',
-    emotions:['Nefret','Kızgınlık','Arzu','Sabırsızlık','İnat','İsyan','Hınç','Tutku','Hırs','Aşk'] },
-  { key:'orange', name:'Turuncu', grad:'linear-gradient(155deg,#FFA552,#FF6B00)', tint:'#FFF3E8', text:'white',
-    emotions:['Heyecan','Coşku','Merak','Cesaret','Şaşkınlık','Heves','İlham','Yaratıcılık','Şevk','Büyülenme'] },
-  { key:'yellow', name:'Sarı',    grad:'linear-gradient(155deg,#FFD95E,#FFB300)', tint:'#FFF9E5', text:'#3a2a00',
-    emotions:['Mutluluk','Neşe','Umut','Gurur','Özgürlük','Tatmin','Keyif','Rahatlama','Özgüven','Zafer'] },
-  { key:'green',  name:'Yeşil',   grad:'linear-gradient(155deg,#4FE88F,#14B859)', tint:'#E8FBF0', text:'white',
-    emotions:['Sevgi','Şefkat','Güven','Merhamet','Şükran','Huzur','Bağışlama','Aidiyet','Empati','Sakinlik'] },
-  { key:'blue',   name:'Mavi',    grad:'linear-gradient(155deg,#5FB8FF,#0B7ED8)', tint:'#E8F4FE', text:'white',
-    emotions:['Üzüntü','Özlem','Yalnızlık','Pişmanlık','Hayal Kırıklığı','Dışlanmışlık','Boşluk','Tükenmişlik','Çaresizlik','Melankoli'] },
-  { key:'navy',   name:'Lacivert',grad:'linear-gradient(155deg,#667BFE,#2235C4)', tint:'#ECEEFF', text:'white',
-    emotions:['Kararlılık','Hayranlık','Sadakat','Sorumluluk','Kıskançlık','Adalet','Suçluluk','Kibir','Onur','Rekabet'] },
-  { key:'purple', name:'Mor',     grad:'linear-gradient(155deg,#C674FF,#8A2BE2)', tint:'#F5EBFE', text:'white',
-    emotions:['Korku','Kaygı','Utanç','Kafa Karışıklığı','Güvensizlik','Gözü Kalmak','Yetersizlik','Mahcubiyet','Tedirginlik','Panik'] },
-];
-
-const SCENES = [
-  { no:1,  title:'Taksici ve Navigasyon', body:'Taksi durdu. Şoför dikiz aynasından sana bakıyor.', q:'Bu duygu şoförün iç sesi olsa, ona ne derdi?' },
-  { no:2,  title:'Buzdolabı Mıknatısı',   body:'Buzdolabında bir mıknatıs eğik duruyor.',            q:'Bu duygu o mıknatıs olsa, sana ne derdi?' },
-  { no:3,  title:'Yanlış Kat',            body:'Anahtar kilide girmiyor. Yanlış kattasın.',           q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:4,  title:'Düğün Fotoğrafçısı',    body:'Fotoğrafçı kareyi hazırladı. Kimse gülümsemiyor.',   q:'Bu duygu fotoğrafçının iç sesi olsa, ona ne derdi?' },
-  { no:5,  title:'Balkon Çiçeği',         body:'Balkonda bir çiçek açmış. Kimse fark etmemiş.',       q:'Bu duygu o çiçek olsa, sana ne derdi?' },
-  { no:6,  title:'Market Kuyruğu',        body:'Kuyruktasın. Arkandaki kişi iç çekiyor.',             q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:7,  title:'Çamaşır Makinesi',      body:'Beyaz çamaşırların arasına bir kırmızı çorap karışmış.', q:'Bu duygu o çorap olsa, sana ne derdi?' },
-  { no:8,  title:'Asansör Muhabbeti',     body:'Asansörde komşuyla yalnızsın. "Hava değişti" demiş.',q:'Bu duygu komşunun iç sesi olsa, ona ne derdi?' },
-  { no:9,  title:'Aile Yemeği',           body:'Teyze masanın ucundan sordu: "tadı nasıl olmuş?"',   q:'Bu duygu teyzenin iç sesi olsa, ona ne derdi?' },
-  { no:10, title:'Göl Ortasındaki Masa',  body:'Bir gölün ortasında masa duruyor. İki sandalye.',     q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:11, title:'Berber',                body:'Berber makası durdurdu, aynaya bakıyor.',              q:'Bu duygu berberin iç sesi olsa, ona ne derdi?' },
-  { no:12, title:'Kargo',                 body:'Kargocu paketi uzattı. Sipariş vermemiştin.',          q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:13, title:'Kahve Lekesi',          body:'Gömleğinin üstünde bir kahve lekesi. Tam kalbinin üstünde.', q:'Bu duygu o leke olsa, sana ne derdi?' },
-  { no:14, title:'Kapıdaki Not',          body:'Kapında bir not: "dönünce konuşalım."',                q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:15, title:'Dans Eden Adam',        body:'Durakta bir adam gözleri kapalı, kendi kendine dans ediyor.', q:'Bu duygu adamın iç sesi olsa, ona ne derdi?' },
-  { no:16, title:'Toplantı',              body:'Toplantıda biri defterine kuş çiziyor.',               q:'Bu duygu çizenin iç sesi olsa, ona ne derdi?' },
-  { no:17, title:'Kitapçı',               body:'Raftan bir kitap hafifçe çıkmış. Diğerleri hizada.',   q:'Bu duygu o kitap olsa, sana ne derdi?' },
-  { no:18, title:'Parktaki Salıncak',     body:'Salıncağa oturdun. Ayakların yere değiyor.',           q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:19, title:'Balon',                 body:'Kafenin tavanında bir balon takılı kalmış.',            q:'Bu duygu o balon olsa, sana ne derdi?' },
-  { no:20, title:'Hep Aynı Saat',         body:'Saate her baktığında aynı saat: 14:47.',               q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:21, title:'Ortak Fotoğraf',        body:'Eski bir fotoğrafta sen ve hatırlamadığın biri.',      q:'Bu duygu sende olsa, o an ne yapardın?' },
-  { no:22, title:'Çay Bardağı',           body:'Masada iki çay bardağı. İkisine de dokunulmamış.',     q:'Bu duygu o bardak olsa, sana ne derdi?' },
-  { no:23, title:'Metro Vagonu',          body:'Metroda biri aynı sesli mesajı tekrar tekrar dinliyor.',q:'Bu duygu o kişinin iç sesi olsa, ona ne derdi?' },
-  { no:24, title:'Gece Bahçesi',          body:'Gece bir bahçedesin. Çiçekler ışık saçıyor.',          q:'Bu duygu o ışık olsa, sana ne derdi?' },
-  { no:25, title:'Sahaf',                 body:'Sahaf vitrininde bir kitap açık. Güneş aynı satırda.', q:'Bu duygu o satır olsa, sana ne derdi?' },
-];
 
 function shuffle(arr) {
   const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;
@@ -268,28 +224,65 @@ function SceneCard({ scene, animKey }) {
       borderRadius:24, flexShrink:0,
       background:'#fff',
       boxShadow:'0 32px 64px -20px rgba(0,0,0,0.18)',
-      display:'flex', flexDirection:'column', justifyContent:'space-between',
-      padding:'clamp(20px,5vw,32px)',
+      display:'flex', flexDirection:'column',
       position:'relative', overflow:'hidden',
       transform: entered ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.95)',
       opacity: entered ? 1 : 0,
       transition:'transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.5s',
     }}>
-      {/* Deco circle */}
-      <div style={{ position:'absolute', top:-40, right:-40, width:120, height:120, borderRadius:'50%', background:'rgba(0,0,0,0.03)' }}/>
-      <div>
-        <div style={{ fontSize:9, letterSpacing:'0.25em', color:'#B0B0B0', textTransform:'uppercase', marginBottom:14, fontWeight:700 }}>
-          SAHNE №{String(scene.no).padStart(2,'0')}
-        </div>
-        <p style={{ fontSize:'clamp(13px,3.5vw,15px)', lineHeight:1.7, color:'#5A5A5A' }}>
+
+      {/* ── Sahne no — sağ üst, diskret ── */}
+      <div style={{
+        position:'absolute', top:'clamp(14px,3.5vw,18px)', right:'clamp(16px,4vw,22px)',
+        fontSize:8, letterSpacing:'0.28em', color:'#D0D0D0', textTransform:'uppercase', fontWeight:700,
+      }}>
+        №{String(animKey + 1).padStart(2,'0')}
+      </div>
+
+      {/* ── Sahne metni — büyük, rahat okunur ── */}
+      <div style={{
+        flex:1,
+        padding:'clamp(22px,6vw,32px) clamp(22px,6vw,30px) clamp(16px,4vw,20px)',
+        display:'flex', alignItems:'center',
+      }}>
+        <p style={{
+          fontSize:'clamp(17px,5vw,21px)',
+          lineHeight:1.75,
+          color:'#1A1A1A',
+          fontWeight:600,
+          margin:0,
+          letterSpacing:'-0.01em',
+        }}>
           {scene.body}
         </p>
       </div>
-      <div>
-        <div style={{ width:24, height:2.5, background:'#1A1A1A', borderRadius:2, marginBottom:16 }}/>
-        <h2 style={{ fontWeight:900, fontSize:'clamp(16px,4.5vw,21px)', lineHeight:1.25, letterSpacing:'-0.01em', color:'#1A1A1A', fontStyle:'italic' }}>
-          {scene.q}
-        </h2>
+
+      {/* ── Ayırıcı ── */}
+      <div style={{
+        margin:'0 clamp(22px,6vw,30px)',
+        height:1,
+        background:'rgba(0,0,0,0.08)',
+        flex:'0 0 auto',
+      }}/>
+
+      {/* ── Soru — kremsi zemin, italik ── */}
+      <div style={{
+        flex:'0 0 auto',
+        background:'#F7F4EE',
+        padding:'clamp(14px,3.5vw,18px) clamp(22px,6vw,30px) clamp(18px,4.5vw,24px)',
+        borderRadius:'0 0 24px 24px',
+      }}>
+        <p style={{
+          fontWeight:700,
+          fontStyle:'italic',
+          fontSize:'clamp(13px,3.5vw,15px)',
+          lineHeight:1.55,
+          letterSpacing:'-0.005em',
+          color:'#7A7A7A',
+          margin:0,
+        }}>
+          {scene.question}
+        </p>
       </div>
     </div>
   );

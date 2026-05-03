@@ -14,7 +14,7 @@
  */
 // data.js
 
-export const SCENES = [
+var SCENES = [
   {
     title: "Kütüphane Masası",
     body: "Kütüphanede arkadaşınla yan yana oturuyorsunuz. İkiniz de sessizsiniz.",
