@@ -14,6 +14,189 @@
  */
 // data.js
 
+var SCENES_GENC = [
+  {
+    title: "Kamera Açık Kaldı",
+    body: "Online derste mikrofonu kapattın ama kameranın açık kaldığını fark ettin. Az önce bir şey söyledin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Yanlış Kişiye Mesaj",
+    body: "Arkadaşın hakkında şikayet mesajı attın. Ama tıkladığında adı o olan kişiye gitmiş.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Crush Anı",
+    body: "Çok beğendiğin kişi tam yanından geçerken tökezleyip düştün.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Viral Olan Şey",
+    body: "Okul koridorunda çekilen komik videon akşama kadar herkese yayıldı.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Son Eleman",
+    body: "Takımları seçiyorlar, iki kişi kaldı ve sen henüz seçilmedin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Gece Yarısı Mesajı",
+    body: "Gece yarısı arkadaşın 'Sana çok önemli bir şey söylemem lazım' dedi ve o andan beri görünmüyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Sınıf Kahkahası",
+    body: "Tahtada bir şey okuyorsun ve bir kelimeyi tamamen yanlış telaffuz ettin. Sınıf güldü.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Sevilen Şarkı",
+    body: "Kulaklıkla dinlediğin şarkıyı farkında olmadan yüksek sesle söylemeye başlamışsın. Herkes duymuş.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Grup Çıkarma",
+    body: "Sabah uyandığında bir grup sohbetinden çıkarılmış olduğunu fark ettin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Efsane Gol",
+    body: "Maçın son dakikasında golü sen attın ama yanlış kaleye.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Ödev Kopyası",
+    body: "Ödevin sorularını arkadaşına attın. Öğretmen ikisini de çağırdı.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Uyku Hali",
+    body: "Sıkıcı derste uyuyakaldın ve gümbürtüyle uyanarak sınıfı karıştırdın.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Doğum Günü Unutuldu",
+    body: "Bugün doğum günün ve arkadaşların hiç mesaj atmadı. Akşam oldu.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Sürpriz Parti",
+    body: "Seninle dalga geçtiklerini sanıyordun ama gerçekten sana sürpriz hazırlamışlar.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Beğeni Kazası",
+    body: "Çok eskilere gidip birinin fotoğrafını beğendin. Beğeniyi kaldırdın ama görmüş olabilir.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Ödül Sürprizi",
+    body: "İsmini okudular. Bir ödül alacağını hiç beklemiyordun, herkes alkışlıyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Sınıf Temsili",
+    body: "Sınıf başkanı seçiminde ismini koymamanı bekliyorken herkes seni önerdi.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Kontrolörün Pili",
+    body: "Online oyunun finaline 2 dakika kala kontrolörün titredi. Pil bitiyor.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Komik İfade",
+    body: "Fotoğraf çekilirken yaptığın komik yüz ifadesi okul gazetesinin kapağına çıktı.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Teneffüs Yalnızlığı",
+    body: "Teneffüste herkes kendi arkadaşıyla dışarı çıktı. Sınıfta yalnız kaldın.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Yanlış Sınıf",
+    body: "Derse geç kaldın ve koşarak içeri girdin. Hiç tanımadığın bir sınıftaydın.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Aile Masası",
+    body: "Aile yemeğinde büyükler seni konu edinen bir şeyi konuşmaya başladı.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Eski Fotoğraf",
+    body: "Annen eski fotoğraf albümünü arkadaşlarına gösterdi. İçinde küçüklüğün var.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Konser Önü",
+    body: "Sevdiğin sanatçının konserinde tam ön sıraya geldin. Müzik başlamak üzere.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Yanlış Anlaşılan Espri",
+    body: "Esprili olmak için bir şey söyledin. Ama kimse güldü, sessizlik oldu.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Kayıp Şarj",
+    body: "Önemli bir yerden çıkmak üzeresin ama telefon ölüyor, şarjın yok.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Maç Sonrası",
+    body: "Maçı kazandınız. Herkes sevinirken takım kaptanı sana baktı ve teşekkür etti.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Sunum Çökmesi",
+    body: "Hazırladığın sunumun dosyası bozuldu. Öğretmen adını okudu.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  },
+  {
+    title: "Şehir Haberi",
+    body: "Ailenin başka şehre taşınacağını öğrendin. Bunu okul arkadaşlarına söylemek üzeresin.",
+    question: "Bu duygu iç sesin olsa, sana ne derdi?",
+    type: "İç Ses"
+  },
+  {
+    title: "Çift Randevu",
+    body: "İki ayrı arkadaş grubu seni aynı günün aynı saatine davet etti. İkisine de evet demiştin.",
+    question: "Bu duygu sende olsa, o an ne yapardın?",
+    type: "Self"
+  }
+];
+
 var SCENES = [
   {
     title: "Kütüphane Masası",

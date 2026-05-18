@@ -122,7 +122,7 @@ function DeckVisual({ icon, label, sub, onClick }) {
 }
 
 /* ─── EMOTION CARD ──────────────────────────────────────────── */
-function EmotionCard({ emotion, group, onShown, animKey }) {
+function EmotionCard({ emotion, group, onShown, animKey, onRedraw }) {
   const [revealed, setRevealed] = React.useState(false);
   const [entered, setEntered] = React.useState(false);
   React.useEffect(() => {
@@ -134,18 +134,14 @@ function EmotionCard({ emotion, group, onShown, animKey }) {
 
   return (
     <div
-      onMouseDown={() => setRevealed(true)}
-      onMouseUp={() => setRevealed(false)}
-      onMouseLeave={() => setRevealed(false)}
-      onTouchStart={e => { e.preventDefault(); setRevealed(true); }}
-      onTouchEnd={() => setRevealed(false)}
+      onClick={() => setRevealed(r => !r)}
       style={{
         width:'min(260px, 66vw)', aspectRatio:'5/7', borderRadius:24,
         background:group.grad,
         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
         position:'relative', overflow:'hidden',
         boxShadow:'0 32px 64px -24px rgba(0,0,0,0.3)',
-        userSelect:'none', cursor:'pointer', touchAction:'none',
+        userSelect:'none', cursor:'pointer',
         transform: entered ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.95)',
         opacity: entered ? 1 : 0,
         transition:'transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.5s',
@@ -154,7 +150,7 @@ function EmotionCard({ emotion, group, onShown, animKey }) {
       <div style={{
         color:group.text, fontWeight:900, fontSize, lineHeight:1, textAlign:'center', padding:'0 20px',
         filter: revealed ? 'blur(0)' : 'blur(20px)',
-        transition: revealed ? 'filter 0.15s' : 'filter 0.4s',
+        transition: revealed ? 'filter 0.18s ease-out' : 'filter 0.45s ease-in-out',
       }}>{emotion}</div>
 
       <div style={{
@@ -172,46 +168,61 @@ function EmotionCard({ emotion, group, onShown, animKey }) {
         <div style={{
           fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', textAlign:'center', lineHeight:1.5,
           color:group.text==='white'?'rgba(255,255,255,0.85)':'rgba(58,42,0,0.65)',
-        }}>Görmek için<br/>dokun &amp; tut</div>
+        }}>Görmek için<br/>dokun</div>
       </div>
+
+      {onRedraw && (
+        <IconChangeBtn
+          onClick={e => { e.stopPropagation(); onRedraw(); }}
+          onMouseDown={e => e.stopPropagation()}
+          onTouchStart={e => { e.stopPropagation(); }}
+          style={{ position:'absolute', top:14, right:14 }}
+        />
+      )}
     </div>
   );
 }
 
 /* ─── MINI CHIP ─────────────────────────────────────────────── */
 function MiniChip({ emotion, group }) {
-  const [peeking, setPeeking] = React.useState(false);
+  const [revealed, setRevealed] = React.useState(false);
+  React.useEffect(() => { setRevealed(false); }, [emotion]);
   return (
     <div
-      onMouseDown={() => setPeeking(true)} onMouseUp={() => setPeeking(false)} onMouseLeave={() => setPeeking(false)}
-      onTouchStart={e=>{e.preventDefault();setPeeking(true);}} onTouchEnd={() => setPeeking(false)}
+      onClick={() => setRevealed(r => !r)}
       style={{
-        display:'inline-flex', alignItems:'center', gap:14,
-        padding:'12px 24px 12px 12px', borderRadius:100,
-        background: group.grad,
-        cursor:'pointer', userSelect:'none', touchAction:'none',
-        boxShadow:`0 8px 24px -8px rgba(0,0,0,0.25)`,
+        borderRadius:20, overflow:'hidden',
+        width:'min(280px, 72vw)',
+        cursor:'pointer', userSelect:'none',
+        boxShadow:`0 2px 8px -4px rgba(0,0,0,0.14)`,
       }}
     >
       <div style={{
-        width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.25)', flexShrink:0,
-        display:'flex', alignItems:'center', justifyContent:'center',
-        filter: peeking ? 'blur(0)' : 'blur(0)',
+        display:'flex', alignItems:'center', gap:12,
+        padding:'12px 18px',
+        background: group.grad,
+        filter: revealed ? 'blur(0)' : 'blur(5px)',
+        transition: revealed ? 'filter 0.18s ease-out' : 'filter 0.45s ease-in-out',
+        willChange:'filter',
       }}>
-        <div style={{ width:20, height:20, borderRadius:'50%', background:'rgba(255,255,255,0.6)' }}/>
+        <div style={{
+          width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.25)', flexShrink:0,
+          display:'flex', alignItems:'center', justifyContent:'center',
+        }}>
+          <div style={{ width:17, height:17, borderRadius:'50%', background:'rgba(255,255,255,0.6)' }}/>
+        </div>
+        <span style={{
+          fontWeight:900, fontStyle:'italic', fontSize:20, color: group.text,
+          letterSpacing:'-0.01em', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+          userSelect:'none',
+        }}>{emotion}</span>
       </div>
-      <span style={{
-        fontWeight:900, fontStyle:'italic', fontSize:20, color: group.text,
-        filter: peeking ? 'blur(0)' : 'blur(7px)',
-        transition: peeking ? 'filter 0.1s' : 'filter 0.3s',
-        letterSpacing:'-0.01em',
-      }}>{emotion}</span>
     </div>
   );
 }
 
 /* ─── SCENE CARD ────────────────────────────────────────────── */
-function SceneCard({ scene, animKey }) {
+function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
   const [entered, setEntered] = React.useState(false);
   React.useEffect(() => {
     setEntered(false);
@@ -222,8 +233,8 @@ function SceneCard({ scene, animKey }) {
     <div style={{
       width:'min(280px, 72vw)', aspectRatio:'5/7',
       borderRadius:24, flexShrink:0,
-      background:'#fff',
-      boxShadow:'0 32px 64px -20px rgba(0,0,0,0.18)',
+      background: dark ? '#1A1A1A' : '#fff',
+      boxShadow:'0 48px 96px -24px rgba(0,0,0,0.32), 0 16px 32px -12px rgba(0,0,0,0.12)',
       display:'flex', flexDirection:'column',
       position:'relative', overflow:'hidden',
       transform: entered ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.95)',
@@ -231,15 +242,26 @@ function SceneCard({ scene, animKey }) {
       transition:'transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.5s',
     }}>
 
-      {/* ── Sahne no — sağ üst, diskret ── */}
+      {/* ── Sahne no — sol üst ── */}
       <div style={{
-        position:'absolute', top:'clamp(14px,3.5vw,18px)', right:'clamp(16px,4vw,22px)',
-        fontSize:8, letterSpacing:'0.28em', color:'#D0D0D0', textTransform:'uppercase', fontWeight:700,
+        position:'absolute', top:'clamp(14px,3.5vw,18px)', left:'clamp(16px,4vw,22px)',
+        fontSize:8, letterSpacing:'0.28em', color: dark ? 'rgba(255,255,255,0.2)' : '#D0D0D0', textTransform:'uppercase', fontWeight:700,
       }}>
-        №{String(animKey + 1).padStart(2,'0')}
+        №{String(displayNum).padStart(2,'0')}
       </div>
 
-      {/* ── Sahne metni — büyük, rahat okunur ── */}
+      {/* ── Sahne değiştir — sağ üst, duygu rengi ── */}
+      {onChangeScene && (
+        <IconChangeBtn
+          onClick={onChangeScene}
+          accentGrad={group && group.grad}
+          accentText={dark ? '#1A1A1A' : (group && group.text)}
+          invertPress={dark}
+          style={{ position:'absolute', top:'clamp(10px,2.5vw,14px)', right:'clamp(10px,2.5vw,14px)' }}
+        />
+      )}
+
+      {/* ── Sahne metni ── */}
       <div style={{
         flex:1,
         padding:'clamp(22px,6vw,32px) clamp(22px,6vw,30px) clamp(16px,4vw,20px)',
@@ -248,7 +270,7 @@ function SceneCard({ scene, animKey }) {
         <p style={{
           fontSize:'clamp(17px,5vw,21px)',
           lineHeight:1.75,
-          color:'#1A1A1A',
+          color: dark ? '#fff' : '#1A1A1A',
           fontWeight:600,
           margin:0,
           letterSpacing:'-0.01em',
@@ -261,14 +283,14 @@ function SceneCard({ scene, animKey }) {
       <div style={{
         margin:'0 clamp(22px,6vw,30px)',
         height:1,
-        background:'rgba(0,0,0,0.08)',
+        background: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
         flex:'0 0 auto',
       }}/>
 
-      {/* ── Soru — kremsi zemin, italik ── */}
+      {/* ── Soru ── */}
       <div style={{
         flex:'0 0 auto',
-        background:'#F7F4EE',
+        background: group ? group.grad : '#F7F4EE',
         padding:'clamp(14px,3.5vw,18px) clamp(22px,6vw,30px) clamp(18px,4.5vw,24px)',
         borderRadius:'0 0 24px 24px',
       }}>
@@ -278,7 +300,7 @@ function SceneCard({ scene, animKey }) {
           fontSize:'clamp(13px,3.5vw,15px)',
           lineHeight:1.55,
           letterSpacing:'-0.005em',
-          color:'#7A7A7A',
+          color: group ? (group.text === 'white' ? 'rgba(255,255,255,0.9)' : 'rgba(58,42,0,0.75)') : '#7A7A7A',
           margin:0,
         }}>
           {scene.question}
@@ -311,12 +333,21 @@ function Btn({ children, onClick, ghost, small }) {
 }
 
 /* ─── WELCOME SCREEN ────────────────────────────────────────── */
-function WelcomeScreen({ onStart }) {
+function WelcomeScreen({ onStart, onListOpen }) {
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, overflowY:'auto', background:'#FAF7F2' }}>
+      <div style={{ padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 0', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
+        <button onClick={onListOpen} style={{
+          width:42, height:42, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+        }}>
+          <RainbowRings size={12} />
+        </button>
+      </div>
       <div style={{
         flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-        padding:'env(safe-area-inset-top, 32px) 28px 0',
+        padding:'0 28px 0',
         minHeight:0,
       }}>
         <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20, marginBottom:36 }}>
@@ -423,19 +454,80 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
         {phase === 'deck' ? (
           <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} />
         ) : (
-          <EmotionCard emotion={emotion} group={group} animKey={animKey} onShown={() => setPhase('ready')} />
+          <EmotionCard emotion={emotion} group={group} animKey={animKey} onShown={() => setPhase('ready')} onRedraw={phase === 'ready' ? redraw : null} />
         )}
       </div>
 
       {/* Actions */}
-      <div style={{ padding:'0 clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 24px)', display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', minHeight:64 }}>
+      <div style={{ padding:'0 clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 24px)', display:'flex', justifyContent:'center', minHeight:64, alignItems:'center' }}>
         {phase === 'ready' && (
-          <>
-            <Btn ghost small onClick={redraw}>Başka Kart</Btn>
-            <Btn small onClick={() => onScenePhase({ emotion, group })}>Sahne Zamanı →</Btn>
-          </>
+          <Btn small onClick={() => onScenePhase({ emotion, group })}>Sahne Zamanı →</Btn>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ─── ICON CHANGE BTN ───────────────────────────────────────── */
+function IconChangeBtn({ onClick, onMouseDown, onTouchStart, style, accentGrad, accentText, invertPress }) {
+  const [hov, setHov] = React.useState(false);
+  const [pressed, setPressed] = React.useState(false);
+  const hasAccent = !!accentGrad;
+  const bg  = hasAccent ? accentGrad : '#fff';
+  const col = hasAccent ? (accentText || '#fff') : '#5A5A5A';
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => { setHov(false); setPressed(false); }}
+      onMouseDown={e => { setPressed(true); onMouseDown && onMouseDown(e); }}
+      onMouseUp={() => setPressed(false)}
+      onTouchStart={e => { setPressed(true); onTouchStart && onTouchStart(e); }}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        width:28, height:28, borderRadius:'50%', flexShrink:0,
+        background: bg,
+        border: hasAccent ? 'none' : '1px solid rgba(0,0,0,0.1)',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        cursor:'pointer', color: col,
+        boxShadow: hov ? '0 4px 12px -4px rgba(0,0,0,0.22)' : '0 2px 6px -3px rgba(0,0,0,0.1)',
+        transition: 'transform 0.2s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.2s',
+        transform: pressed ? 'scale(0.82)' : hov ? 'scale(1.08)' : 'scale(1)',
+        fontSize:13, lineHeight:1,
+        ...style,
+      }}
+    >↻</button>
+  );
+}
+
+/* ─── AGE TOGGLE ────────────────────────────────────────────── */
+function AgeToggle({ isYouth, onChange }) {
+  return (
+    <div style={{
+      display:'flex', alignItems:'center', gap:10,
+      background:'#fff', borderRadius:100,
+      padding:'6px 14px 6px 10px',
+      border:'1px solid rgba(0,0,0,0.08)',
+      boxShadow:'0 2px 8px -3px rgba(0,0,0,0.1)',
+      cursor:'pointer', userSelect:'none',
+    }} onClick={() => onChange(!isYouth)}>
+      <div style={{
+        position:'relative', width:36, height:20, borderRadius:100,
+        background: isYouth ? '#3D5AFE' : '#1A1A1A',
+        transition:'background 0.25s',
+        flexShrink:0,
+      }}>
+        <div style={{
+          position:'absolute', top:3, left: isYouth ? 19 : 3,
+          width:14, height:14, borderRadius:'50%', background:'#fff',
+          transition:'left 0.25s cubic-bezier(0.2,0.8,0.2,1)',
+          boxShadow:'0 1px 4px rgba(0,0,0,0.2)',
+        }}/>
+      </div>
+      <span style={{
+        fontSize:11, fontWeight:800, letterSpacing:'0.08em',
+        color: isYouth ? '#3D5AFE' : '#1A1A1A',
+        transition:'color 0.25s',
+      }}>{isYouth ? 'GENÇ' : 'YETİŞKİN'}</span>
     </div>
   );
 }
@@ -443,9 +535,25 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
 /* ─── SCENE SCREEN ──────────────────────────────────────────── */
 function SceneScreen({ emotionData, onRestart, onListOpen }) {
   const { emotion, group } = emotionData;
-  const [shuffled] = React.useState(() => shuffle(SCENES));
-  const [idx, setIdx] = React.useState(0);
+
+  // Sahne
+  const [isYouth, setIsYouth] = React.useState(false);
+  const [shuffledAdult] = React.useState(() => shuffle(SCENES));
+  const [shuffledYouth] = React.useState(() => shuffle(SCENES_GENC));
+  const [idxAdult, setIdxAdult] = React.useState(0);
+  const [idxYouth, setIdxYouth] = React.useState(0);
+
+  const shuffled = isYouth ? shuffledYouth : shuffledAdult;
+  const idx = isYouth ? idxYouth : idxAdult;
+  const setIdx = isYouth ? setIdxYouth : setIdxAdult;
   const scene = shuffled[idx % shuffled.length];
+
+  function randomScene() {
+    const len = shuffled.length;
+    let next;
+    do { next = Math.floor(Math.random() * len); } while (len > 1 && next === idx);
+    setIdx(next);
+  }
 
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2' }}>
@@ -465,21 +573,25 @@ function SceneScreen({ emotionData, onRestart, onListOpen }) {
 
       <StepDots active={2} />
 
-      {/* Scrollable */}
-      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px)', gap:'clamp(16px,4vw,24px)', overflow:'hidden' }}>
-        <div style={{ display:'flex', justifyContent:'center' }}>
-          <MiniChip emotion={emotion} group={group} />
-        </div>
-        <SceneCard scene={scene} animKey={idx} />
+      {/* Content */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(10px,3vw,16px) clamp(16px,5vw,24px)', gap:'clamp(10px,2.5vw,14px)', overflow:'hidden' }}>
+
+        {/* Duygu chip — kart genişliğinde */}
+        <MiniChip emotion={emotion} group={group} />
+
+        {/* Sahne kartı — önde, duygu renginde değiştir */}
+        <SceneCard scene={scene} animKey={idx} displayNum={idx + 1} onChangeScene={randomScene} group={group} dark={isYouth} />
+
+        {/* Yaş toggle — kart altında */}
+        <AgeToggle isYouth={isYouth} onChange={setIsYouth} />
       </div>
 
-      {/* Actions */}
+      {/* Alt çubuk */}
       <div style={{
         padding:'12px clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 20px)',
-        display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap',
+        display:'flex', justifyContent:'center',
         borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2',
       }}>
-        <Btn ghost small onClick={() => setIdx(i=>i+1)}>Başka Sahne</Btn>
         <Btn ghost small onClick={onRestart}>Yeni Tur</Btn>
       </div>
     </div>
@@ -535,6 +647,80 @@ function EmotionListOverlay({ onClose }) {
   );
 }
 
+/* ─── NEW ROUND SCREEN ──────────────────────────────────────── */
+function NewRoundScreen({ onStart }) {
+  const [vis, setVis] = React.useState(false);
+  React.useEffect(() => { const t = setTimeout(() => setVis(true), 40); return () => clearTimeout(t); }, []);
+
+  const blobs = [
+    { g: GROUPS[0], top:'8%',  left:'-10%', size:'55vw' },
+    { g: GROUPS[2], top:'55%', left:'50%',  size:'60vw' },
+    { g: GROUPS[4], top:'20%', left:'55%',  size:'40vw' },
+    { g: GROUPS[6], top:'65%', left:'-5%',  size:'45vw' },
+  ];
+
+  return (
+    <div style={{
+      display:'flex', flexDirection:'column', flex:1,
+      background:'#0E0E0E', alignItems:'center', justifyContent:'center',
+      position:'relative', overflow:'hidden',
+    }}>
+      {/* Renkli arka plan blobları */}
+      {blobs.map((b, i) => (
+        <div key={i} style={{
+          position:'absolute', borderRadius:'50%',
+          width: b.size, height: b.size,
+          background: b.g.grad,
+          top: b.top, left: b.left,
+          opacity: vis ? 0.55 : 0,
+          filter:'blur(72px)',
+          transform: vis ? 'scale(1)' : 'scale(0.4)',
+          transition:`opacity 0.9s ease ${i*0.12}s, transform 1s cubic-bezier(0.2,0.8,0.2,1) ${i*0.12}s`,
+        }}/>
+      ))}
+
+      {/* Başlık */}
+      <div style={{ textAlign:'center', position:'relative', zIndex:1, marginBottom:56 }}>
+        <div style={{
+          fontWeight:900, fontSize:'clamp(56px,18vw,96px)',
+          color:'#fff', letterSpacing:'-0.04em', lineHeight:0.85,
+          opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(32px)',
+          transition:'opacity 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.25s, transform 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.25s',
+        }}>Yeni</div>
+        <div style={{
+          fontWeight:400, fontStyle:'italic', fontSize:'clamp(56px,18vw,96px)',
+          color:'rgba(255,255,255,0.55)', letterSpacing:'-0.02em', lineHeight:0.85,
+          opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(32px)',
+          transition:'opacity 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.38s, transform 0.55s cubic-bezier(0.2,0.8,0.2,1) 0.38s',
+        }}>Tur</div>
+
+        {/* Renk noktaları */}
+        <div style={{
+          display:'flex', gap:8, justifyContent:'center', marginTop:28,
+          opacity: vis ? 1 : 0, transition:'opacity 0.5s 0.6s',
+        }}>
+          {GROUPS.map((g,i) => (
+            <div key={i} style={{
+              width:10, height:10, borderRadius:'50%', background: g.grad,
+              transform: vis ? 'scale(1)' : 'scale(0)',
+              transition:`transform 0.4s cubic-bezier(0.2,0.8,0.2,1) ${0.6+i*0.06}s`,
+            }}/>
+          ))}
+        </div>
+      </div>
+
+      {/* Başla butonu */}
+      <div style={{
+        position:'relative', zIndex:1,
+        opacity: vis ? 1 : 0, transform: vis ? 'translateY(0)' : 'translateY(16px)',
+        transition:'opacity 0.5s 0.7s, transform 0.5s cubic-bezier(0.2,0.8,0.2,1) 0.7s',
+      }}>
+        <Btn onClick={onStart}>Başla →</Btn>
+      </div>
+    </div>
+  );
+}
+
 /* ─── APP ───────────────────────────────────────────────────── */
 function App() {
   const [screen, setScreen] = React.useState('welcome');
@@ -543,7 +729,7 @@ function App() {
 
   return (
     <div style={{ display:'flex', flexDirection:'column', height:'100%', position:'relative' }}>
-      {screen === 'welcome' && <WelcomeScreen onStart={() => setScreen('emotion')} />}
+      {screen === 'welcome' && <WelcomeScreen onStart={() => setScreen('emotion')} onListOpen={() => setShowList(true)} />}
       {screen === 'emotion' && (
         <EmotionScreen
           onScenePhase={d => { setEmotionData(d); setScreen('scene'); }}
@@ -553,10 +739,11 @@ function App() {
       {screen === 'scene' && emotionData && (
         <SceneScreen
           emotionData={emotionData}
-          onRestart={() => { setEmotionData(null); setScreen('emotion'); }}
+          onRestart={() => { setEmotionData(null); setScreen('newround'); }}
           onListOpen={() => setShowList(true)}
         />
       )}
+      {screen === 'newround' && <NewRoundScreen onStart={() => setScreen('emotion')} />}
       {showList && <EmotionListOverlay onClose={() => setShowList(false)} />}
     </div>
   );
