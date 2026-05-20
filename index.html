@@ -80,8 +80,9 @@ function StepDots({ active }) {
 }
 
 /* ─── DECK VISUAL ───────────────────────────────────────────── */
-function DeckVisual({ icon, label, sub, onClick }) {
+function DeckVisual({ icon, label, sub, onClick, playerGrad }) {
   const [hovered, setHovered] = React.useState(false);
+  const iconBg = playerGrad || 'linear-gradient(135deg,#B14AED,#3D5AFE)';
   return (
     <div
       onClick={onClick}
@@ -109,8 +110,9 @@ function DeckVisual({ icon, label, sub, onClick }) {
         transition:'transform 0.3s cubic-bezier(0.2,0.8,0.2,1)',
       }}>
         <div style={{
-          width:56, height:56, borderRadius:'50%', background:'#1A1A1A', color:'#fff',
+          width:56, height:56, borderRadius:'50%', background:iconBg, color:'#fff',
           display:'flex', alignItems:'center', justifyContent:'center', fontSize:26, fontWeight:900,
+          boxShadow:'0 8px 20px -6px rgba(0,0,0,0.25)',
         }}>{icon}</div>
         <div style={{ textAlign:'center' }}>
           <div style={{ fontWeight:900, fontSize:'clamp(16px,4vw,20px)', color:'#1A1A1A', lineHeight:1.1 }}>{label}</div>
@@ -311,22 +313,23 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
 }
 
 /* ─── BTN ───────────────────────────────────────────────────── */
-function Btn({ children, onClick, ghost, small }) {
+function Btn({ children, onClick, ghost, small, disabled }) {
   const [hov, setHov] = React.useState(false);
   return (
     <button
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        fontFamily:'Nunito', fontWeight:700, cursor:'pointer',
+        fontFamily:'Nunito', fontWeight:700, cursor: disabled ? 'default' : 'pointer',
         fontSize: small ? 10 : 11, letterSpacing:'0.18em', textTransform:'uppercase',
         padding: small ? '12px 22px' : '14px 28px', borderRadius:100,
-        background: ghost ? 'transparent' : '#1A1A1A',
-        color: ghost ? '#5A5A5A' : '#fff',
+        background: disabled ? '#E8E6E1' : ghost ? 'transparent' : '#1A1A1A',
+        color: disabled ? '#B0A898' : ghost ? '#5A5A5A' : '#fff',
         border: ghost ? '1px solid rgba(0,0,0,0.13)' : 'none',
-        transform: hov ? 'translateY(-2px)' : 'translateY(0)',
+        transform: (!disabled && hov) ? 'translateY(-2px)' : 'translateY(0)',
         transition:'transform 0.2s, box-shadow 0.2s',
-        boxShadow: hov && !ghost ? '0 8px 20px -6px rgba(0,0,0,0.35)' : 'none',
+        boxShadow: (!disabled && hov && !ghost) ? '0 8px 20px -6px rgba(0,0,0,0.35)' : 'none',
       }}
     >{children}</button>
   );
@@ -396,8 +399,201 @@ function WelcomeScreen({ onStart, onListOpen }) {
   );
 }
 
+/* ─── PLAYER SETUP ──────────────────────────────────────────── */
+const PLAYER_ANIMALS = ['🦊','🐸','🐯','🐧','🦄','🐙','🦁','🐺'];
+
+const PLAYER_GRADS = [
+  'linear-gradient(135deg,#FF6B7A,#E63946)',
+  'linear-gradient(135deg,#FF8C42,#FF6B00)',
+  'linear-gradient(135deg,#FFC93C,#F4A400)',
+  'linear-gradient(135deg,#2ED573,#1DB954)',
+  'linear-gradient(135deg,#2E9CFF,#0072F5)',
+  'linear-gradient(135deg,#B14AED,#7B2FBE)',
+  'linear-gradient(135deg,#FF4757,#B14AED)',
+  'linear-gradient(135deg,#3D5AFE,#2E9CFF)',
+];
+
+function PlayerSetup({ onStart }) {
+  const [name, setName] = React.useState('');
+  const [players, setPlayers] = React.useState([]);
+
+  function addPlayer() {
+    const trimmed = name.trim();
+    if (!trimmed || players.length >= 8) return;
+    setPlayers(p => [...p, trimmed]);
+    setName('');
+  }
+
+  function removePlayer(i) {
+    setPlayers(p => p.filter((_, idx) => idx !== i));
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter') addPlayer();
+  }
+
+  const canStart = players.length >= 2;
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2', overflow:'hidden' }}>
+
+      {/* Başlık */}
+      <div style={{ padding:'clamp(24px,6vw,36px) clamp(20px,5vw,28px) 0', flexShrink:0, textAlign:'center' }}>
+        <div style={{ fontSize:'clamp(32px,9vw,44px)', fontWeight:900, letterSpacing:'-0.03em', lineHeight:1, color:'#1A1A1A' }}>
+          Kim<em style={{ fontStyle:'italic', fontWeight:400, color:'#B14AED' }}> oynuyor?</em>
+        </div>
+        <div style={{ fontSize:12, color:'#A0A0A0', marginTop:8, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase' }}>
+          {players.length === 0 ? 'İsim ekle, oyunu başlat' : `${players.length} oyuncu hazır`}
+        </div>
+      </div>
+
+      {/* Oyuncu grid */}
+      <div style={{ flex:1, padding:'20px clamp(20px,5vw,28px) 0', overflowY:'auto' }}>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+          {players.map((p, i) => (
+            <div key={i} style={{
+              position:'relative',
+              width:'calc(50% - 5px)',
+              background: PLAYER_GRADS[i % PLAYER_GRADS.length],
+              borderRadius:24, padding:'18px 14px 16px',
+              boxShadow:'0 6px 20px -6px rgba(0,0,0,0.25)',
+              animation:'enter 0.3s cubic-bezier(0.2,0.8,0.2,1) both',
+              display:'flex', flexDirection:'column', alignItems:'center', gap:8,
+            }}>
+              <span style={{ fontSize:34, lineHeight:1 }}>{PLAYER_ANIMALS[i % PLAYER_ANIMALS.length]}</span>
+              <span style={{
+                fontWeight:900, fontSize:'clamp(14px,4vw,17px)',
+                color:'#fff', letterSpacing:'-0.01em',
+                textShadow:'0 1px 3px rgba(0,0,0,0.15)',
+                textAlign:'center', wordBreak:'break-word',
+              }}>{p}</span>
+              <button onClick={() => removePlayer(i)} style={{
+                position:'absolute', top:8, right:8,
+                width:26, height:26, borderRadius:'50%',
+                background:'rgba(255,255,255,0.25)',
+                border:'none', fontSize:15, cursor:'pointer', color:'#fff',
+                display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1,
+              }}>×</button>
+            </div>
+          ))}
+        </div>
+
+        {players.length === 0 && (
+          <div style={{
+            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+            gap:12, padding:'40px 0', color:'#C8C0B8',
+          }}>
+            <div style={{ fontSize:40 }}>👥</div>
+            <div style={{ fontSize:14, fontWeight:700 }}>Henüz kimse yok</div>
+          </div>
+        )}
+      </div>
+
+      {/* Input + Ekle */}
+      <div style={{ padding:'16px clamp(20px,5vw,28px) 12px', display:'flex', gap:8, flexShrink:0 }}>
+        <input
+          value={name}
+          onChange={e => setName(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder="İsim gir..."
+          maxLength={20}
+          autoComplete="off"
+          style={{
+            flex:1, fontFamily:'Nunito', fontWeight:800, fontSize:16,
+            padding:'14px 20px', borderRadius:100,
+            border:'2.5px solid',
+            borderColor: name.trim() ? '#B14AED' : 'rgba(0,0,0,0.1)',
+            background:'#fff', outline:'none', color:'#1A1A1A',
+            transition:'border-color 0.2s',
+          }}
+        />
+        <button
+          onClick={addPlayer}
+          disabled={!name.trim() || players.length >= 8}
+          style={{
+            fontFamily:'Nunito', fontWeight:900, fontSize:15,
+            width:52, height:52, borderRadius:'50%',
+            background: (!name.trim() || players.length >= 8)
+              ? '#E8E6E1'
+              : 'linear-gradient(135deg,#B14AED,#3D5AFE)',
+            color: (!name.trim() || players.length >= 8) ? '#B0A898' : '#fff',
+            border:'none', cursor: (!name.trim() || players.length >= 8) ? 'default' : 'pointer',
+            flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow: (!name.trim() || players.length >= 8) ? 'none' : '0 6px 18px -4px rgba(100,60,220,0.5)',
+            transition:'all 0.2s',
+          }}
+        >+</button>
+      </div>
+
+      {/* Başla butonu */}
+      <div style={{ padding:'0 clamp(20px,5vw,28px) calc(env(safe-area-inset-bottom,0px) + 20px)', flexShrink:0 }}>
+        <button
+          onClick={() => canStart && onStart(players)}
+          style={{
+            width:'100%',
+            fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(15px,4vw,18px)',
+            letterSpacing:'0.06em', textTransform:'uppercase',
+            padding:'18px 0', borderRadius:100,
+            background: canStart
+              ? 'linear-gradient(135deg,#FF6B7A 0%,#FF8C42 35%,#FFC93C 65%,#2ED573 100%)'
+              : '#E8E6E1',
+            color: canStart ? '#fff' : '#B0A898',
+            border:'none', cursor: canStart ? 'pointer' : 'default',
+            boxShadow: canStart ? '0 10px 28px -6px rgba(255,100,80,0.45)' : 'none',
+            transition:'all 0.3s cubic-bezier(0.2,0.8,0.2,1)',
+            transform: canStart ? 'scale(1)' : 'scale(0.97)',
+            textShadow: canStart ? '0 1px 4px rgba(0,0,0,0.15)' : 'none',
+          }}
+        >
+          {canStart ? `Oynayalım! →` : `${2 - players.length} oyuncu daha ekle`}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── PLAYER LIST ───────────────────────────────────────────── */
+function PlayerList({ players, currentPlayerIdx, onPlayerTap }) {
+  const current = players[currentPlayerIdx];
+  const grad = PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length];
+  const animal = PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length];
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2', alignItems:'center', justifyContent:'center', gap:20 }}>
+
+      <div style={{ fontSize:11, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700 }}>
+        Sıradaki oyuncu
+      </div>
+
+      <button
+        onClick={onPlayerTap}
+        style={{
+          display:'flex', flexDirection:'column', alignItems:'center', gap:12,
+          background: grad,
+          borderRadius:28, padding:'32px 48px',
+          border:'none', cursor:'pointer',
+          boxShadow:'0 16px 48px -12px rgba(0,0,0,0.35)',
+        }}
+      >
+        <span style={{ fontSize:64, lineHeight:1 }}>{animal}</span>
+        <span style={{
+          fontFamily:'Nunito', fontWeight:900,
+          fontSize:'clamp(22px,6vw,30px)', letterSpacing:'-0.02em', lineHeight:1,
+          color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)',
+        }}>{current.name}</span>
+      </button>
+
+      <div style={{ fontSize:12, color:'#B0A898', fontWeight:700 }}>
+        dokun, turuna başla
+      </div>
+
+      <div style={{ height: 'calc(env(safe-area-inset-bottom,0px) + 16px)' }} />
+    </div>
+  );
+}
+
 /* ─── EMOTION SCREEN ────────────────────────────────────────── */
-function EmotionScreen({ onScenePhase, onListOpen }) {
+function EmotionScreen({ playerName, playerGrad, playerAnimal, onScenePhase, onListOpen, onScoreOpen }) {
   const [phase, setPhase] = React.useState('deck');
   const [emotion, setEmotion] = React.useState(null);
   const [group, setGroup] = React.useState(null);
@@ -423,20 +619,37 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, background:bg, transition:'background 0.8s cubic-bezier(0.2,0.8,0.2,1)' }}>
       {/* Header */}
-      <div style={{ padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <div style={{ fontWeight:900, fontSize:'clamp(16px,4.5vw,20px)', letterSpacing:'-0.02em', color:'#1A1A1A' }}>
-          Duygu <em style={{ fontWeight:400, color:'#5A5A5A' }}>Dedektifi</em>
-        </div>
-        <button onClick={onListOpen} style={{
-          width:42, height:42, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+      <div style={{ padding:'clamp(10px,3vw,14px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        {/* Sol: sıralama ikonu */}
+        <button onClick={onScoreOpen} style={{
+          width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
           display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
           boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
         }}>
-          <RainbowRings size={12} />
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="8" width="3" height="7" rx="1" fill="#1A1A1A"/>
+            <rect x="6" y="4" width="3" height="11" rx="1" fill="#1A1A1A"/>
+            <rect x="11" y="1" width="3" height="14" rx="1" fill="#1A1A1A"/>
+          </svg>
+        </button>
+
+        {/* Orta: oyuncu badge */}
+        {playerName && (
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, background: playerGrad, borderRadius:16, padding:'8px 14px 8px 10px', boxShadow:'0 4px 14px -4px rgba(0,0,0,0.25)' }}>
+            <span style={{ fontSize:20, lineHeight:1 }}>{playerAnimal}</span>
+            <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(14px,4vw,17px)', letterSpacing:'-0.01em', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,0.15)' }}>{playerName}</span>
+          </div>
+        )}
+
+        {/* Sağ: duygu listesi */}
+        <button onClick={onListOpen} style={{
+          width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+        }}>
+          <RainbowRings size={10} />
         </button>
       </div>
-
-      <StepDots active={1} />
 
       {/* Content */}
       <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(16px,4vw,24px)', gap:'clamp(20px,5vw,32px)' }}>
@@ -452,7 +665,7 @@ function EmotionScreen({ onScenePhase, onListOpen }) {
         </div>
 
         {phase === 'deck' ? (
-          <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} />
+          <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} playerGrad={playerGrad} />
         ) : (
           <EmotionCard emotion={emotion} group={group} animKey={animKey} onShown={() => setPhase('ready')} onRedraw={phase === 'ready' ? redraw : null} />
         )}
@@ -533,10 +746,9 @@ function AgeToggle({ isYouth, onChange }) {
 }
 
 /* ─── SCENE SCREEN ──────────────────────────────────────────── */
-function SceneScreen({ emotionData, onRestart, onListOpen }) {
+function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurnEnd, onRestart, onListOpen, onScoreOpen }) {
   const { emotion, group } = emotionData;
 
-  // Sahne
   const [isYouth, setIsYouth] = React.useState(false);
   const [shuffledAdult] = React.useState(() => shuffle(SCENES));
   const [shuffledYouth] = React.useState(() => shuffle(SCENES_GENC));
@@ -555,44 +767,228 @@ function SceneScreen({ emotionData, onRestart, onListOpen }) {
     setIdx(next);
   }
 
+  const TOTAL = 90;
+  const [started, setStarted] = React.useState(false);
+  const [timeLeft, setTimeLeft] = React.useState(TOTAL);
+  const [ended, setEnded] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!started || ended) return;
+    if (timeLeft <= 0) { setEnded(true); onTurnEnd(); return; }
+    const t = setTimeout(() => setTimeLeft(s => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [started, timeLeft, ended]);
+
+  function handleEnd() {
+    if (ended) return;
+    setEnded(true);
+    onTurnEnd();
+  }
+
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  const timeStr = `${mins}:${String(secs).padStart(2, '0')}`;
+  const isUrgent = timeLeft <= 10;
+  const progress = timeLeft / TOTAL;
+
+  const cardW = 'min(280px, 72vw)';
+
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2' }}>
       {/* Header */}
-      <div style={{ padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <div style={{ fontWeight:900, fontSize:'clamp(16px,4.5vw,20px)', letterSpacing:'-0.02em', color:'#1A1A1A' }}>
-          Duygu <em style={{ fontWeight:400, color:'#5A5A5A' }}>Dedektifi</em>
-        </div>
-        <button onClick={onListOpen} style={{
-          width:42, height:42, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+      <div style={{ padding:'clamp(10px,3vw,14px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        {/* Sol: sıralama ikonu */}
+        <button onClick={onScoreOpen} style={{
+          width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
           display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
           boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
         }}>
-          <RainbowRings size={12} />
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="8" width="3" height="7" rx="1" fill="#1A1A1A"/>
+            <rect x="6" y="4" width="3" height="11" rx="1" fill="#1A1A1A"/>
+            <rect x="11" y="1" width="3" height="14" rx="1" fill="#1A1A1A"/>
+          </svg>
+        </button>
+
+        {/* Orta: oyuncu badge */}
+        {playerName && (
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, background: playerGrad, borderRadius:16, padding:'8px 14px 8px 10px', boxShadow:'0 4px 14px -4px rgba(0,0,0,0.25)' }}>
+            <span style={{ fontSize:20, lineHeight:1 }}>{playerAnimal}</span>
+            <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(14px,4vw,17px)', letterSpacing:'-0.01em', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,0.15)' }}>{playerName}</span>
+          </div>
+        )}
+
+        {/* Sağ: duygu listesi */}
+        <button onClick={onListOpen} style={{
+          width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+        }}>
+          <RainbowRings size={10} />
         </button>
       </div>
 
-      <StepDots active={2} />
-
       {/* Content */}
       <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(10px,3vw,16px) clamp(16px,5vw,24px)', gap:'clamp(10px,2.5vw,14px)', overflow:'hidden' }}>
-
-        {/* Duygu chip — kart genişliğinde */}
         <MiniChip emotion={emotion} group={group} />
-
-        {/* Sahne kartı — önde, duygu renginde değiştir */}
         <SceneCard scene={scene} animKey={idx} displayNum={idx + 1} onChangeScene={randomScene} group={group} dark={isYouth} />
-
-        {/* Yaş toggle — kart altında */}
         <AgeToggle isYouth={isYouth} onChange={setIsYouth} />
       </div>
 
       {/* Alt çubuk */}
       <div style={{
-        padding:'12px clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 20px)',
-        display:'flex', justifyContent:'center',
-        borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2',
+        padding:'12px clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 16px)',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2', flexShrink:0,
       }}>
-        <Btn ghost small onClick={onRestart}>Yeni Tur</Btn>
+        <div style={{ width:cardW, display:'flex', gap:8, height:48 }}>
+          {/* Sol: Yeni Tur → Timer */}
+          {!started ? (
+            <button
+              onClick={onRestart}
+              style={{
+                flex:1, height:'100%',
+                fontFamily:'Nunito', fontWeight:800, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase',
+                borderRadius:100,
+                background:'linear-gradient(135deg,#B14AED,#3D5AFE)',
+                color:'#fff', border:'none', cursor:'pointer',
+                boxShadow:'0 6px 18px -4px rgba(100,60,220,0.45)',
+              }}
+            >Yeni Tur</button>
+          ) : (
+            <div style={{
+              flex:1, height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:7,
+              background: isUrgent ? 'linear-gradient(135deg,#FF3B30,#FF6B35)' : '#1A1A1A',
+              borderRadius:100,
+              transition:'background 0.4s',
+              boxShadow: isUrgent ? '0 6px 18px -4px rgba(255,59,48,0.55)' : 'none',
+            }}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <circle cx="6" cy="6" r="5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none"/>
+                <path
+                  d={`M 6 6 L 6 1 A 5 5 0 ${progress > 0.5 ? 1 : 0} 1 ${6 + 5*Math.sin(2*Math.PI*(1-progress))} ${6 - 5*Math.cos(2*Math.PI*(1-progress))} Z`}
+                  fill="rgba(255,255,255,0.65)"
+                />
+              </svg>
+              <span style={{
+                fontFamily:'Nunito', fontWeight:900, fontSize:16, letterSpacing:'-0.01em',
+                color:'#fff', fontVariantNumeric:'tabular-nums',
+              }}>{timeStr}</span>
+            </div>
+          )}
+
+          {/* Sağ: Başla → Tamamla */}
+          {!started ? (
+            <button
+              onClick={() => setStarted(true)}
+              style={{
+                flex:1, height:'100%',
+                fontFamily:'Nunito', fontWeight:800, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase',
+                borderRadius:100,
+                background:'linear-gradient(135deg,#2ED573,#1DB954)',
+                color:'#fff', border:'none', cursor:'pointer',
+                boxShadow:'0 6px 18px -4px rgba(30,185,84,0.45)',
+              }}
+            >Başla</button>
+          ) : (
+            <button
+              onClick={handleEnd}
+              style={{
+                flex:1, height:'100%',
+                fontFamily:'Nunito', fontWeight:800, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase',
+                borderRadius:100,
+                background:'linear-gradient(135deg,#FF8C42,#FF3B30)',
+                color:'#fff', border:'none', cursor:'pointer',
+                boxShadow:'0 6px 18px -4px rgba(255,90,50,0.45)',
+              }}
+            >Tamamla</button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ROUND RESULT ──────────────────────────────────────────── */
+function RoundResult({ players, currentPlayerIdx, onConfirm }) {
+  const [selected, setSelected] = React.useState(null);
+
+  // Karışık sıra — anlatan hariç + kimse bilemedi
+  const [shuffledOthers] = React.useState(() => {
+    const others = players
+      .map((p, i) => ({ ...p, originalIdx: i }))
+      .filter((_, i) => i !== currentPlayerIdx);
+    return shuffle([...others, { name: 'Kimse bilemedi', originalIdx: 'none', isNone: true }]);
+  });
+
+  const anlatanGrad = PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length];
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2', overflow:'hidden' }}>
+
+      {/* Başlık */}
+      <div style={{ padding:'clamp(24px,6vw,36px) clamp(20px,5vw,28px) 20px', flexShrink:0, textAlign:'center' }}>
+        <div style={{ fontSize:11, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:8 }}>
+          Tur bitti
+        </div>
+        <div style={{ fontWeight:900, fontSize:'clamp(28px,8vw,38px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>
+          Kim <em style={{ fontStyle:'italic', fontWeight:400, background: anlatanGrad, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>buldu?</em>
+        </div>
+        <div style={{ fontSize:12, color:'#A0A0A0', marginTop:8, fontWeight:700 }}>
+          {players[currentPlayerIdx].name} anlatıyordu
+        </div>
+      </div>
+
+      <div style={{ flex:1, padding:'0 clamp(20px,5vw,28px)', overflowY:'auto', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+        {/* Oyuncular + Kimse bilemedi — tek grid */}
+        <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+          {shuffledOthers.map((p) => {
+            const isSel = selected === p.originalIdx;
+            const bg = p.isNone ? '#1A1A1A' : PLAYER_GRADS[p.originalIdx % PLAYER_GRADS.length];
+            const icon = p.isNone ? '🤷' : PLAYER_ANIMALS[p.originalIdx % PLAYER_ANIMALS.length];
+            return (
+              <button
+                key={String(p.originalIdx)}
+                onClick={() => setSelected(p.originalIdx)}
+                style={{
+                  fontFamily:'Nunito',
+                  width:'calc(50% - 5px)',
+                  display:'flex', flexDirection:'column', alignItems:'center', gap:8,
+                  padding:'20px 14px 16px', borderRadius:24,
+                  background: bg,
+                  border:'none', cursor:'pointer',
+                  transform: isSel ? 'scale(1.04)' : 'scale(1)',
+                  boxShadow: isSel ? '0 12px 32px -8px rgba(0,0,0,0.4)' : '0 4px 14px -4px rgba(0,0,0,0.18)',
+                  opacity: isSel ? 1 : 0.72,
+                  transition:'all 0.2s cubic-bezier(0.2,0.8,0.2,1)',
+                }}
+              >
+                <span style={{ fontSize:38, lineHeight:1 }}>{icon}</span>
+                <span style={{ fontWeight:900, fontSize:15, fontStyle: p.isNone ? 'italic' : 'normal', color:'#fff', lineHeight:1 }}>{p.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div style={{ padding:'16px clamp(20px,5vw,28px) calc(env(safe-area-inset-bottom,0px) + 20px)', flexShrink:0 }}>
+        <button
+          onClick={() => selected !== null && onConfirm(selected)}
+          style={{
+            width:'100%',
+            fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(14px,4vw,17px)',
+            letterSpacing:'0.06em', textTransform:'uppercase',
+            padding:'17px 0', borderRadius:100,
+            background: selected !== null
+              ? 'linear-gradient(135deg,#2ED573 0%,#2E9CFF 50%,#B14AED 100%)'
+              : '#E8E6E1',
+            color: selected !== null ? '#fff' : '#B0A898',
+            border:'none', cursor: selected !== null ? 'pointer' : 'default',
+            boxShadow: selected !== null ? '0 10px 28px -6px rgba(80,160,255,0.4)' : 'none',
+            transition:'all 0.3s cubic-bezier(0.2,0.8,0.2,1)',
+            textShadow: selected !== null ? '0 1px 4px rgba(0,0,0,0.15)' : 'none',
+          }}
+        >Onayla →</button>
       </div>
     </div>
   );
@@ -647,29 +1043,178 @@ function EmotionListOverlay({ onClose }) {
   );
 }
 
+/* ─── SCOREBOARD ────────────────────────────────────────────── */
+function Scoreboard({ players, onContinue, onClose }) {
+  const sorted = [...players]
+    .map((p, i) => ({ ...p, originalIdx: i }))
+    .sort((a, b) => b.score - a.score);
+
+  const medals = ['🥇','🥈','🥉'];
+
+  const isOverlay = !!onClose;
+
+  return (
+    <div style={{
+      display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2', overflow:'hidden',
+      ...(isOverlay ? { position:'fixed', inset:0, zIndex:200 } : {}),
+    }}>
+
+      <div style={{ padding:'clamp(20px,5vw,28px) clamp(20px,5vw,28px) 16px', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div>
+          <div style={{ fontSize:11, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:4 }}>Skor</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(24px,7vw,32px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>
+            Sıralama
+          </div>
+        </div>
+        {isOverlay && (
+          <button onClick={onClose} style={{
+            width:38, height:38, borderRadius:'50%', background:'rgba(0,0,0,0.07)',
+            border:'none', fontSize:20, cursor:'pointer',
+            display:'flex', alignItems:'center', justifyContent:'center', color:'#1A1A1A', fontFamily:'Nunito',
+          }}>×</button>
+        )}
+      </div>
+
+      <div style={{ flex:1, padding:'0 clamp(20px,5vw,28px)', display:'flex', flexDirection:'column', gap:10, overflowY:'auto' }}>
+        {sorted.map((p, rank) => {
+          const g = PLAYER_GRADS[p.originalIdx % PLAYER_GRADS.length];
+          const anml = PLAYER_ANIMALS[p.originalIdx % PLAYER_ANIMALS.length];
+          const isFirst = rank === 0;
+          return (
+            <div key={p.originalIdx} style={{
+              display:'flex', alignItems:'center', gap:14,
+              background: isFirst ? g : '#fff',
+              borderRadius:24, padding: isFirst ? '16px 20px' : '13px 20px',
+              border: isFirst ? 'none' : '1px solid rgba(0,0,0,0.06)',
+              boxShadow: isFirst ? '0 10px 28px -6px rgba(0,0,0,0.28)' : 'none',
+              transform: isFirst ? 'scale(1.02)' : 'scale(1)',
+            }}>
+              <span style={{ fontSize: isFirst ? 28 : 22, lineHeight:1, flexShrink:0 }}>
+                {rank < 3 ? medals[rank] : anml}
+              </span>
+              <div style={{ display:'flex', alignItems:'center', gap:10, flex:1, minWidth:0 }}>
+                <span style={{ fontSize: isFirst ? 22 : 18, lineHeight:1, flexShrink:0 }}>{rank >= 3 ? '' : anml}</span>
+                <span style={{
+                  fontWeight:900, fontSize: isFirst ? 18 : 15,
+                  color: isFirst ? '#fff' : '#1A1A1A',
+                  overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+                }}>{p.name}</span>
+              </div>
+              <div style={{ textAlign:'right', flexShrink:0 }}>
+                <span style={{
+                  fontWeight:900, fontSize: isFirst ? 26 : 20,
+                  color: isFirst ? '#fff' : '#1A1A1A',
+                }}>{p.score > 0 ? `+${p.score}` : p.score}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {!isOverlay && (
+        <div style={{ padding:'16px clamp(20px,5vw,28px) calc(env(safe-area-inset-bottom,0px) + 20px)', flexShrink:0 }}>
+          <button
+            onClick={onContinue}
+            style={{
+              width:'100%',
+              fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(15px,4vw,18px)',
+              letterSpacing:'0.06em', textTransform:'uppercase',
+              padding:'18px 0', borderRadius:100,
+              background:'linear-gradient(135deg,#FF6B7A 0%,#FF8C42 35%,#FFC93C 65%,#2ED573 100%)',
+              color:'#fff', border:'none', cursor:'pointer',
+              boxShadow:'0 10px 28px -6px rgba(255,100,80,0.4)',
+              textShadow:'0 1px 4px rgba(0,0,0,0.15)',
+            }}
+          >Devam →</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── APP ───────────────────────────────────────────────────── */
 function App() {
   const [screen, setScreen] = React.useState('welcome');
+  const [players, setPlayers] = React.useState([]);
+  const [currentPlayerIdx, setCurrentPlayerIdx] = React.useState(0);
   const [emotionData, setEmotionData] = React.useState(null);
   const [showList, setShowList] = React.useState(false);
+  const [showScoreboard, setShowScoreboard] = React.useState(false);
+
+  function startGame(playerNames) {
+    setPlayers(playerNames.map(name => ({ name, score: 0 })));
+    setCurrentPlayerIdx(0);
+    setScreen('playerList');
+  }
+
+  function handleRoundResult(guessedIdx) {
+    setPlayers(prev => {
+      const updated = prev.map(p => ({ ...p }));
+      if (guessedIdx === 'none') {
+        updated[currentPlayerIdx].score -= 1;
+      } else {
+        updated[currentPlayerIdx].score += 1;
+        updated[guessedIdx].score += 2;
+      }
+      return updated;
+    });
+    setCurrentPlayerIdx(i => (i + 1) % players.length);
+    setEmotionData(null);
+    setScreen('scoreboard');
+  }
 
   return (
     <div style={{ display:'flex', flexDirection:'column', height:'100%', position:'relative' }}>
-      {screen === 'welcome' && <WelcomeScreen onStart={() => setScreen('emotion')} onListOpen={() => setShowList(true)} />}
+      {screen === 'welcome' && (
+        <WelcomeScreen onStart={() => setScreen('setup')} onListOpen={() => setShowList(true)} />
+      )}
+      {screen === 'setup' && (
+        <PlayerSetup onStart={startGame} />
+      )}
+      {screen === 'playerList' && (
+        <PlayerList
+          players={players}
+          currentPlayerIdx={currentPlayerIdx}
+          onPlayerTap={() => setScreen('emotion')}
+        />
+      )}
       {screen === 'emotion' && (
         <EmotionScreen
+          playerName={players[currentPlayerIdx]?.name}
+          playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
+          playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
           onScenePhase={d => { setEmotionData(d); setScreen('scene'); }}
           onListOpen={() => setShowList(true)}
+          onScoreOpen={() => setShowScoreboard(true)}
         />
       )}
       {screen === 'scene' && emotionData && (
         <SceneScreen
+          playerName={players[currentPlayerIdx]?.name}
+          playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
+          playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
           emotionData={emotionData}
+          onTurnEnd={() => setScreen('roundResult')}
           onRestart={() => { setEmotionData(null); setScreen('emotion'); }}
           onListOpen={() => setShowList(true)}
+          onScoreOpen={() => setShowScoreboard(true)}
         />
       )}
-{showList && <EmotionListOverlay onClose={() => setShowList(false)} />}
+      {screen === 'roundResult' && (
+        <RoundResult
+          players={players}
+          currentPlayerIdx={currentPlayerIdx}
+          onConfirm={handleRoundResult}
+        />
+      )}
+      {screen === 'scoreboard' && (
+        <Scoreboard
+          players={players}
+          onContinue={() => setScreen('playerList')}
+        />
+      )}
+      {showList && <EmotionListOverlay onClose={() => setShowList(false)} />}
+      {showScoreboard && <Scoreboard players={players} onClose={() => setShowScoreboard(false)} />}
     </div>
   );
 }
