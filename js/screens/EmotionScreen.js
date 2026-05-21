@@ -1,4 +1,4 @@
-function EmotionScreen({ playerName, playerGrad, playerAnimal, onScenePhase, onListOpen, onScoreOpen }) {
+function EmotionScreen({ playerName, playerGrad, playerAnimal, onScenePhase, onListOpen, onScoreOpen, onHome }) {
   const [phase, setPhase] = React.useState('deck');
   const [emotion, setEmotion] = React.useState(null);
   const [group, setGroup] = React.useState(null);
@@ -30,20 +30,15 @@ function EmotionScreen({ playerName, playerGrad, playerAnimal, onScenePhase, onL
         playerAnimal={playerAnimal}
         onScoreOpen={onScoreOpen}
         onListOpen={onListOpen}
+        onHome={onHome}
       />
 
       <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(16px,4vw,24px)', gap:'clamp(20px,5vw,32px)' }}>
         <div style={{ textAlign:'center' }}>
-          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(22px,6vw,30px)', color:'#1A1A1A', marginBottom:8, lineHeight:1 }}>
-            {phase === 'deck' ? 'Duygunu çek.' : 'Duygunla hazırlan.'}
+          <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(22px,6vw,30px)', color:'#1A1A1A', lineHeight:1 }}>
+            {phase === 'deck' ? 'Duygunu Çek.' : 'Duygunla Hazırlan.'}
           </h1>
-          <p style={{ fontSize:'clamp(11px,3vw,13px)', color:'#5A5A5A', lineHeight:1.6, maxWidth:280 }}>
-            {phase === 'deck'
-              ? 'Desteye dokun, rastgele bir duygu atansın.'
-              : 'Basılı tutarak sadece sen görebilirsin.'}
-          </p>
         </div>
-
         {phase === 'deck' ? (
           <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} playerGrad={playerGrad} />
         ) : (

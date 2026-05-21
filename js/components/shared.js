@@ -35,7 +35,7 @@ function DeckVisual({ icon, label, sub, onClick, playerGrad }) {
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{ position:'relative', width:'min(200px, 52vw)', aspectRatio:'5/7', cursor:'pointer', userSelect:'none' }}
+      style={{ position:'relative', width:'min(280px, 72vw)', aspectRatio:'5/7', cursor:'pointer', userSelect:'none' }}
     >
       {[
         { r:-6, tx:-10, ty:6, op:0.45 },
@@ -103,10 +103,10 @@ function IconChangeBtn({ onClick, onMouseDown, onTouchStart, style, accentGrad, 
 
 /* ─── EMOTION CARD ──────────────────────────────────────────── */
 function EmotionCard({ emotion, group, onShown, animKey, onRedraw }) {
-  const [revealed, setRevealed] = React.useState(false);
+  const [revealed, setRevealed] = React.useState(true);
   const [entered, setEntered] = React.useState(false);
   React.useEffect(() => {
-    setEntered(false); setRevealed(false);
+    setEntered(false); setRevealed(true);
     const t = setTimeout(() => { setEntered(true); if (onShown) onShown(); }, 60);
     return () => clearTimeout(t);
   }, [animKey]);
@@ -116,7 +116,7 @@ function EmotionCard({ emotion, group, onShown, animKey, onRedraw }) {
     <div
       onClick={() => setRevealed(r => !r)}
       style={{
-        width:'min(260px, 66vw)', aspectRatio:'5/7', borderRadius:24,
+        width:'min(280px, 72vw)', aspectRatio:'5/7', borderRadius:24,
         background:group.grad,
         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
         position:'relative', overflow:'hidden',
@@ -285,7 +285,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
 }
 
 /* ─── BTN ───────────────────────────────────────────────────── */
-function Btn({ children, onClick, ghost, small, disabled }) {
+function Btn({ children, onClick, ghost, disabled }) {
   const [hov, setHov] = React.useState(false);
   return (
     <button
@@ -293,9 +293,9 @@ function Btn({ children, onClick, ghost, small, disabled }) {
       disabled={disabled}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        fontFamily:'Nunito', fontWeight:700, cursor: disabled ? 'default' : 'pointer',
-        fontSize: small ? 10 : 11, letterSpacing:'0.18em', textTransform:'uppercase',
-        padding: small ? '12px 22px' : '14px 28px', borderRadius:100,
+        fontFamily:'Nunito', fontWeight:900, cursor: disabled ? 'default' : 'pointer',
+        fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
+        padding:'16px 28px', borderRadius:100,
         background: disabled ? '#E8E6E1' : ghost ? 'transparent' : '#1A1A1A',
         color: disabled ? '#B0A898' : ghost ? '#5A5A5A' : '#fff',
         border: ghost ? '1px solid rgba(0,0,0,0.13)' : 'none',
@@ -341,35 +341,53 @@ function AgeToggle({ isYouth, onChange }) {
 }
 
 /* ─── TURN HEADER (shared by EmotionScreen + SceneScreen) ───── */
-function TurnHeader({ playerName, playerGrad, playerAnimal, onScoreOpen, onListOpen }) {
+function TurnHeader({ playerName, playerGrad, playerAnimal, onScoreOpen, onListOpen, onHome }) {
   return (
-    <div style={{ padding:'clamp(10px,3vw,14px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-      <button onClick={onScoreOpen} style={{
+    <div style={{ padding:'clamp(10px,3vw,14px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between', position:'relative' }}>
+      <button onClick={onHome} style={{
         width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
         display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
-        boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+        boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0, zIndex:1,
       }}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect x="1" y="8" width="3" height="7" rx="1" fill="#1A1A1A"/>
-          <rect x="6" y="4" width="3" height="11" rx="1" fill="#1A1A1A"/>
-          <rect x="11" y="1" width="3" height="14" rx="1" fill="#1A1A1A"/>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M6 2L1 7L6 12" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <line x1="1" y1="7" x2="13" y2="7" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       </button>
 
       {playerName && (
-        <div style={{ display:'inline-flex', alignItems:'center', gap:8, background: playerGrad, borderRadius:16, padding:'8px 14px 8px 10px', boxShadow:'0 4px 14px -4px rgba(0,0,0,0.25)' }}>
-          <span style={{ fontSize:20, lineHeight:1 }}>{playerAnimal}</span>
-          <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(14px,4vw,17px)', letterSpacing:'-0.01em', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,0.15)' }}>{playerName}</span>
+        <div style={{
+          position:'absolute', left:'50%', transform:'translateX(-50%)',
+          display:'inline-flex', alignItems:'center', gap:8,
+          background: playerGrad, borderRadius:16, padding:'8px 14px 8px 10px',
+          boxShadow:'0 4px 14px -4px rgba(0,0,0,0.25)',
+          maxWidth:'55%',
+        }}>
+          <span style={{ fontSize:20, lineHeight:1, flexShrink:0 }}>{playerAnimal}</span>
+          <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(14px,4vw,17px)', letterSpacing:'-0.01em', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,0.15)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{playerName}</span>
         </div>
       )}
 
-      <button onClick={onListOpen} style={{
-        width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
-        display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
-        boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
-      }}>
-        <RainbowRings size={10} />
-      </button>
+      <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+        <button onClick={onScoreOpen} style={{
+          width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+        }}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="8" width="3" height="7" rx="1" fill="#1A1A1A"/>
+            <rect x="6" y="4" width="3" height="11" rx="1" fill="#1A1A1A"/>
+            <rect x="11" y="1" width="3" height="14" rx="1" fill="#1A1A1A"/>
+          </svg>
+        </button>
+        <button onClick={onListOpen} style={{
+          width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+          display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+          boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+        }}>
+          <RainbowRings size={10} />
+        </button>
+      </div>
     </div>
   );
 }

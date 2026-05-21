@@ -1,4 +1,4 @@
-/**
+a/**
  * ViewManager — Uygulamadaki view'ler (sayfalar) arasında geçişi yönetir.
  *
  * Kullanım:

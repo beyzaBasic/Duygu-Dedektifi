@@ -97,6 +97,15 @@ button {
   color: inherit;
 }
 
+/* Scrollbar gizle */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
 .hidden { display: none !important; }
 
 .enter {

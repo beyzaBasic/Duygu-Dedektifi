@@ -1,4 +1,4 @@
-function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurnEnd, onRestart, onListOpen, onScoreOpen }) {
+function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurnEnd, onRestart, onListOpen, onScoreOpen, onHome }) {
   const { emotion, group } = emotionData;
 
   const [isYouth, setIsYouth] = React.useState(false);
@@ -52,6 +52,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
         playerAnimal={playerAnimal}
         onScoreOpen={onScoreOpen}
         onListOpen={onListOpen}
+        onHome={onHome}
       />
 
       <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(10px,3vw,16px) clamp(16px,5vw,24px)', gap:'clamp(10px,2.5vw,14px)', overflow:'hidden' }}>
@@ -65,13 +66,13 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
         display:'flex', alignItems:'center', justifyContent:'center',
         borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2', flexShrink:0,
       }}>
-        <div style={{ width:cardW, display:'flex', gap:8, height:48 }}>
+        <div style={{ width:cardW, display:'flex', gap:8, height:52 }}>
           {!started ? (
             <button
               onClick={onRestart}
               style={{
                 flex:1, height:'100%',
-                fontFamily:'Nunito', fontWeight:800, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase',
+                fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
                 borderRadius:100,
                 background:'linear-gradient(135deg,#B14AED,#3D5AFE)',
                 color:'#fff', border:'none', cursor:'pointer',
@@ -105,7 +106,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
               onClick={() => setStarted(true)}
               style={{
                 flex:1, height:'100%',
-                fontFamily:'Nunito', fontWeight:800, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase',
+                fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
                 borderRadius:100,
                 background:'linear-gradient(135deg,#2ED573,#1DB954)',
                 color:'#fff', border:'none', cursor:'pointer',
@@ -117,7 +118,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
               onClick={handleEnd}
               style={{
                 flex:1, height:'100%',
-                fontFamily:'Nunito', fontWeight:800, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase',
+                fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
                 borderRadius:100,
                 background:'linear-gradient(135deg,#FF8C42,#FF3B30)',
                 color:'#fff', border:'none', cursor:'pointer',
