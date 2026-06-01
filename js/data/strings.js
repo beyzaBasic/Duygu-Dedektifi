@@ -24,8 +24,8 @@ var STRINGS = {
         hint:   '70 farklı duygu kartı',
       },
       {
-        grad:   'linear-gradient(155deg,#FF8C42,#FF6B00)',
-        shadow: 'rgba(255,100,20,0.5)',
+        grad:   'linear-gradient(155deg,#2ED573,#1DB954)',
+        shadow: 'rgba(30,185,84,0.5)',
         emoji:  '🎬',
         tag:    'ADIM 2',
         title:  'Sahneyi Oyna',
