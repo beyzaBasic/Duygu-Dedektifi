@@ -13,11 +13,11 @@
 
 var SCENES_GENC = [
   {
-    title: "Kamera Açık Kaldı",
-    body: "Online derste mikrofonu kapattın ama kameranın açık kaldığını fark ettin. Az önce bir şey söyledin.",
+    title: "Sınav Kağıdı",
+    body: "Sınav kağıtları dağıtıldı. Yanındakine baktın, o da tam o anda sana baktı.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['red', 'blue', 'orange', 'purple', 'navy', 'yellow']
   },
   {
     title: "Yanlış Kişiye Mesaj",
@@ -48,18 +48,18 @@ var SCENES_GENC = [
     groups: ['orange', 'yellow', 'purple', 'navy', 'red', 'green']
   },
   {
-    title: "Gece Yarısı Mesajı",
-    body: "Gece yarısı arkadaşın 'Sana çok önemli bir şey söylemem lazım' dedi ve o andan beri görünmüyor.",
+    title: "Grup Fotoğrafı",
+    body: "Birlikte çekilen fotoğrafın linki geldi. Açmak üzeresin.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'yellow', 'purple', 'green', 'blue', 'red']
   },
   {
-    title: "Sınıf Kahkahası",
-    body: "Tahtada bir şey okuyorsun ve bir kelimeyi tamamen yanlış telaffuz ettin. Sınıf güldü.",
+    title: "İlk Mesaj",
+    body: "Birine ilk mesajı attın. Teslim edildi ama okunmadı. Saatler geçiyor.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'purple', 'blue', 'red', 'green']
   },
   {
     title: "Sevilen Şarkı",
@@ -90,11 +90,11 @@ var SCENES_GENC = [
     groups: ['purple', 'navy', 'blue']
   },
   {
-    title: "Uyku Hali",
-    body: "Sıkıcı derste uyuyakaldın ve gümbürtüyle uyanarak sınıfı karıştırdın.",
+    title: "Yazıp Silmek",
+    body: "Uzun bir şey yazdın. Okudun. Sildın. Tekrar yazmaya başladın.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'purple', 'blue', 'red', 'green', 'navy']
   },
   {
     title: "Veda Anı",
@@ -153,11 +153,11 @@ var SCENES_GENC = [
     groups: ['orange', 'purple', 'yellow', 'red', 'navy', 'blue']
   },
   {
-    title: "Yanlış Sınıf",
-    body: "Derse geç kaldın ve koşarak içeri girdin. Hiç tanımadığın bir sınıftaydın.",
+    title: "Beklenmedik Haber",
+    body: "Bir yerden beklenmedik bir haber geldi. İçerik tam beklediğinin tersiydi.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'blue', 'yellow', 'red', 'purple', 'navy']
   },
   {
     title: "Aile Masası",
@@ -167,11 +167,11 @@ var SCENES_GENC = [
     groups: ['purple', 'red', 'blue']
   },
   {
-    title: "Eski Fotoğraf",
-    body: "Annen eski fotoğraf albümünü arkadaşlarına gösterdi. İçinde küçüklüğün var.",
+    title: "Son Gün",
+    body: "Bugün bir şeyin son günü. Birazdan sona erecek.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['blue', 'green']
+    groups: ['blue', 'green', 'orange', 'yellow', 'red', 'navy']
   },
   {
     title: "Konser Önü",
@@ -265,11 +265,11 @@ var SCENES_GENC = [
     groups: ['purple', 'red', 'orange']
   },
   {
-    title: "Emoji Kazası",
-    body: "Hocana ya da patronuna gönderdiğin mesajın sonuna yanlışlıkla kalp emojisi ekledin.",
+    title: "Sabah Bildirimi",
+    body: "Telefon çaldı. Sabah yeni bir bildirim — bugün bir şey başlıyor.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'yellow', 'purple', 'blue', 'red', 'green']
   },
   {
     title: "Yıllar Sonra",
@@ -307,11 +307,11 @@ var SCENES_GENC = [
     groups: ['purple', 'red', 'blue']
   },
   {
-    title: "Yanlış Kapı",
-    body: "Tuvaleti arayıp girdiğin kapıdan personel odası çıktı. İçeridekiler sana bakıyor.",
+    title: "Sessiz Ev",
+    body: "Eve döndün, sessizlik var. Her şey yerli yerinde ama bir şeyler değişmiş.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'orange']
+    groups: ['blue', 'green', 'orange', 'yellow', 'purple', 'red']
   },
   {
     title: "Sırılsıklam",
@@ -329,7 +329,7 @@ var SCENES_GENC = [
   },
   {
     title: "Piknik Karıncası",
-    body: "Parkta çim üstüne uzanmıştın. Birden gömleğinin içinde bir şey hissettin — çok sayıda bir şey.",
+    body: "Parkta çim üstüne uzanmıştın. Birden gömleğinin içinde bir kıpırtı — çok sayıda bir kıpırtı.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
     groups: ['orange', 'red', 'purple']
@@ -380,25 +380,25 @@ var SCENES = [
     groups: ['purple', 'red', 'blue']
   },
   {
-    title: "Asansördeki Ayna",
-    body: "Asansörde ayna karşısında duruyorsun. Işıklar bir anlığına yanıp sönüyor.",
+    title: "Tanıdık Ses",
+    body: "Kalabalıkta seninle aynı anda biri seni çağırdı. Döndün.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'green', 'blue', 'yellow', 'purple', 'red']
   },
   {
-    title: "Kasadaki Bant",
-    body: "Süpermarket kasasında bant hareket etmiyor. Arkanda uzun bir kuyruk oluştu.",
+    title: "Pencere Önü",
+    body: "Kafede tek başınasın. Pencereden geçen biri sana baktı, durdu, sonra yoluna devam etti.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['red', 'purple']
+    groups: ['orange', 'green', 'blue', 'yellow', 'purple', 'red']
   },
   {
-    title: "Eski Kare",
-    body: "Eski bir fotoğrafı elinde tutuyorsun. Görüntüdeki detaylar çok net.",
+    title: "Bulunan Not",
+    body: "Eski bir kitabın sayfaları arasından küçük bir not düştü.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['blue', 'green']
+    groups: ['blue', 'green', 'orange', 'yellow', 'purple', 'red']
   },
   {
     title: "Eski Çekmece",
@@ -422,11 +422,11 @@ var SCENES = [
     groups: ['purple', 'red', 'blue', 'navy']
   },
   {
-    title: "Yanlış Mesaj",
-    body: "Telefonunda bir mesaj gönderdin ve mesajı alan kişi tam karşında oturuyor.",
+    title: "İki Adres",
+    body: "Aynı saate iki farklı yere söz verdiğini fark ettin. İkisi de önemli.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'blue']
+    groups: ['purple', 'red', 'orange', 'blue', 'navy', 'green']
   },
   {
     title: "Kapı Zili",
@@ -464,18 +464,18 @@ var SCENES = [
     groups: ['purple', 'red']
   },
   {
-    title: "Yanlış Tren",
-    body: "Trende yanlış yöne gittiğini anonsu duyduğunda anladın.",
+    title: "Kapı Kapandı",
+    body: "Kapı kapandı, yola çıktın. Arkana bakmadın.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'yellow', 'navy', 'purple', 'blue', 'red']
   },
   {
-    title: "Fırtınalı Kulübe",
-    body: "Dışarıda fırtına var, sen eski bir kulübede mahsur kaldın.",
+    title: "İki Kişi Bekliyordu",
+    body: "Bir odaya girdiğinde içerideki iki kişi konuşmayı kesti ve sana döndü.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'purple', 'red', 'blue', 'green', 'navy']
   },
   {
     title: "Mülakat Kapısı",
@@ -492,11 +492,11 @@ var SCENES = [
     groups: ['red', 'purple', 'navy']
   },
   {
-    title: "Kamp Ateşi",
-    body: "Ormanda ateşin etrafında oturuyorsun. Karanlığın içinden bir ses geldi.",
+    title: "Gece Yarısı Çalan",
+    body: "Gece yarısı telefon çaldı. Ekrana baktın, numarayı gördün.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'purple', 'red', 'blue', 'green', 'yellow']
   },
   {
     title: "Sınav Sonucu",
@@ -534,18 +534,18 @@ var SCENES = [
     groups: ['navy', 'red']
   },
   {
-    title: "Cam Asansör",
-    body: "Cam asansör 30. katta aniden durdu.",
+    title: "Eski Şarkı",
+    body: "Tesadüfen eski bir şarkı çalmaya başladı. Tam ne yapıyorsan duraksadın.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['blue', 'green', 'orange', 'yellow', 'red', 'purple']
   },
   {
-    title: "Karantina Balkonu",
-    body: "Balkonda oturmuş boş sokağı izliyorsun.",
+    title: "Sabah Erken",
+    body: "Sabahın erken saatinde tek başınasın. Dışarısı henüz uyanmamış.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['blue', 'green']
+    groups: ['green', 'yellow', 'blue', 'orange', 'purple', 'red']
   },
   {
     title: "Yarışma Finali",
@@ -590,11 +590,11 @@ var SCENES = [
     groups: ['purple', 'red', 'navy']
   },
   {
-    title: "Doktor Bekleme",
-    body: "Doktorun kapısında isminin yazılı olduğu tabelaya bakıyorsun.",
+    title: "Sonuç Sayfası",
+    body: "Uzun süredir merak ettiğin bir şeyin cevabını bulmak üzeresin. Sayfa yükleniyor.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'blue']
+    groups: ['orange', 'purple', 'yellow', 'blue', 'navy', 'red']
   },
   {
     title: "Yeni Ev",
@@ -618,11 +618,11 @@ var SCENES = [
     groups: ['yellow', 'orange']
   },
   {
-    title: "Buz Pisti",
-    body: "Buz pistinde dengeni kaybettin ve herkesin önünde düştün.",
+    title: "Boş Koltuk",
+    body: "Birine ayrılmış koltuk hâlâ boş. Etkinlik başlamak üzere.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['blue', 'green', 'orange', 'yellow', 'purple', 'red']
   },
   {
     title: "Otel Odası",
@@ -639,11 +639,11 @@ var SCENES = [
     groups: ['orange', 'yellow', 'purple']
   },
   {
-    title: "Kayıp Telefon",
-    body: "Çantanda telefonunu arıyorsun ama bulamıyorsun.",
+    title: "İlk Gün",
+    body: "Yeni bir yere ilk gün başlıyorsun. Kapıya geldin, içeri girmek üzeresin.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'red']
+    groups: ['orange', 'yellow', 'purple', 'navy', 'green', 'blue']
   },
   {
     title: "Düğün Masası",
@@ -653,11 +653,11 @@ var SCENES = [
     groups: ['purple', 'green', 'blue']
   },
   {
-    title: "Tıkış Tıkış Otobüs",
-    body: "Otobüste insanların arasına sıkışıp kaldın, kimse kımıldayamıyor.",
+    title: "İlk Adım",
+    body: "Uzun süredir ertelediğin bir şeyi yapmak için harekete geçtin. İlk adımı attın.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['red', 'purple']
+    groups: ['orange', 'yellow', 'navy', 'purple', 'red', 'green']
   },
   {
     title: "Tanıdık Yüz",
@@ -667,18 +667,18 @@ var SCENES = [
     groups: ['orange', 'purple', 'red', 'blue', 'green']
   },
   {
-    title: "Sinema Sessizliği",
-    body: "Sinemada en sessiz sahnede elindeki mısır kutusunu yere düşürdün.",
+    title: "Beklenen Karar",
+    body: "Toplantı bitti, herkes çantasını topluyor. Karar henüz açıklanmadı.",
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'navy', 'purple', 'blue', 'red', 'yellow']
   },
   {
-    title: "Yanlış Toplantı",
-    body: "Bir ofis binasında yanlış toplantı odasına girdin ve herkes sana bakıyor.",
+    title: "Söz Sırası",
+    body: "Uzun süre dinledin. Şimdi seni dinlemeleri için sıra sende.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'navy', 'yellow', 'purple', 'red', 'green']
   },
   {
     title: "Piknik Yağmuru",
@@ -688,11 +688,11 @@ var SCENES = [
     groups: ['blue', 'red', 'orange']
   },
   {
-    title: "Canlı Yayın",
-    body: "Yanlışlıkla sosyal medyada canlı yayın başlattın.",
+    title: "Yarım Kalan",
+    body: "Bir şeyi yarım bıraktın. Geri dönmek zorunda değilsin ama hatırlıyorsun.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['blue', 'orange', 'navy', 'green', 'red', 'yellow']
   },
   {
     title: "Yanlış Kargo",
@@ -702,11 +702,11 @@ var SCENES = [
     groups: ['orange', 'purple']
   },
   {
-    title: "Sisli Yol",
-    body: "Yolda yürürken aniden bastıran yoğun sis yüzünden önünü göremiyorsun.",
+    title: "Uzun Sessizlik",
+    body: "Uzun süredir haber alamadığın birinden mesaj geldi. Sadece 'Nasılsın?' yazıyor.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
-    groups: ['purple', 'orange']
+    groups: ['orange', 'blue', 'green', 'red', 'purple', 'yellow']
   },
   {
     title: "Eski Sevgili",
