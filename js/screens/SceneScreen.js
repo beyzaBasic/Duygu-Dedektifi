@@ -1,9 +1,13 @@
-function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurnEnd, onRestart, onListOpen, onScoreOpen, onHome }) {
+function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, isYouth, onAgeChange, onTurnEnd, onRestart, onListOpen, onScoreOpen, onHome }) {
   const { emotion, group } = emotionData;
 
-  const [isYouth, setIsYouth] = React.useState(false);
-  const [shuffledAdult] = React.useState(() => shuffle(SCENES));
-  const [shuffledYouth] = React.useState(() => shuffle(SCENES_GENC));
+  function filterByGroup(scenes) {
+    const matched = scenes.filter(s => s.groups && s.groups.includes(group.key));
+    return matched.length >= 6 ? matched : scenes;
+  }
+
+  const [shuffledAdult] = React.useState(() => shuffle(filterByGroup(SCENES)));
+  const [shuffledYouth] = React.useState(() => shuffle(filterByGroup(SCENES_GENC)));
   const [idxAdult, setIdxAdult] = React.useState(0);
   const [idxYouth, setIdxYouth] = React.useState(0);
 
@@ -58,7 +62,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
       <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(10px,3vw,16px) clamp(16px,5vw,24px)', gap:'clamp(10px,2.5vw,14px)', overflow:'hidden' }}>
         <MiniChip emotion={emotion} group={group} />
         <SceneCard scene={scene} animKey={idx} displayNum={idx + 1} onChangeScene={randomScene} group={group} dark={isYouth} />
-        <AgeToggle isYouth={isYouth} onChange={setIsYouth} />
+        <AgeToggle isYouth={isYouth} onChange={onAgeChange} />
       </div>
 
       <div style={{
@@ -78,7 +82,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
                 color:'#fff', border:'none', cursor:'pointer',
                 boxShadow:'0 6px 18px -4px rgba(100,60,220,0.45)',
               }}
-            >Yeni Tur</button>
+            >{STRINGS.scene.newTurn}</button>
           ) : (
             <div style={{
               flex:1, height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:7,
@@ -112,7 +116,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
                 color:'#fff', border:'none', cursor:'pointer',
                 boxShadow:'0 6px 18px -4px rgba(30,185,84,0.45)',
               }}
-            >Başla</button>
+            >{STRINGS.scene.start}</button>
           ) : (
             <button
               onClick={handleEnd}
@@ -124,7 +128,7 @@ function SceneScreen({ playerName, playerGrad, playerAnimal, emotionData, onTurn
                 color:'#fff', border:'none', cursor:'pointer',
                 boxShadow:'0 6px 18px -4px rgba(255,90,50,0.45)',
               }}
-            >Tamamla</button>
+            >{STRINGS.scene.finish}</button>
           )}
         </div>
       </div>

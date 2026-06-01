@@ -67,8 +67,8 @@ function Scoreboard({ players, prevPlayers, onContinue, onClose }) {
       {/* Header */}
       <div style={{ padding:'clamp(16px,4vw,24px) clamp(20px,5vw,28px) 12px', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div>
-          <div style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:3 }}>Skor</div>
-          <div style={{ fontWeight:900, fontSize:'clamp(22px,6vw,28px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>Sıralama</div>
+          <div style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:3 }}>{STRINGS.scoreboard.label}</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(22px,6vw,28px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>{STRINGS.scoreboard.title}</div>
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           {totalRounds > 0 && (
@@ -78,7 +78,7 @@ function Scoreboard({ players, prevPlayers, onContinue, onClose }) {
               display:'flex', flexDirection:'column', alignItems:'center',
             }}>
               <span style={{ fontSize:16, fontWeight:900, color:'#1A1A1A', lineHeight:1 }}>{totalRounds}</span>
-              <span style={{ fontSize:7, letterSpacing:'0.18em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700 }}>tur</span>
+              <span style={{ fontSize:7, letterSpacing:'0.18em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700 }}>{STRINGS.scoreboard.rounds}</span>
             </div>
           )}
           {isOverlay && (
@@ -151,7 +151,7 @@ function Scoreboard({ players, prevPlayers, onContinue, onClose }) {
                         fontSize:10, fontWeight:700, marginTop:2,
                         color: rankDelta > 0 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.55)',
                       }}>
-                        {rankDelta > 0 ? `↑ ${rankDelta} sıra` : `↓ ${Math.abs(rankDelta)} sıra`}
+                        {rankDelta > 0 ? STRINGS.scoreboard.rankUp(rankDelta) : STRINGS.scoreboard.rankDown(Math.abs(rankDelta))}
                       </div>
                     )}
                   </div>
@@ -251,7 +251,7 @@ function Scoreboard({ players, prevPlayers, onContinue, onClose }) {
               color:'#fff', border:'none', cursor:'pointer',
               boxShadow:'0 6px 20px -6px rgba(0,0,0,0.3)',
             }}
-          >Devam →</button>
+          >{STRINGS.scoreboard.continueBtn}</button>
         </div>
       )}
     </div>

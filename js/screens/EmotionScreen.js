@@ -36,11 +36,11 @@ function EmotionScreen({ playerName, playerGrad, playerAnimal, onScenePhase, onL
       <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(16px,4vw,24px)', gap:'clamp(20px,5vw,32px)' }}>
         <div style={{ textAlign:'center' }}>
           <h1 style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(22px,6vw,30px)', color:'#1A1A1A', lineHeight:1 }}>
-            {phase === 'deck' ? 'Duygunu Çek.' : 'Duygunla Hazırlan.'}
+            {phase === 'deck' ? STRINGS.emotion.titleDeck : STRINGS.emotion.titleReady}
           </h1>
         </div>
         {phase === 'deck' ? (
-          <DeckVisual icon="?" label="Duygu Destesi" sub="70 Kart" onClick={draw} playerGrad={playerGrad} />
+          <DeckVisual icon="?" label={STRINGS.emotion.deckLabel} sub={STRINGS.emotion.deckSub} onClick={draw} playerGrad={playerGrad} />
         ) : (
           <EmotionCard emotion={emotion} group={group} animKey={animKey} onShown={() => setPhase('ready')} onRedraw={phase === 'ready' ? redraw : null} />
         )}
@@ -48,7 +48,7 @@ function EmotionScreen({ playerName, playerGrad, playerAnimal, onScenePhase, onL
 
       <div style={{ padding:'0 clamp(16px,5vw,24px) calc(env(safe-area-inset-bottom,0px) + 24px)', display:'flex', justifyContent:'center', minHeight:64, alignItems:'center' }}>
         {phase === 'ready' && (
-          <Btn small onClick={() => onScenePhase({ emotion, group })}>Sahne Zamanı →</Btn>
+          <Btn small onClick={() => onScenePhase({ emotion, group })}>{STRINGS.emotion.sceneBtn}</Btn>
         )}
       </div>
     </div>

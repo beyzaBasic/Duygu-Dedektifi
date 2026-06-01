@@ -28,10 +28,10 @@ function PlayerSetup({ onStart, onBack }) {
   const canStart = players.length >= 3;
 
   const statusText = players.length === 0
-    ? 'En az 3 kişiyle oynanır'
+    ? STRINGS.playerSetup.statusEmpty
     : players.length < 3
-    ? `${3 - players.length} kişi daha ekle`
-    : `${players.length} oyuncu hazır 🎉`;
+    ? STRINGS.playerSetup.statusNeedMore(3 - players.length)
+    : STRINGS.playerSetup.statusReady(players.length);
 
   return (
     <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2', overflow:'hidden' }}>
@@ -56,11 +56,11 @@ function PlayerSetup({ onStart, onBack }) {
                 fontWeight:900, fontSize:'clamp(26px,7vw,36px)', letterSpacing:'-0.03em', lineHeight:1,
                 background:'linear-gradient(135deg,#FF6B7A,#FF8C42,#FFC93C)',
                 WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
-              }}>Kim</span>
+              }}>{STRINGS.playerSetup.titleLine1}</span>
               <span style={{
                 fontWeight:400, fontStyle:'italic',
                 fontSize:'clamp(26px,7vw,36px)', letterSpacing:'-0.01em', lineHeight:1, color:'#5A5A5A',
-              }}>oynuyor?</span>
+              }}>{STRINGS.playerSetup.titleLine2}</span>
             </div>
             <div style={{
               fontSize:11, marginTop:5, fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase',
@@ -77,7 +77,7 @@ function PlayerSetup({ onStart, onBack }) {
         <input
           value={gameName}
           onChange={e => setGameName(e.target.value)}
-          placeholder="Oyun adı (opsiyonel)"
+          placeholder={STRINGS.playerSetup.gameNamePlaceholder}
           maxLength={32}
           autoComplete="off"
           style={{
@@ -147,7 +147,7 @@ function PlayerSetup({ onStart, onBack }) {
           value={name}
           onChange={e => setName(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="İsim gir..."
+          placeholder={STRINGS.playerSetup.playerPlaceholder}
           maxLength={20}
           autoComplete="off"
           style={{
@@ -197,7 +197,7 @@ function PlayerSetup({ onStart, onBack }) {
             textShadow: canStart ? '0 1px 4px rgba(0,0,0,0.15)' : 'none',
           }}
         >
-          {canStart ? 'Oynayalım! →' : `${3 - players.length} oyuncu daha ekle`}
+          {canStart ? STRINGS.playerSetup.startBtn : STRINGS.playerSetup.needMoreBtn(3 - players.length)}
         </button>
       </div>
     </div>

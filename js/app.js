@@ -1,5 +1,5 @@
 const RAINBOW_BONUS = 5;
-const SESSIONS_KEY = 'duyguDedektifiSessions';
+const SESSIONS_KEY = 'duyguAviSessions';
 
 function loadAllSessions() {
   try { return JSON.parse(localStorage.getItem(SESSIONS_KEY) || '[]'); }
@@ -20,11 +20,14 @@ function removeSession(id) {
 }
 
 function App() {
-  const [screen, setScreen] = React.useState('welcome');
+  const [screen, setScreen] = React.useState(
+    localStorage.getItem('duyguAviTutorialSeen') ? 'welcome' : 'tutorial'
+  );
   const [players, setPlayers] = React.useState([]);
   const [prevPlayers, setPrevPlayers] = React.useState(null);
   const [currentPlayerIdx, setCurrentPlayerIdx] = React.useState(0);
   const [emotionData, setEmotionData] = React.useState(null);
+  const [isYouth, setIsYouth] = React.useState(false);
   const [showList, setShowList] = React.useState(false);
   const [showScoreboard, setShowScoreboard] = React.useState(false);
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
@@ -135,8 +138,16 @@ function App() {
 
   const homeProps = { onHome: handleHome };
 
+  function finishTutorial() {
+    localStorage.setItem('duyguAviTutorialSeen', '1');
+    setScreen('welcome');
+  }
+
   return (
     <div style={{ display:'flex', flexDirection:'column', height:'100%', position:'relative' }}>
+      {screen === 'tutorial' && (
+        <TutorialScreen onDone={finishTutorial} />
+      )}
       {screen === 'welcome' && (
         <WelcomeScreen
           onStart={() => setScreen('setup')}
@@ -166,6 +177,8 @@ function App() {
           playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
           playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
           onScenePhase={d => { setEmotionData(d); setScreen('scene'); }}
+          isYouth={isYouth}
+          onAgeChange={setIsYouth}
           onListOpen={() => setShowList(true)}
           onScoreOpen={() => setShowScoreboard(true)}
           {...homeProps}
@@ -177,6 +190,8 @@ function App() {
           playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
           playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
           emotionData={emotionData}
+          isYouth={isYouth}
+          onAgeChange={setIsYouth}
           onTurnEnd={() => setScreen('roundResult')}
           onRestart={() => { setEmotionData(null); setScreen('emotion'); }}
           onListOpen={() => setShowList(true)}
@@ -221,7 +236,7 @@ function App() {
               {sessionName}
             </div>
             <div style={{ fontSize:13, color:'#7A7A7A', lineHeight:1.6, marginBottom:24 }}>
-              Oyun kaydedildi.<br/>Ana menüden kaldığın yerden devam edebilirsin.
+              {STRINGS.exit.message.split('\n').map((line, i) => i === 0 ? line : [React.createElement('br', {key:i}), line])}
             </div>
             <div style={{ display:'flex', gap:10 }}>
               <button
@@ -232,7 +247,7 @@ function App() {
                   background:'rgba(0,0,0,0.07)', color:'#1A1A1A',
                   border:'none', cursor:'pointer',
                 }}
-              >İptal</button>
+              >{STRINGS.exit.cancel}</button>
               <button
                 onClick={confirmExit}
                 style={{
@@ -243,7 +258,7 @@ function App() {
                   boxShadow:'0 6px 18px -6px rgba(255,100,80,0.5)',
                   letterSpacing:'0.04em',
                 }}
-              >Ana Menüye Dön →</button>
+              >{STRINGS.exit.confirm}</button>
             </div>
           </div>
         </div>

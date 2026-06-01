@@ -53,7 +53,7 @@ function PlayerList({ players, currentPlayerIdx, sessionName, onPlayerTap, onHom
                     fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase',
                     color:'#A0A0A0', fontWeight:700, textAlign:'center', paddingTop:2,
                   }}>
-                    Sıradaki oyuncu
+                    {STRINGS.playerList.nextPlayer}
                   </div>
                   <button
                     onClick={onPlayerTap}
@@ -73,7 +73,7 @@ function PlayerList({ players, currentPlayerIdx, sessionName, onPlayerTap, onHom
                       color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)',
                     }}>{p.name}</span>
                     <span style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.7)', fontWeight:700 }}>
-                      dokun, turuna başla
+                      {STRINGS.playerList.tapHint}
                     </span>
                   </button>
                 </React.Fragment>

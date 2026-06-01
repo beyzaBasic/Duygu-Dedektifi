@@ -258,7 +258,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
       <div style={{
         margin:'0 clamp(22px,6vw,30px)',
         height:1,
-        background: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+        background: dark ? 'rgba(0,0,0,0.07)' : 'rgba(0,0,0,0.08)',
         flex:'0 0 auto',
       }}/>
 

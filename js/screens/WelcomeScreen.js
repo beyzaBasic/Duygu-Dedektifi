@@ -140,8 +140,8 @@ function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
         flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between',
       }}>
         <div>
-          <div style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:4 }}>Arşiv</div>
-          <div style={{ fontWeight:900, fontSize:'clamp(22px,6vw,28px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>Kayıtlı Oyunlar</div>
+          <div style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:4 }}>{STRINGS.welcome.archiveLabel}</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(22px,6vw,28px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>{STRINGS.welcome.archiveTitle}</div>
         </div>
         <button onClick={onClose} style={{
           width:36, height:36, borderRadius:'50%', background:'#fff',
@@ -160,8 +160,8 @@ function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
         {sessions.length === 0 ? (
           <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:12, color:'#C8C0B8', paddingTop:60 }}>
             <div style={{ fontSize:44 }}>📂</div>
-            <div style={{ fontSize:14, fontWeight:700 }}>Henüz kayıtlı oyun yok</div>
-            <div style={{ fontSize:12, color:'#D0C8C0' }}>Oyun bitince otomatik kaydedilir</div>
+            <div style={{ fontSize:14, fontWeight:700 }}>{STRINGS.welcome.archiveEmpty}</div>
+            <div style={{ fontSize:12, color:'#D0C8C0' }}>{STRINGS.welcome.archiveEmptySub}</div>
           </div>
         ) : sessions.map((s, i) => (
           <SwipeableSessionCard
@@ -175,7 +175,7 @@ function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
         ))}
         {sessions.length > 0 && (
           <div style={{ textAlign:'center', marginTop:4, fontSize:10, color:'#C8C0B8', fontWeight:600, letterSpacing:'0.08em' }}>
-            Silmek için sola kaydır
+            {STRINGS.welcome.archiveSwipeHint}
           </div>
         )}
       </div>
@@ -232,13 +232,13 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
           position:'relative', overflow:'hidden',
         }}>
           {/* Decorative blobs */}
-          <div style={{ position:'absolute', top:-30, right:-30, width:120, height:120, borderRadius:'50%', background:'rgba(255,255,255,0.12)' }}/>
-          <div style={{ position:'absolute', bottom:-20, left:-20, width:80, height:80, borderRadius:'50%', background:'rgba(255,255,255,0.08)' }}/>
+          <div style={{ position:'absolute', top:-30, right:-30, width:120, height:120, borderRadius:'50%', background:'rgba(0,0,0,0.1)' }}/>
+          <div style={{ position:'absolute', bottom:-20, left:-20, width:80, height:80, borderRadius:'50%', background:'rgba(0,0,0,0.07)' }}/>
 
           <div style={{ fontSize:52, lineHeight:1, zIndex:1 }}>🎭</div>
           <div style={{ textAlign:'center', zIndex:1 }}>
-            <div style={{ fontWeight:900, fontSize:'clamp(36px,10vw,50px)', color:'#fff', letterSpacing:'-0.03em', lineHeight:0.9, textShadow:'0 2px 12px rgba(0,0,0,0.15)' }}>Duygu</div>
-            <div style={{ fontWeight:400, fontStyle:'italic', fontSize:'clamp(36px,10vw,50px)', color:'rgba(255,255,255,0.82)', letterSpacing:'-0.01em', lineHeight:0.95 }}>Dedektifi</div>
+            <div style={{ fontWeight:900, fontSize:'clamp(48px,13vw,62px)', color:'#fff', letterSpacing:'-0.03em', lineHeight:0.88, textShadow:'0 4px 24px rgba(0,0,0,0.2)' }}>Duygu</div>
+            <div style={{ fontWeight:900, fontSize:'clamp(26px,7vw,34px)', color:'rgba(255,255,255,0.82)', letterSpacing:'0.28em', lineHeight:1, marginTop:6, paddingLeft:'0.28em' }}>Avı</div>
           </div>
           <div style={{ display:'flex', gap:6, zIndex:1 }}>
             {['😊','😢','😡','😍','😱','🥳','😤'].map(e => (
@@ -251,7 +251,7 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
             ))}
           </div>
           <div style={{ fontSize:9, letterSpacing:'0.24em', color:'rgba(255,255,255,0.6)', textTransform:'uppercase', fontWeight:700, zIndex:1 }}>
-            Sahne · Duygu · Tahmin
+            {STRINGS.welcome.tagline}
           </div>
         </div>
       </div>
@@ -259,12 +259,8 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
       {/* How to play */}
       <div style={{ padding:'14px clamp(16px,5vw,24px) 0', flexShrink:0 }}>
         <div style={{ background:'#fff', borderRadius:24, padding:'20px 20px' }}>
-          <div style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', marginBottom:18, fontWeight:700 }}>Nasıl oynanır</div>
-          {[
-            ['🃏', 'Duygu çek', 'Kart bulanık gelir — sadece sen görürsün', 'linear-gradient(135deg,#FF6B7A,#FF8C42)', 'rgba(255,100,80,0.35)'],
-            ['🎬', 'Sahneyi oku', 'Sahneyi duygunla yorumla, soruyu cevapla', 'linear-gradient(135deg,#FFC93C,#2ED573)', 'rgba(46,213,115,0.35)'],
-            ['🔍', 'Tahmin et', 'Diğerleri senin duygunun ne olduğunu bulmalı', 'linear-gradient(135deg,#5FB8FF,#B14AED)', 'rgba(100,60,220,0.35)'],
-          ].map(([icon, t, d, grad, shadow], i) => (
+          <div style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', marginBottom:18, fontWeight:700 }}>{STRINGS.welcome.howToPlay}</div>
+          {STRINGS.welcome.howToPlayItems.map(([icon, t, d, grad, shadow], i) => (
             <div key={i} style={{ display:'flex', gap:14, alignItems:'flex-start', marginBottom: i===2 ? 0 : 16 }}>
               <div style={{
                 width:42, height:42, borderRadius:14, background:grad,
@@ -294,7 +290,7 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
             boxShadow:'0 8px 24px -6px rgba(0,0,0,0.35)',
           }}
         >
-          {sessions && sessions.length > 0 ? 'Yeni Oyun →' : 'Haydi Oynayalım! →'}
+          {sessions && sessions.length > 0 ? STRINGS.welcome.newGame : STRINGS.welcome.continueGame}
         </button>
       </div>
 

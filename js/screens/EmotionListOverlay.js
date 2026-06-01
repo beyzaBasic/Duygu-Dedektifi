@@ -12,8 +12,8 @@ function EmotionListOverlay({ onClose }) {
     }}>
       <div style={{ padding:'clamp(16px,5vw,24px) clamp(16px,5vw,24px) 12px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
         <div>
-          <div style={{ fontWeight:900, fontSize:'clamp(18px,5vw,22px)', color:'#1A1A1A' }}>Duygu Havuzu</div>
-          <div style={{ fontSize:10, letterSpacing:'0.18em', textTransform:'uppercase', color:'#A0A0A0', marginTop:3, fontWeight:700 }}>70 duygu · 7 renk ailesi</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(18px,5vw,22px)', color:'#1A1A1A' }}>{STRINGS.emotionList.title}</div>
+          <div style={{ fontSize:10, letterSpacing:'0.18em', textTransform:'uppercase', color:'#A0A0A0', marginTop:3, fontWeight:700 }}>{STRINGS.emotionList.subtitle}</div>
         </div>
         <button onClick={onClose} style={{
           width:38, height:38, borderRadius:'50%', background:'rgba(0,0,0,0.07)',
@@ -28,7 +28,7 @@ function EmotionListOverlay({ onClose }) {
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
               <div style={{ width:12, height:12, borderRadius:'50%', background:g.grad, flexShrink:0 }}/>
               <span style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700 }}>
-                {g.name} Duygular
+                {g.name} {STRINGS.emotionList.groupSuffix}
               </span>
             </div>
             <div style={{ display:'flex', flexWrap:'wrap', gap:7 }}>

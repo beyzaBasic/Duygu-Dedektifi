@@ -5,7 +5,7 @@ function RoundResult({ players, currentPlayerIdx, onConfirm }) {
     ...players
       .map((p, i) => ({ ...p, originalIdx: i }))
       .filter((_, i) => i !== currentPlayerIdx),
-    { name: 'Kimse bilemedi', originalIdx: 'none', isNone: true },
+    { name: STRINGS.roundResult.nobody, originalIdx: 'none', isNone: true },
   ];
 
   const anlatanGrad = PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length];
@@ -15,7 +15,7 @@ function RoundResult({ players, currentPlayerIdx, onConfirm }) {
 
       <div style={{ padding:'clamp(16px,4vw,24px) clamp(20px,5vw,28px) 16px', flexShrink:0 }}>
         <div style={{ fontSize:11, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:12, textAlign:'center' }}>
-          Tur bitti · Kim <span style={{ background: anlatanGrad, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>buldu?</span>
+          {STRINGS.roundResult.header} <span style={{ background: anlatanGrad, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>{STRINGS.roundResult.headerHL}</span>
         </div>
         {/* Anlatıcı */}
         <div style={{ display:'flex', justifyContent:'center' }}>
@@ -29,7 +29,7 @@ function RoundResult({ players, currentPlayerIdx, onConfirm }) {
             <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:15, color:'#fff' }}>
               {players[currentPlayerIdx].name}
             </span>
-            <span style={{ fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'rgba(255,255,255,0.7)', fontWeight:700 }}>anlatıyordu</span>
+            <span style={{ fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'rgba(255,255,255,0.7)', fontWeight:700 }}>{STRINGS.roundResult.telling}</span>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@ function RoundResult({ players, currentPlayerIdx, onConfirm }) {
             transition:'all 0.3s cubic-bezier(0.2,0.8,0.2,1)',
             textShadow: selected !== null ? '0 1px 4px rgba(0,0,0,0.15)' : 'none',
           }}
-        >Onayla →</button>
+        >{STRINGS.roundResult.confirm}</button>
       </div>
     </div>
   );
