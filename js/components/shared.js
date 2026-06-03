@@ -255,6 +255,28 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
         </p>
       </div>
 
+      {scene.groups && scene.groups.length > 0 && (
+        <div style={{
+          display:'flex', gap:7, alignItems:'center',
+          padding:'0 clamp(22px,6vw,30px) clamp(12px,3vw,16px)',
+          flex:'0 0 auto',
+        }}>
+          {scene.groups.map(key => {
+            const g = (typeof GROUPS !== 'undefined') && GROUPS.find(x => x.key === key);
+            if (!g) return null;
+            const active = group && key === group.key;
+            return <span key={key} style={{
+              width: active ? 15 : 11, height: active ? 15 : 11,
+              borderRadius:'50%', background:g.grad, flexShrink:0,
+              boxShadow: active
+                ? `0 0 0 2px ${dark ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.08)'}, 0 1px 3px rgba(0,0,0,0.22)`
+                : '0 1px 2px rgba(0,0,0,0.12)',
+              transition:'all 0.2s',
+            }}/>;
+          })}
+        </div>
+      )}
+
       <div style={{
         margin:'0 clamp(22px,6vw,30px)',
         height:1,
@@ -271,7 +293,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
         <p style={{
           fontWeight:700,
           fontStyle:'italic',
-          fontSize:'clamp(13px,3.5vw,15px)',
+          fontSize:'clamp(15px,4.3vw,17px)',
           lineHeight:1.55,
           letterSpacing:'-0.005em',
           color: group ? (group.text === 'white' ? 'rgba(255,255,255,0.9)' : 'rgba(58,42,0,0.75)') : '#7A7A7A',

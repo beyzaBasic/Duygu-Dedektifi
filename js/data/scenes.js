@@ -361,6 +361,140 @@ var SCENES_GENC = [
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
     groups: ['red', 'orange', 'navy']
+  },
+
+  /* ─── BEDEN DİLİ ─── duyguyu sadece bedenle anlat (her duyguya uyar) */
+  {
+    title: "Sessiz Sahne",
+    body: "Konuşmak yok. Tek araçların yüzün, ellerin ve duruşun.",
+    question: "Bu duyguyu tek kelime etmeden, sadece beden dilinle anlat.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Donmuş Kare",
+    body: "Story'ye bir fotoğraf koyacaksın ve sonsuza dek o pozda kalacaksın.",
+    question: "Bu duyguyu anlatan tek bir poz ver ve öylece don.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Sadece Yüz",
+    body: "Ellerin cebinde, yerinden kıpırdayamıyorsun. Geriye yalnızca yüzün kaldı.",
+    question: "Bu duyguyu sadece yüz ifadenle anlat.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Emoji Ol",
+    body: "Bu duygu bir emoji olsaydı, ekranda hep o ifadeyle dururdu.",
+    question: "O emojiyi yüzünle ve bedeninle canlandır.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+
+  /* ─── CANLANDIR ─── duygu bir insan olsa nasıl davranırdı */
+  {
+    title: "Sınıfa Giriş",
+    body: "Bu duygu bir öğrenci olsaydı ve zil çaldıktan sonra sınıfa girseydi.",
+    question: "Onun yerine geç: Kapıdan nasıl girer, sırasına nasıl otururdu?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Story Atmak",
+    body: "Bu duygu bir insan ve tam şimdi telefonuna story atıyor.",
+    question: "Onun yerine geç: Nasıl poz verir, ne yazıp paylaşırdı?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Servise Binmek",
+    body: "Bu duygu bir insan ve okul servisine yeni bindi.",
+    question: "Onun yerine geç: Nasıl biner, nereye nasıl otururdu?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Selfie Çekmek",
+    body: "Bu duygu bir insan ve bir selfie çekmek üzere.",
+    question: "Onun yerine geç: Telefonu nasıl tutar, nasıl poz verirdi?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+
+  /* ─── BİRİNİ SEÇ ─── bu duygu sen olsan birine nasıl davranırdın */
+  {
+    title: "Selam Ver",
+    body: "Gruptan birini seç. Bu duygu sen olsaydın.",
+    question: "Seçtiğin kişiye sadece bu duygunun yönlendirdiği gibi selam ver.",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Çak Bir Beşlik",
+    body: "Gruptan birini seç. Onunla 'çak' yapacaksın.",
+    question: "Bu duygu sen olsaydın, seçtiğin kişiyle nasıl el çırpardın?",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Kulağa Fısılda",
+    body: "Gruptan birini seç. Kulağına bir şey söyleyeceksin.",
+    question: "Bu duygu sen olsaydın, seçtiğin kişiye nasıl yaklaşırdın?",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Bir Şey Ver",
+    body: "Gruptan birini seç. Eline hayali bir şey tutuşturacaksın.",
+    question: "Bu duygu sen olsaydın, onu seçtiğin kişiye nasıl uzatırdın?",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+
+  /* ─── ROL ─── bir role gir, bu duygu sende olsa ne yapardın */
+  {
+    title: "Dinlenmeyen Sunum",
+    body: "Sınıfın önünde sunum yapıyorsun ama kimse dinlemiyor, herkes fısıldaşıyor.",
+    question: "Bu duygu sende olsa, sunuma nasıl devam ederdin?",
+    type: "Rol",
+    groups: ['red', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Takım Kaptanı",
+    body: "Takım kaptanısın. Maça iki dakika kala herkesi bir araya toplaman gerekiyor.",
+    question: "Bu duygu sende olsa, takımına nasıl seslenirdin?",
+    type: "Rol",
+    groups: ['red', 'orange', 'yellow', 'navy']
+  },
+  {
+    title: "Yeni Okul",
+    body: "Yeni bir okula geldin. İlk kez sınıfın kapısından içeri gireceksin.",
+    question: "Bu duygu sende olsa, sınıfa nasıl girer, nasıl tanışırdın?",
+    type: "Rol",
+    groups: ['orange', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Grup Ödevi",
+    body: "Grup ödevinde herkes işi sana bıraktı ve sunum yarın.",
+    question: "Bu duygu sende olsa, gruba ne der, ne yapardın?",
+    type: "Rol",
+    groups: ['red', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Perde Açılmadan",
+    body: "Okul gösterisinde sahneye çıkmana saniyeler kaldı. Perde birazdan açılıyor.",
+    question: "Bu duygu sende olsa, perde açılmadan ne yapardın?",
+    type: "Rol",
+    groups: ['orange', 'yellow', 'navy', 'purple']
+  },
+  {
+    title: "Münazara",
+    body: "Münazaradasın. Karşı takım tam senin söyleyeceğin şeyi söyledi.",
+    question: "Bu duygu sende olsa, sıra sana gelince ne yapardın?",
+    type: "Rol",
+    groups: ['red', 'orange', 'navy', 'purple']
   }
 ];
 
@@ -714,5 +848,153 @@ var SCENES = [
     question: "Bu duygu sende olsa, o an ne yapardın?",
     type: "Self",
     groups: ['purple', 'orange', 'blue', 'red']
+  },
+
+  /* ─── BEDEN DİLİ ─── duyguyu sadece bedenle anlat (her duyguya uyar) */
+  {
+    title: "Sessiz Sahne",
+    body: "Konuşmak yok. Tek araçların yüzün, ellerin, omuzların ve duruşun.",
+    question: "Bu duyguyu tek kelime etmeden, sadece beden dilinle anlat.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Donmuş Kare",
+    body: "Bir fotoğraf çekilecek ve sonsuza dek o pozda kalacaksın.",
+    question: "Bu duyguyu anlatan tek bir poz ver ve öylece don.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Yavaş Çekim",
+    body: "Her hareketin üç kat yavaşladı, zaman ağırlaştı.",
+    question: "Bu duyguyu ağır çekimde, sadece beden dilinle göster.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Sadece Eller",
+    body: "Yüzünü saklıyorsun, yüz ifaden görünmüyor. Geriye yalnızca ellerin kaldı.",
+    question: "Bu duyguyu sadece ellerinle anlat.",
+    type: "Beden Dili",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+
+  /* ─── CANLANDIR ─── duygu bir insan olsa nasıl davranırdı */
+  {
+    title: "Kapıdan Giriş",
+    body: "Bu duygu bir insan olsaydı ve şu an kapıdan içeri girseydi.",
+    question: "Onun yerine geç: Kapıyı nasıl açar, içeri nasıl girer, nasıl yürürdü?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Telefonu Açmak",
+    body: "Bu duygu bir insan ve telefonu yeni çaldı.",
+    question: "Onun yerine geç: Telefonu nasıl açar, karşıdakiyle nasıl konuşurdu?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Kahve Siparişi",
+    body: "Bu duygu bir insan ve kafeye girip sıraya geçti.",
+    question: "Onun yerine geç: Sırasını nasıl bekler, siparişini nasıl verirdi?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Masaya Oturmak",
+    body: "Bu duygu bir insan ve kalabalık bir masaya yeni oturdu.",
+    question: "Onun yerine geç: Nasıl oturur, nasıl selam verir, nasıl yer kaplardı?",
+    type: "Canlandır",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+
+  /* ─── BİRİNİ SEÇ ─── bu duygu sen olsan birine nasıl davranırdın */
+  {
+    title: "Selam Ver",
+    body: "Masadan birini seç. Bu duygu sen olsaydın.",
+    question: "Seçtiğin kişiye sadece bu duygunun yönlendirdiği gibi 'merhaba' de.",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Sırını Söyle",
+    body: "Masadan birini seç. Ona bir şey fısıldayacaksın.",
+    question: "Bu duygu sen olsaydın, seçtiğin kişiye nasıl yaklaşır, nasıl anlatırdın?",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Bir Şey Uzat",
+    body: "Masadan birini seç. Eline hayali bir şey tutuşturacaksın.",
+    question: "Bu duygu sen olsaydın, onu seçtiğin kişiye nasıl uzatırdın?",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Veda Et",
+    body: "Masadan birini seç. Ona veda edeceksin.",
+    question: "Bu duygu sen olsaydın, seçtiğin kişiye nasıl veda ederdin?",
+    type: "Birini Seç",
+    groups: ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple']
+  },
+
+  /* ─── ROL ─── bir meslek/role gir, bu duygu sende olsa ne yapardın */
+  {
+    title: "Dinlenmeyen Öğretmen",
+    body: "Bir öğretmensin. Sınıfta kimse seni dinlemiyor, herkes kendi dünyasında.",
+    question: "Bu duygu sende olsa, o sınıfta nasıl davranırdın?",
+    type: "Rol",
+    groups: ['red', 'blue', 'navy', 'purple']
+  },
+  {
+    title: "Yoğun Garson",
+    body: "Bir garsonsun. Bütün masalar dolu ve herkes aynı anda seni çağırıyor.",
+    question: "Bu duygu sende olsa, bu akşamı nasıl idare ederdin?",
+    type: "Rol",
+    groups: ['red', 'orange', 'navy', 'purple']
+  },
+  {
+    title: "Sahnedeki Sunucu",
+    body: "Bir sunucusun. Sahnedesin, mikrofon açık, yüzlerce kişi sana bakıyor.",
+    question: "Bu duygu sende olsa, sahneye nasıl çıkar, nasıl konuşurdun?",
+    type: "Rol",
+    groups: ['orange', 'yellow', 'navy', 'purple']
+  },
+  {
+    title: "Acil Servis Doktoru",
+    body: "Bir doktorsun. Aynı anda iki hasta birden sana yetişmeye çalışıyor.",
+    question: "Bu duygu sende olsa, bu vardiyada nasıl davranırdın?",
+    type: "Rol",
+    groups: ['green', 'red', 'navy', 'purple']
+  },
+  {
+    title: "İlk Günkü Patron",
+    body: "Yeni bir ekibin yöneticisisin. İlk kez hepsinin karşısına çıkacaksın.",
+    question: "Bu duygu sende olsa, ekibinle ilk kez nasıl tanışırdın?",
+    type: "Rol",
+    groups: ['orange', 'yellow', 'navy', 'purple']
+  },
+  {
+    title: "Müşteri Temsilcisi",
+    body: "Bir müşteri temsilcisisin. Karşındaki kişi telefonda dakikalardır bağırıyor.",
+    question: "Bu duygu sende olsa, bu görüşmeyi nasıl yönetirdin?",
+    type: "Rol",
+    groups: ['red', 'green', 'blue', 'navy']
+  },
+  {
+    title: "Pilot Anonsu",
+    body: "Bir pilotsun. Uçaktaki yolculara anons yapman gerekiyor.",
+    question: "Bu duygu sende olsa, anonsu nasıl yapardın?",
+    type: "Rol",
+    groups: ['yellow', 'green', 'navy', 'purple']
+  },
+  {
+    title: "Düğün Fotoğrafçısı",
+    body: "Bir fotoğrafçısın. Dağınık kalabalığı toplayıp poz verdirmen gerekiyor.",
+    question: "Bu duygu sende olsa, kalabalığı nasıl yönetirdin?",
+    type: "Rol",
+    groups: ['red', 'orange', 'yellow', 'navy']
   }
 ];

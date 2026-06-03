@@ -107,19 +107,6 @@ function SwipeableSessionCard({ session, index, onContinue, onDelete, formatDate
             )}
           </div>
         </div>
-
-        <button
-          onClick={e => { e.stopPropagation(); onDelete(session.id); }}
-          style={{
-            width:32, height:32, borderRadius:'50%',
-            background:'rgba(0,0,0,0.05)', border:'none', cursor:'pointer',
-            display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-          }}
-        >
-          <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
-            <path d="M1 3.5h12M4.5 3.5V2h5v1.5M2.5 3.5l1 10h7l1-10" stroke="#B0A898" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
       </div>
     </div>
   );
