@@ -37,6 +37,29 @@
       60%  { transform: translateY(-4px) scale(1.02); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
+    @keyframes shake-wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      20%      { transform: rotate(-12deg); }
+      40%      { transform: rotate(10deg); }
+      60%      { transform: rotate(-8deg); }
+      80%      { transform: rotate(6deg); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(0.55); opacity: 0.45; }
+      100% { transform: scale(1.45); opacity: 0; }
+    }
+    @keyframes float-y {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-18px) scale(1.1); }
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    @keyframes pop-in {
+      0%   { opacity: 0; transform: translateY(14px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
     .enter    { animation: enter 0.4s cubic-bezier(0.2,0.8,0.2,1) both; }
     .card-in  { animation: card-in 0.5s cubic-bezier(0.2,0.8,0.2,1) both; }
   </style>
@@ -61,8 +84,7 @@
 <script type="text/babel" src="js/screens/WelcomeScreen.js"></script>
 <script type="text/babel" src="js/screens/PlayerSetup.js"></script>
 <script type="text/babel" src="js/screens/PlayerList.js"></script>
-<script type="text/babel" src="js/screens/EmotionScreen.js"></script>
-<script type="text/babel" src="js/screens/SceneScreen.js"></script>
+<script type="text/babel" src="js/screens/TurnScreen.js"></script>
 <script type="text/babel" src="js/screens/RoundResult.js"></script>
 <script type="text/babel" src="js/screens/Scoreboard.js"></script>
 

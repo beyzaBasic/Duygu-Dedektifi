@@ -170,6 +170,12 @@ function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
   );
 }
 
+var WELCOME_STEPS = [
+  { emoji:'📱', grad:'linear-gradient(135deg,#B14AED,#3D5AFE)', shadow:'rgba(100,60,220,0.4)',  anim:'shake-wiggle 1.7s ease-in-out infinite' },
+  { emoji:'🎭', grad:'linear-gradient(135deg,#FFC93C,#2ED573)', shadow:'rgba(46,213,115,0.4)',  anim:'bob 2.2s ease-in-out infinite' },
+  { emoji:'🔍', grad:'linear-gradient(135deg,#5FB8FF,#B14AED)', shadow:'rgba(100,60,220,0.4)',  anim:'bob 2.2s ease-in-out 0.5s infinite' },
+];
+
 function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDeleteSession }) {
   const [showArchive, setShowArchive] = React.useState(false);
 
@@ -228,12 +234,13 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
             <div style={{ fontWeight:900, fontSize:'clamp(26px,7vw,34px)', color:'rgba(255,255,255,0.82)', letterSpacing:'0.28em', lineHeight:1, marginTop:6, paddingLeft:'0.28em' }}>Avı</div>
           </div>
           <div style={{ display:'flex', gap:6, zIndex:1 }}>
-            {['😊','😢','😡','😍','😱','🥳','😤'].map(e => (
+            {['😊','😢','😡','😍','😱','🥳','😤'].map((e, i) => (
               <div key={e} style={{
                 width:36, height:36, borderRadius:'50%',
                 background:'rgba(255,255,255,0.2)',
                 display:'flex', alignItems:'center', justifyContent:'center',
                 fontSize:18,
+                animation:`bob 2.4s ease-in-out ${i * 0.18}s infinite`,
               }}>{e}</div>
             ))}
           </div>
@@ -243,23 +250,43 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
         </div>
       </div>
 
-      {/* How to play */}
+      {/* Oyun akışı — 3 adım görsel özet */}
       <div style={{ padding:'14px clamp(16px,5vw,24px) 0', flexShrink:0 }}>
-        <div style={{ background:'#fff', borderRadius:24, padding:'20px 20px' }}>
-          <div style={{ fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#A0A0A0', marginBottom:18, fontWeight:700 }}>{STRINGS.welcome.howToPlay}</div>
-          {STRINGS.welcome.howToPlayItems.map(([icon, t, d, grad, shadow], i) => (
-            <div key={i} style={{ display:'flex', gap:14, alignItems:'flex-start', marginBottom: i===2 ? 0 : 16 }}>
-              <div style={{
-                width:42, height:42, borderRadius:14, background:grad,
-                display:'flex', alignItems:'center', justifyContent:'center',
-                fontSize:19, flexShrink:0,
-                boxShadow:`0 6px 16px -4px ${shadow}`,
-              }}>{icon}</div>
-              <div style={{ paddingTop:2 }}>
-                <div style={{ fontWeight:800, fontSize:14, color:'#1A1A1A' }}>{t}</div>
-                <div style={{ fontSize:12, color:'#7A7A7A', marginTop:3, lineHeight:1.45 }}>{d}</div>
+        <div style={{
+          background:'#fff', borderRadius:24, padding:'22px 14px',
+          display:'flex', alignItems:'flex-start', justifyContent:'center', gap:'clamp(2px,1.5vw,8px)',
+        }}>
+          {WELCOME_STEPS.map((st, i) => (
+            <React.Fragment key={i}>
+              <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:10, width:'clamp(64px,21vw,88px)' }}>
+                <div style={{
+                  position:'relative',
+                  width:'clamp(56px,15vw,68px)', height:'clamp(56px,15vw,68px)', borderRadius:'50%',
+                  background:st.grad,
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:'clamp(26px,7vw,32px)',
+                  boxShadow:`0 8px 20px -6px ${st.shadow}`,
+                  animation:st.anim,
+                }}>
+                  {st.emoji}
+                  <div style={{
+                    position:'absolute', top:-5, left:-5,
+                    width:21, height:21, borderRadius:'50%',
+                    background:'#1A1A1A', color:'#fff',
+                    fontSize:11, fontWeight:900,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    border:'2px solid #fff',
+                  }}>{i + 1}</div>
+                </div>
+                <div style={{ fontWeight:800, fontSize:'clamp(12px,3.5vw,14px)', color:'#1A1A1A' }}>{STRINGS.welcome.steps[i]}</div>
               </div>
-            </div>
+              {i < WELCOME_STEPS.length - 1 && (
+                <div style={{
+                  marginTop:'clamp(18px,5.5vw,26px)',
+                  fontSize:'clamp(15px,4.5vw,20px)', color:'#D5D0C8', fontWeight:900, lineHeight:1,
+                }}>→</div>
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>

@@ -6,7 +6,7 @@ function PlayerSetup({ onStart, onBack }) {
 
   function addPlayer() {
     const trimmed = name.trim();
-    if (!trimmed || players.length >= 10) return;
+    if (!trimmed || players.length >= MAX_PLAYERS) return;
     setPlayers(p => [...p, trimmed]);
     setName('');
     setTimeout(() => inputRef.current && inputRef.current.focus(), 0);
@@ -161,17 +161,17 @@ function PlayerSetup({ onStart, onBack }) {
         />
         <button
           onClick={addPlayer}
-          disabled={!name.trim() || players.length >= 10}
+          disabled={!name.trim() || players.length >= MAX_PLAYERS}
           style={{
             fontFamily:'Nunito', fontWeight:900, fontSize:15,
             width:52, height:52, borderRadius:'50%',
-            background: (!name.trim() || players.length >= 8)
+            background: (!name.trim() || players.length >= MAX_PLAYERS)
               ? '#E8E6E1'
               : 'linear-gradient(135deg,#B14AED,#3D5AFE)',
-            color: (!name.trim() || players.length >= 10) ? '#B0A898' : '#fff',
-            border:'none', cursor: (!name.trim() || players.length >= 10) ? 'default' : 'pointer',
+            color: (!name.trim() || players.length >= MAX_PLAYERS) ? '#B0A898' : '#fff',
+            border:'none', cursor: (!name.trim() || players.length >= MAX_PLAYERS) ? 'default' : 'pointer',
             flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow: (!name.trim() || players.length >= 8) ? 'none' : '0 6px 18px -4px rgba(100,60,220,0.5)',
+            boxShadow: (!name.trim() || players.length >= MAX_PLAYERS) ? 'none' : '0 6px 18px -4px rgba(100,60,220,0.5)',
             transition:'all 0.2s',
           }}
         >+</button>

@@ -35,8 +35,9 @@ function App() {
   const [sessionName, setSessionName] = React.useState('');
   const [sessionStorageName, setSessionStorageName] = React.useState('');
   const [sessions, setSessions] = React.useState(loadAllSessions);
+  const [usedScenes, setUsedScenes] = React.useState([]);
 
-  const gameScreens = ['playerList', 'emotion', 'scene', 'roundResult', 'scoreboard'];
+  const gameScreens = ['playerList', 'turn', 'roundResult', 'scoreboard'];
 
   // Auto-save whenever game state changes
   React.useEffect(() => {
@@ -46,12 +47,17 @@ function App() {
         name: sessionStorageName || sessionName,
         players,
         currentPlayerIdx,
+        usedScenes,
         updatedAt: Date.now(),
       };
       persistSession(session);
       setSessions(loadAllSessions());
     }
-  }, [players, currentPlayerIdx]);
+  }, [players, currentPlayerIdx, usedScenes]);
+
+  function markSceneUsed(key) {
+    setUsedScenes(prev => prev.indexOf(key) === -1 ? [...prev, key] : prev);
+  }
 
   function startGame(playerNames, gameName) {
     const id = Date.now().toString();
@@ -71,7 +77,8 @@ function App() {
     setPrevPlayers(null);
     setCurrentPlayerIdx(0);
     setEmotionData(null);
-    persistSession({ id, name: storageName, players: newPlayers, currentPlayerIdx: 0, updatedAt: Date.now() });
+    setUsedScenes([]);
+    persistSession({ id, name: storageName, players: newPlayers, currentPlayerIdx: 0, usedScenes: [], updatedAt: Date.now() });
     setSessions(loadAllSessions());
     setScreen('playerList');
   }
@@ -81,6 +88,7 @@ function App() {
     setSessionName(session.name);
     setPlayers(session.players);
     setCurrentPlayerIdx(session.currentPlayerIdx);
+    setUsedScenes(session.usedScenes || []);
     setPrevPlayers(null);
     setEmotionData(null);
     setScreen('playerList');
@@ -165,35 +173,23 @@ function App() {
           players={players}
           currentPlayerIdx={currentPlayerIdx}
           sessionName={sessionName}
-          onPlayerTap={() => setScreen('emotion')}
+          onPlayerTap={() => setScreen('turn')}
           onHome={handleHome}
           onScoreOpen={() => setShowScoreboard(true)}
           onListOpen={() => setShowList(true)}
         />
       )}
-      {screen === 'emotion' && (
-        <EmotionScreen
+      {screen === 'turn' && (
+        <TurnScreen
           playerName={players[currentPlayerIdx]?.name}
           playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
           playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
-          onScenePhase={d => { setEmotionData(d); setScreen('scene'); }}
           isYouth={isYouth}
           onAgeChange={setIsYouth}
-          onListOpen={() => setShowList(true)}
-          onScoreOpen={() => setShowScoreboard(true)}
-          {...homeProps}
-        />
-      )}
-      {screen === 'scene' && emotionData && (
-        <SceneScreen
-          playerName={players[currentPlayerIdx]?.name}
-          playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
-          playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
-          emotionData={emotionData}
-          isYouth={isYouth}
-          onAgeChange={setIsYouth}
+          onEmotionDrawn={d => setEmotionData(d)}
           onTurnEnd={() => setScreen('roundResult')}
-          onRestart={() => { setEmotionData(null); setScreen('emotion'); }}
+          usedScenes={usedScenes}
+          onSceneUsed={markSceneUsed}
           onListOpen={() => setShowList(true)}
           onScoreOpen={() => setShowScoreboard(true)}
           {...homeProps}

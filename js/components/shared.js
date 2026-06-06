@@ -202,16 +202,28 @@ function MiniChip({ emotion, group }) {
 }
 
 /* ─── SCENE CARD ────────────────────────────────────────────── */
-function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
+function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion, group, dark, emotion }) {
   const [entered, setEntered] = React.useState(false);
   React.useEffect(() => {
     setEntered(false);
     const t = setTimeout(() => setEntered(true), 60);
     return () => clearTimeout(t);
   }, [animKey]);
+  const emoFont = emotion && emotion.length > 12 ? 'clamp(24px,6.5vw,31px)'
+    : emotion && emotion.length > 8 ? 'clamp(28px,7.5vw,37px)'
+    : 'clamp(32px,9vw,44px)';
+
+  // Beyaz alan: sahne metnine göre dinamik tipografi (duygu bandı sabit kalır)
+  const bodyLen = (scene && scene.body) ? scene.body.length : 0;
+  const tier = bodyLen <= 35 ? 0 : bodyLen <= 60 ? 1 : bodyLen <= 95 ? 2 : 3;
+  const bodyFont   = ['clamp(21px,6.2vw,27px)','clamp(18px,5.3vw,23px)','clamp(16px,4.6vw,20px)','clamp(14px,4.1vw,17.5px)'][tier];
+  const bodyLH     = [1.46, 1.4, 1.34, 1.3][tier];
+  const contentGap = ['clamp(16px,4vw,20px)','clamp(13px,3.3vw,17px)','clamp(10px,2.6vw,13px)','clamp(8px,2.1vw,11px)'][tier];
+  const qFont      = ['clamp(15px,4.4vw,18px)','clamp(14px,4.1vw,16.5px)','clamp(13px,3.8vw,15px)','clamp(12px,3.5vw,14px)'][tier];
+  const qLH        = [1.5, 1.46, 1.42, 1.38][tier];
   return (
     <div style={{
-      width:'min(280px, 72vw)', aspectRatio:'5/7',
+      width:'min(280px, 72vw)', aspectRatio:'5/8.4',
       borderRadius:24, flexShrink:0,
       background: dark ? '#1A1A1A' : '#fff',
       boxShadow:'0 48px 96px -24px rgba(0,0,0,0.32), 0 16px 32px -12px rgba(0,0,0,0.12)',
@@ -240,18 +252,37 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
 
       <div style={{
         flex:1,
-        padding:'clamp(22px,6vw,32px) clamp(22px,6vw,30px) clamp(16px,4vw,20px)',
-        display:'flex', alignItems:'center',
+        padding:'clamp(24px,5.5vw,32px) clamp(22px,6vw,30px) clamp(12px,3vw,16px)',
+        display:'flex', flexDirection:'column', justifyContent:'center', gap:contentGap,
       }}>
+        {/* Birincil okuma: sahne anlatısı */}
         <p style={{
-          fontSize:'clamp(17px,5vw,21px)',
-          lineHeight:1.75,
+          fontSize:bodyFont,
+          lineHeight:bodyLH,
           color: dark ? '#fff' : '#1A1A1A',
-          fontWeight:600,
+          fontWeight:700,
           margin:0,
-          letterSpacing:'-0.01em',
+          letterSpacing:'-0.015em',
         }}>
           {scene.body}
+        </p>
+        {/* Renk kodlu ayraç — sahneden soruya geçiş */}
+        <div style={{
+          width:30, height:3, borderRadius:3, flexShrink:0,
+          background: group ? group.grad : (dark ? 'rgba(255,255,255,0.25)' : '#E2DED6'),
+          opacity:0.9,
+        }}/>
+        {/* İkincil okuma: yansıtma sorusu */}
+        <p style={{
+          fontWeight:600,
+          fontStyle:'italic',
+          fontSize:qFont,
+          lineHeight:qLH,
+          letterSpacing:'0',
+          color: dark ? 'rgba(255,255,255,0.55)' : '#9A9A9A',
+          margin:0,
+        }}>
+          {scene.question}
         </p>
       </div>
 
@@ -284,23 +315,28 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, group, dark }) {
         flex:'0 0 auto',
       }}/>
 
+      {/* Alt band: duygu kartı — görünür, sola hizalı, sabit yükseklik */}
       <div style={{
-        flex:'0 0 auto',
+        flex:'0 0 auto', position:'relative',
+        height:'clamp(116px,28vw,144px)',
         background: group ? group.grad : '#F7F4EE',
-        padding:'clamp(14px,3.5vw,18px) clamp(22px,6vw,30px) clamp(18px,4.5vw,24px)',
+        padding:'0 clamp(22px,6vw,30px)',
         borderRadius:'0 0 24px 24px',
+        display:'flex', alignItems:'center', justifyContent:'flex-start',
       }}>
-        <p style={{
-          fontWeight:700,
-          fontStyle:'italic',
-          fontSize:'clamp(15px,4.3vw,17px)',
-          lineHeight:1.55,
-          letterSpacing:'-0.005em',
-          color: group ? (group.text === 'white' ? 'rgba(255,255,255,0.9)' : 'rgba(58,42,0,0.75)') : '#7A7A7A',
-          margin:0,
-        }}>
-          {scene.question}
-        </p>
+        <span style={{
+          fontWeight:900,
+          fontSize: emoFont, lineHeight:1.15,
+          letterSpacing:'-0.01em',
+          color: group ? group.text : '#1A1A1A',
+          wordBreak:'break-word', textAlign:'left',
+        }}>{emotion}</span>
+        {onChangeEmotion && (
+          <IconChangeBtn
+            onClick={onChangeEmotion}
+            style={{ position:'absolute', top:'clamp(10px,2.5vw,14px)', right:'clamp(10px,2.5vw,14px)' }}
+          />
+        )}
       </div>
     </div>
   );
@@ -333,31 +369,31 @@ function Btn({ children, onClick, ghost, disabled }) {
 function AgeToggle({ isYouth, onChange }) {
   return (
     <div style={{
-      display:'flex', alignItems:'center', gap:10,
+      display:'flex', alignItems:'center', gap:12,
       background:'#fff', borderRadius:100,
-      padding:'6px 14px 6px 10px',
+      padding:'9px 20px 9px 15px',
       border:'1px solid rgba(0,0,0,0.08)',
-      boxShadow:'0 2px 8px -3px rgba(0,0,0,0.1)',
+      boxShadow:'0 3px 10px -3px rgba(0,0,0,0.12)',
       cursor:'pointer', userSelect:'none',
     }} onClick={() => onChange(!isYouth)}>
       <div style={{
-        position:'relative', width:36, height:20, borderRadius:100,
+        position:'relative', width:50, height:28, borderRadius:100,
         background: isYouth ? '#3D5AFE' : '#1A1A1A',
         transition:'background 0.25s',
         flexShrink:0,
       }}>
         <div style={{
-          position:'absolute', top:3, left: isYouth ? 19 : 3,
-          width:14, height:14, borderRadius:'50%', background:'#fff',
+          position:'absolute', top:4, left: isYouth ? 26 : 4,
+          width:20, height:20, borderRadius:'50%', background:'#fff',
           transition:'left 0.25s cubic-bezier(0.2,0.8,0.2,1)',
           boxShadow:'0 1px 4px rgba(0,0,0,0.2)',
         }}/>
       </div>
       <span style={{
-        fontSize:11, fontWeight:800, letterSpacing:'0.08em',
+        fontSize:14, fontWeight:800, letterSpacing:'0.07em',
         color: isYouth ? '#3D5AFE' : '#1A1A1A',
         transition:'color 0.25s',
-      }}>{isYouth ? 'GENÇ' : 'YETİŞKİN'}</span>
+      }}>{isYouth ? STRINGS.scene.ageYouth : STRINGS.scene.ageAdult}</span>
     </div>
   );
 }
