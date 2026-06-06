@@ -4,6 +4,26 @@
 
 var ALL_EMOTIONS = GROUPS.flatMap(g => g.emotions.map(e => ({ emotion: e, group: g })));
 
+// Hareket izni — bir kez verilince oturum boyu hatırlanır (TurnScreen her turda remount olur).
+var MOTION_NEEDS_PERMISSION = typeof DeviceMotionEvent !== 'undefined'
+  && typeof DeviceMotionEvent.requestPermission === 'function';
+var motionGranted = !MOTION_NEEDS_PERMISSION; // Android/masaüstü: izne gerek yok
+
+// iOS 13+ izin akışı — mutlaka bir kullanıcı hareketinden (tap) çağrılmalı.
+function ensureMotionPermission() {
+  if (motionGranted) return Promise.resolve(true);
+  return DeviceMotionEvent.requestPermission()
+    .then(res => { motionGranted = (res === 'granted'); return motionGranted; })
+    .catch(() => false);
+}
+
+// Titreşim (Android destekler; iOS Safari desteklemez — sessizce yok sayılır).
+function haptic(pattern) {
+  if (typeof navigator !== 'undefined' && navigator.vibrate) {
+    try { navigator.vibrate(pattern); } catch (e) {}
+  }
+}
+
 function sceneKey(s) { return s.title; }
 
 // Sahneye uygun (grubu sahnenin gruplarında olan) bir duygu seç.
@@ -167,6 +187,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     setAnimKey(k => k + 1);
     setPhase('revealed');
     setStarted(false); setTimeLeft(TOTAL); setEnded(false);
+    haptic([0, 45, 30, 60]); // çekiş titreşimi
   }
 
   /* ── Sahneyi değiştir: duygu sabit, uyumlu/çıkmamış başka sahne ── */
@@ -175,6 +196,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     const pool = isYouth ? SCENES_GENC : SCENES;
     const sc = pickScene(pool, group.key, usedScenes, sceneKey(scene));
     setScene(sc); setAnimKey(k => k + 1);
+    haptic(25);
   }
 
   /* ── Duyguyu değiştir: sahne sabit, sahneye uygun başka duygu ── */
@@ -183,6 +205,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     const e = pickEmotionForScene(scene.groups, emotion);
     setEmo(e);
     onEmotionDrawn({ emotion: e.emotion, group: e.group });
+    haptic(25);
   }
 
   /* ── Yaş geçişi: duygu sabit, yeni havuzdan uyumlu sahne ── */
@@ -196,9 +219,12 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
   }
 
   /* ── Sallama algılama ── */
-  const needsMotionPerm = typeof DeviceMotionEvent !== 'undefined'
-    && typeof DeviceMotionEvent.requestPermission === 'function';
-  const [motionEnabled, setMotionEnabled] = React.useState(!needsMotionPerm);
+  const [motionEnabled, setMotionEnabled] = React.useState(motionGranted);
+
+  // İzin daha önce verilmemişse, oyuncuya dokunulduğunda (app.js) verilmiş olabilir.
+  React.useEffect(() => {
+    if (!motionEnabled && motionGranted) setMotionEnabled(true);
+  }, []);
 
   // Sallama; sayaç başlamadıysa yeniden çek.
   const shakeRef = React.useRef();
@@ -208,12 +234,12 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     if (!motionEnabled) return;
     let lastTime = 0, lx = null, ly = null, lz = null;
     function onMotion(e) {
-      const a = e.accelerationIncludingGravity;
+      const a = e.accelerationIncludingGravity || e.acceleration;
       if (!a || a.x == null) return;
       const now = Date.now();
       if (lx !== null) {
         const delta = Math.abs(a.x - lx) + Math.abs(a.y - ly) + Math.abs(a.z - lz);
-        if (delta > 28 && now - lastTime > 900) {
+        if (delta > 20 && now - lastTime > 800) {
           lastTime = now;
           shakeRef.current();
         }
@@ -225,11 +251,9 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
   }, [motionEnabled]);
 
   function handlePromptDraw() {
-    // iOS 13+ izin akışı — ilk dokunuşta tetiklenir
-    if (needsMotionPerm && !motionEnabled) {
-      DeviceMotionEvent.requestPermission()
-        .then(res => { if (res === 'granted') setMotionEnabled(true); })
-        .catch(() => {});
+    // iOS izni daha alınmadıysa bu dokunuşta al (gerçek bir kullanıcı hareketi).
+    if (!motionEnabled) {
+      ensureMotionPermission().then(ok => { if (ok) setMotionEnabled(true); });
     }
     drawNew();
   }
