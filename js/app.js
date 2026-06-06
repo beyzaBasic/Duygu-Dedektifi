@@ -173,7 +173,7 @@ function App() {
           players={players}
           currentPlayerIdx={currentPlayerIdx}
           sessionName={sessionName}
-          onPlayerTap={() => { ensureMotionPermission(); setScreen('turn'); }}
+          onPlayerTap={() => { ensureMotionPermission().finally(() => setScreen('turn')); }}
           onHome={handleHome}
           onScoreOpen={() => setShowScoreboard(true)}
           onListOpen={() => setShowList(true)}
