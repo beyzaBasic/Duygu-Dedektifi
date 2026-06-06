@@ -196,6 +196,15 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
   const [started, setStarted] = React.useState(false);
   const [timeLeft, setTimeLeft] = React.useState(TOTAL);
   const [ended, setEnded] = React.useState(false);
+  const [countdown, setCountdown] = React.useState(0); // 3-2-1 geri sayım (0 = bitti)
+
+  /* ── 3-2-1 geri sayım: bitince sayaç otomatik başlar ── */
+  React.useEffect(() => {
+    if (phase !== 'revealed' || started) return;
+    if (countdown <= 0) { setStarted(true); return; }
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [phase, countdown, started]);
 
   function finishTurn() {
     if (scene) onSceneUsed(sceneKey(scene));
@@ -226,7 +235,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     onEmotionDrawn({ emotion: e.emotion, group: e.group });
     setAnimKey(k => k + 1);
     setPhase('revealed');
-    setStarted(false); setTimeLeft(TOTAL); setEnded(false);
+    setStarted(false); setTimeLeft(TOTAL); setEnded(false); setCountdown(3);
     haptic([0, 45, 30, 60]); // çekiş titreşimi
   }
 
@@ -234,7 +243,13 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
   function backToIdle() {
     setPhase('idle');
     setSceneAdult(null); setSceneYouth(null); setEmo(null);
-    setStarted(false); setTimeLeft(TOTAL); setEnded(false);
+    setStarted(false); setTimeLeft(TOTAL); setEnded(false); setCountdown(0);
+  }
+
+  /* ── Header geri tuşu: sahne açıkken yeni tur gibi davranır ── */
+  function handleBack() {
+    if (phase === 'revealed') backToIdle();
+    else onHome();
   }
 
   /* ── Sahneyi değiştir: yalnız aktif yaşın sahnesi değişir (diğeri sabit) ── */
@@ -335,15 +350,18 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
   const progress = timeLeft / TOTAL;
   const cardW = 'min(280px, 72vw)';
 
+  // Geri sayım örtüsü, seçilen duygunun renginde
+  const overlayColor = (group && (group.grad.match(/#[0-9A-Fa-f]{6}/) || [])[0]) || '#FAF7F2';
+
   return (
-    <div style={{ display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2' }}>
+    <div style={{ position:'relative', display:'flex', flexDirection:'column', flex:1, background:'#FAF7F2' }}>
       <TurnHeader
         playerName={playerName}
         playerGrad={playerGrad}
         playerAnimal={playerAnimal}
         onScoreOpen={onScoreOpen}
         onListOpen={onListOpen}
-        onHome={onHome}
+        onHome={handleBack}
       />
 
       {phase === 'idle' ? (
@@ -366,68 +384,72 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
             borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2', flexShrink:0,
           }}>
             <div style={{ width:cardW, display:'flex', gap:8, height:52 }}>
-              {!started ? (
-                <button
-                  onClick={backToIdle}
-                  style={{
-                    flex:1, height:'100%',
-                    fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
-                    borderRadius:100,
-                    background:'linear-gradient(135deg,#B14AED,#3D5AFE)',
-                    color:'#fff', border:'none', cursor:'pointer',
-                    boxShadow:'0 6px 18px -4px rgba(100,60,220,0.45)',
-                  }}
-                >{STRINGS.scene.newTurn}</button>
-              ) : (
-                <div style={{
-                  flex:1, height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:7,
-                  background: isUrgent ? 'linear-gradient(135deg,#FF3B30,#FF6B35)' : '#1A1A1A',
-                  borderRadius:100,
-                  transition:'background 0.4s',
-                  boxShadow: isUrgent ? '0 6px 18px -4px rgba(255,59,48,0.55)' : 'none',
-                }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <circle cx="6" cy="6" r="5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none"/>
-                    <path
-                      d={`M 6 6 L 6 1 A 5 5 0 ${progress > 0.5 ? 1 : 0} 1 ${6 + 5*Math.sin(2*Math.PI*(1-progress))} ${6 - 5*Math.cos(2*Math.PI*(1-progress))} Z`}
-                      fill="rgba(255,255,255,0.65)"
-                    />
-                  </svg>
-                  <span style={{
-                    fontFamily:'Nunito', fontWeight:900, fontSize:16, letterSpacing:'-0.01em',
-                    color:'#fff', fontVariantNumeric:'tabular-nums',
-                  }}>{timeStr}</span>
-                </div>
-              )}
+              <div style={{
+                flex:1, height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:7,
+                background: isUrgent ? 'linear-gradient(135deg,#FF3B30,#FF6B35)' : '#1A1A1A',
+                borderRadius:100,
+                transition:'background 0.4s',
+                boxShadow: isUrgent ? '0 6px 18px -4px rgba(255,59,48,0.55)' : 'none',
+              }}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <circle cx="6" cy="6" r="5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none"/>
+                  <path
+                    d={`M 6 6 L 6 1 A 5 5 0 ${progress > 0.5 ? 1 : 0} 1 ${6 + 5*Math.sin(2*Math.PI*(1-progress))} ${6 - 5*Math.cos(2*Math.PI*(1-progress))} Z`}
+                    fill="rgba(255,255,255,0.65)"
+                  />
+                </svg>
+                <span style={{
+                  fontFamily:'Nunito', fontWeight:900, fontSize:16, letterSpacing:'-0.01em',
+                  color:'#fff', fontVariantNumeric:'tabular-nums',
+                }}>{timeStr}</span>
+              </div>
 
-              {!started ? (
-                <button
-                  onClick={() => setStarted(true)}
-                  style={{
-                    flex:1, height:'100%',
-                    fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
-                    borderRadius:100,
-                    background:'linear-gradient(135deg,#2ED573,#1DB954)',
-                    color:'#fff', border:'none', cursor:'pointer',
-                    boxShadow:'0 6px 18px -4px rgba(30,185,84,0.45)',
-                  }}
-                >{STRINGS.scene.start}</button>
-              ) : (
-                <button
-                  onClick={handleEnd}
-                  style={{
-                    flex:1, height:'100%',
-                    fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
-                    borderRadius:100,
-                    background:'linear-gradient(135deg,#FF8C42,#FF3B30)',
-                    color:'#fff', border:'none', cursor:'pointer',
-                    boxShadow:'0 6px 18px -4px rgba(255,90,50,0.45)',
-                  }}
-                >{STRINGS.scene.finish}</button>
-              )}
+              <button
+                onClick={handleEnd}
+                disabled={countdown > 0}
+                style={{
+                  flex:1, height:'100%',
+                  fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
+                  borderRadius:100,
+                  background:'linear-gradient(135deg,#FF8C42,#FF3B30)',
+                  color:'#fff', border:'none', cursor: countdown > 0 ? 'default' : 'pointer',
+                  boxShadow:'0 6px 18px -4px rgba(255,90,50,0.45)',
+                }}
+              >{STRINGS.scene.finish}</button>
             </div>
           </div>
         </React.Fragment>
+      )}
+
+      {/* 3-2-1 geri sayım — tüm ekranın (sayaç + Tamamla dahil) üzerinde,
+          seçilen duygunun renginde örtü; alttaki butonlar bu sırada pasif */}
+      {phase === 'revealed' && countdown > 0 && (
+        <div style={{
+          position:'absolute', inset:0, zIndex:20,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          background: overlayColor + 'D9', backdropFilter:'blur(4px)', WebkitBackdropFilter:'blur(4px)',
+          pointerEvents:'auto',
+        }}>
+          <div key={countdown} style={{
+            position:'relative', display:'flex', alignItems:'center', justifyContent:'center',
+            width:'clamp(200px,62vw,300px)', height:'clamp(200px,62vw,300px)',
+          }}>
+            {/* dairesel pump halkaları */}
+            {[0, 0.25].map((d, i) => (
+              <span key={i} style={{
+                position:'absolute', width:'100%', height:'100%', borderRadius:'50%',
+                border:'4px solid rgba(255,255,255,0.7)',
+                animation:`count-ring 1s ease-out ${d}s both`,
+              }}/>
+            ))}
+            <span style={{
+              fontFamily:'Nunito', fontWeight:900, lineHeight:1, color:'#fff',
+              fontSize:'clamp(120px,40vw,200px)',
+              textShadow:'0 8px 30px rgba(0,0,0,0.25)',
+              animation:'count-pump 0.6s cubic-bezier(0.2,0.8,0.2,1) both',
+            }}>{countdown}</span>
+          </div>
+        </div>
       )}
     </div>
   );
