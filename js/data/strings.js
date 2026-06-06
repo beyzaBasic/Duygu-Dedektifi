@@ -17,6 +17,7 @@ var STRINGS = {
         shadow:  'rgba(100,60,220,0.5)',
         tag:     'ADIM 1',
         title:   'Salla',
+        titleIos:'Döndür',
         caption: 'Duygu + sahne gelsin',
       },
       {
@@ -49,7 +50,9 @@ var STRINGS = {
     archiveEmptySub: 'Oyun bitince otomatik kaydedilir',
     archiveSwipeHint:'Silmek için sola kaydır',
     tagline:         'Salla · Oyna · Tahmin',
+    taglineIos:      'Döndür · Oyna · Tahmin',
     steps:           ['Salla', 'Oyna', 'Tahmin'],
+    stepRotate:      'Döndür',
     newGame:      'Yeni Oyun →',
     continueGame: 'Haydi Oynayalım! →',
   },
@@ -89,6 +92,7 @@ var STRINGS = {
 
   turn: {
     shakeTitle:   'Telefonu Salla!',
+    rotateTitle:  'Telefonu Döndür!',
     shakeSub:     'duygu + sahne kartın gelsin',
     shakeTap:     'veya dokun',
     drawBtn:      'Salla ya da Seç →',

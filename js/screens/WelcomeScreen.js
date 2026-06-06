@@ -273,7 +273,7 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
                     border:'2px solid #fff',
                   }}>{i + 1}</div>
                 </div>
-                <div style={{ fontWeight:800, fontSize:'clamp(12px,3.5vw,14px)', color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)' }}>{STRINGS.welcome.steps[i]}</div>
+                <div style={{ fontWeight:800, fontSize:'clamp(12px,3.5vw,14px)', color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)' }}>{i === 0 && IS_IOS ? STRINGS.welcome.stepRotate : STRINGS.welcome.steps[i]}</div>
               </div>
               {i < WELCOME_STEPS.length - 1 && (
                 <div style={{
@@ -287,7 +287,7 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
 
         {/* Tagline */}
         <div style={{ fontSize:'clamp(10px,2.8vw,12px)', letterSpacing:'0.24em', color:'rgba(255,255,255,0.7)', textTransform:'uppercase', fontWeight:800 }}>
-          {STRINGS.welcome.tagline}
+          {IS_IOS ? STRINGS.welcome.taglineIos : STRINGS.welcome.tagline}
         </div>
       </div>
 

@@ -219,7 +219,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
   const bodyFont   = ['clamp(21px,6.2vw,27px)','clamp(18px,5.3vw,23px)','clamp(16px,4.6vw,20px)','clamp(14px,4.1vw,17.5px)'][tier];
   const bodyLH     = [1.46, 1.4, 1.34, 1.3][tier];
   const contentGap = ['clamp(16px,4vw,20px)','clamp(13px,3.3vw,17px)','clamp(10px,2.6vw,13px)','clamp(8px,2.1vw,11px)'][tier];
-  const qFont      = ['clamp(15px,4.4vw,18px)','clamp(14px,4.1vw,16.5px)','clamp(13px,3.8vw,15px)','clamp(12px,3.5vw,14px)'][tier];
+  const qFont      = ['clamp(16px,4.8vw,19.5px)','clamp(15px,4.5vw,18px)','clamp(14.5px,4.2vw,16.5px)','clamp(13.5px,3.9vw,15.5px)'][tier];
   const qLH        = [1.5, 1.46, 1.42, 1.38][tier];
   return (
     <div style={{
@@ -279,7 +279,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
           fontSize:qFont,
           lineHeight:qLH,
           letterSpacing:'0',
-          color: dark ? 'rgba(255,255,255,0.55)' : '#9A9A9A',
+          color: dark ? 'rgba(255,255,255,0.62)' : '#7C7C7C',
           margin:0,
         }}>
           {scene.question}
@@ -369,28 +369,28 @@ function Btn({ children, onClick, ghost, disabled }) {
 function AgeToggle({ isYouth, onChange }) {
   return (
     <div style={{
-      display:'flex', alignItems:'center', gap:12,
+      display:'flex', alignItems:'center', gap:10,
       background:'#fff', borderRadius:100,
-      padding:'9px 20px 9px 15px',
+      padding:'6px 14px 6px 10px',
       border:'1px solid rgba(0,0,0,0.08)',
-      boxShadow:'0 3px 10px -3px rgba(0,0,0,0.12)',
+      boxShadow:'0 2px 8px -3px rgba(0,0,0,0.1)',
       cursor:'pointer', userSelect:'none',
     }} onClick={() => onChange(!isYouth)}>
       <div style={{
-        position:'relative', width:50, height:28, borderRadius:100,
+        position:'relative', width:36, height:20, borderRadius:100,
         background: isYouth ? '#3D5AFE' : '#1A1A1A',
         transition:'background 0.25s',
         flexShrink:0,
       }}>
         <div style={{
-          position:'absolute', top:4, left: isYouth ? 26 : 4,
-          width:20, height:20, borderRadius:'50%', background:'#fff',
+          position:'absolute', top:3, left: isYouth ? 19 : 3,
+          width:14, height:14, borderRadius:'50%', background:'#fff',
           transition:'left 0.25s cubic-bezier(0.2,0.8,0.2,1)',
           boxShadow:'0 1px 4px rgba(0,0,0,0.2)',
         }}/>
       </div>
       <span style={{
-        fontSize:14, fontWeight:800, letterSpacing:'0.07em',
+        fontSize:11, fontWeight:800, letterSpacing:'0.08em',
         color: isYouth ? '#3D5AFE' : '#1A1A1A',
         transition:'color 0.25s',
       }}>{isYouth ? STRINGS.scene.ageYouth : STRINGS.scene.ageAdult}</span>

@@ -10,10 +10,17 @@ var MOTION_NEEDS_PERMISSION = typeof DeviceMotionEvent !== 'undefined'
 var motionGranted = !MOTION_NEEDS_PERMISSION; // Android/masaüstü: izne gerek yok
 
 // iOS 13+ izin akışı — mutlaka bir kullanıcı hareketinden (tap) çağrılmalı.
+// Hem hareket (Android sallama) hem yönelim (iOS döndürme) izni istenir.
 function ensureMotionPermission() {
   if (motionGranted) return Promise.resolve(true);
-  return DeviceMotionEvent.requestPermission()
-    .then(res => { motionGranted = (res === 'granted'); return motionGranted; })
+  var reqs = [];
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function')
+    reqs.push(DeviceMotionEvent.requestPermission().catch(() => 'denied'));
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function')
+    reqs.push(DeviceOrientationEvent.requestPermission().catch(() => 'denied'));
+  if (!reqs.length) { motionGranted = true; return Promise.resolve(true); }
+  return Promise.all(reqs)
+    .then(res => { motionGranted = res.some(r => r === 'granted'); return motionGranted; })
     .catch(() => false);
 }
 
@@ -109,7 +116,7 @@ function ShakePrompt({ playerGrad, playerAnimal, onDraw }) {
           borderRadius:'50%', background:grad,
           display:'flex', alignItems:'center', justifyContent:'center',
           boxShadow:'0 22px 50px -12px rgba(0,0,0,0.34)',
-          animation: pressed ? 'none' : 'shake-wiggle 1.5s ease-in-out infinite',
+          animation: pressed ? 'none' : (IS_IOS ? 'twist 2s ease-in-out infinite' : 'shake-wiggle 1.5s ease-in-out infinite'),
         }}>
           <span style={{ fontSize:'clamp(50px,14vw,64px)', lineHeight:1, filter:'drop-shadow(0 4px 8px rgba(0,0,0,0.25))' }}>📱</span>
         </div>
@@ -121,13 +128,13 @@ function ShakePrompt({ playerGrad, playerAnimal, onDraw }) {
           fontWeight:900, fontSize:'clamp(28px,8.5vw,42px)', lineHeight:1.05, letterSpacing:'-0.025em',
           background:'linear-gradient(120deg,#FF6B7A,#FF8C42,#FFC93C,#2ED573,#2E9CFF,#B14AED)',
           WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
-        }}>{STRINGS.turn.shakeTitle}</div>
+        }}>{IS_IOS ? STRINGS.turn.rotateTitle : STRINGS.turn.shakeTitle}</div>
         <div style={{ fontSize:'clamp(13px,3.8vw,15px)', color:'#8A8A8A', marginTop:10, fontWeight:700 }}>
           {STRINGS.turn.shakeSub}
         </div>
       </div>
 
-      {/* Dokun ipucu — zıplayan hap */}
+      {/* Dokun ipucu — zıplayan hap (her iki platformda yedek) */}
       <div style={{
         marginTop:'clamp(4px,1.5vw,10px)', zIndex:1,
         display:'inline-flex', alignItems:'center', gap:9,
@@ -232,6 +239,28 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
 
   React.useEffect(() => {
     if (!motionEnabled) return;
+
+    if (IS_IOS) {
+      // iOS: telefonu döndür/eğ — deviceorientation (geri-al kutusunu tetiklemez).
+      let lastTime = 0, lb = null, lg = null;
+      function onOrient(e) {
+        if (e.beta == null && e.gamma == null) return;
+        const b = e.beta || 0, g = e.gamma || 0;
+        const now = Date.now();
+        if (lb !== null) {
+          const delta = Math.abs(b - lb) + Math.abs(g - lg);
+          if (delta > 22 && now - lastTime > 900) {
+            lastTime = now;
+            shakeRef.current();
+          }
+        }
+        lb = b; lg = g;
+      }
+      window.addEventListener('deviceorientation', onOrient);
+      return () => window.removeEventListener('deviceorientation', onOrient);
+    }
+
+    // Android/masaüstü: salla — devicemotion.
     let lastTime = 0, lx = null, ly = null, lz = null;
     function onMotion(e) {
       const a = e.accelerationIncludingGravity || e.acceleration;

@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 var MAX_PLAYERS = 40;
 
+// iOS tespiti (sallama yerine "döndür", titreşim/izin farkları için). Tüm ekranlar kullanır.
+var IS_IOS = typeof navigator !== 'undefined' && (
+  /iP(hone|ad|od)/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+);
+
 var PLAYER_ANIMALS = [
   '🦊','🐸','🐯','🐧','🦄','🐙','🦁','🐺',
   '🐰','🐼','🐨','🐮','🐷','🐵','🐔','🦆',

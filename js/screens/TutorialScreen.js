@@ -57,7 +57,7 @@ function SlideVisual({ index }) {
     return (
       <div style={{ display:'flex', alignItems:'center', gap:'clamp(8px,3vw,16px)' }}>
         <TBubble size={'clamp(86px,23vw,104px)'} fs={'clamp(40px,11vw,50px)'}
-          style={{ animation:'shake-wiggle 1.5s ease-in-out infinite' }}>📱</TBubble>
+          style={{ animation: IS_IOS ? 'twist 2s ease-in-out infinite' : 'shake-wiggle 1.5s ease-in-out infinite' }}>📱</TBubble>
         <TArrow />
         <div style={{ display:'flex', flexDirection:'column', gap:9 }}>
           {/* duygu chip */}
@@ -178,7 +178,7 @@ function TutorialScreen({ onDone }) {
           fontWeight: 900, fontSize: 'clamp(34px,10vw,46px)',
           color: '#fff', letterSpacing: '-0.03em', lineHeight: 1,
           textAlign: 'center', textShadow: '0 2px 12px rgba(0,0,0,0.15)',
-        }}>{s.title}</div>
+        }}>{IS_IOS && s.titleIos ? s.titleIos : s.title}</div>
 
         {/* Kısa caption */}
         {s.caption && (
