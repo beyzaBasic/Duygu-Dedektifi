@@ -216,11 +216,11 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
   // Beyaz alan: sahne metnine göre dinamik tipografi (duygu bandı sabit kalır)
   const bodyLen = (scene && scene.body) ? scene.body.length : 0;
   const tier = bodyLen <= 35 ? 0 : bodyLen <= 60 ? 1 : bodyLen <= 95 ? 2 : 3;
-  const bodyFont   = ['clamp(21px,6.2vw,27px)','clamp(18px,5.3vw,23px)','clamp(16px,4.6vw,20px)','clamp(14px,4.1vw,17.5px)'][tier];
-  const bodyLH     = [1.46, 1.4, 1.34, 1.3][tier];
-  const contentGap = ['clamp(16px,4vw,20px)','clamp(13px,3.3vw,17px)','clamp(10px,2.6vw,13px)','clamp(8px,2.1vw,11px)'][tier];
-  const qFont      = ['clamp(16px,4.8vw,19.5px)','clamp(15px,4.5vw,18px)','clamp(14.5px,4.2vw,16.5px)','clamp(13.5px,3.9vw,15.5px)'][tier];
-  const qLH        = [1.5, 1.46, 1.42, 1.38][tier];
+  const bodyFont   = ['clamp(24px,7vw,31px)','clamp(20px,5.9vw,26px)','clamp(17px,5vw,22px)','clamp(14.5px,4.2vw,18px)'][tier];
+  const bodyLH     = [1.5, 1.45, 1.4, 1.33][tier];
+  const contentGap = ['clamp(20px,5vw,26px)','clamp(16px,4vw,21px)','clamp(12px,3vw,16px)','clamp(9px,2.3vw,12px)'][tier];
+  const qFont      = ['clamp(17px,5.3vw,21px)','clamp(16px,4.9vw,20px)','clamp(15px,4.4vw,18px)','clamp(14px,4vw,16.5px)'][tier];
+  const qLH        = [1.56, 1.5, 1.45, 1.4][tier];
 
   // Soru aynen kalır — sesli okunduğu için duygu adı yazılmaz (gizli kalsın).
   const questionText = (scene && scene.question) ? scene.question : '';
