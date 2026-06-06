@@ -49,8 +49,6 @@ var STRINGS = {
     archiveEmpty:    'Henüz kayıtlı oyun yok',
     archiveEmptySub: 'Oyun bitince otomatik kaydedilir',
     archiveSwipeHint:'Silmek için sola kaydır',
-    tagline:         'Salla · Oyna · Tahmin',
-    taglineIos:      'Döndür · Oyna · Tahmin',
     steps:           ['Salla', 'Oyna', 'Tahmin'],
     stepRotate:      'Döndür',
     newGame:      'Yeni Oyun →',

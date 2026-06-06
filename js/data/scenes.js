@@ -357,7 +357,7 @@ var SCENES_GENC = [
   },
   {
     title: "Şarj Yarışı",
-    body: "Kafede telefonun ölmek üzere, tek boş prize yürüdün. Tam o anda yan masadaki de kalktı.",
+    body: "Kafede telefonunun şarjı bitmek üzere, tek boş prize doğru yürüdün. Tam o anda yan masadaki de kalktı.",
     question: "Bu duygu iç sesin olsa, sana ne derdi?",
     type: "İç Ses",
     groups: ['red', 'orange', 'navy']

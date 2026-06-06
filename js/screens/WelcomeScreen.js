@@ -253,41 +253,36 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
         <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'center', gap:'clamp(2px,1.5vw,8px)' }}>
           {WELCOME_STEPS.map((st, i) => (
             <React.Fragment key={i}>
-              <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:10, width:'clamp(64px,21vw,88px)' }}>
+              <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:11, width:'clamp(74px,23vw,100px)' }}>
                 <div style={{
                   position:'relative',
-                  width:'clamp(56px,15vw,68px)', height:'clamp(56px,15vw,68px)', borderRadius:'50%',
+                  width:'clamp(68px,18vw,84px)', height:'clamp(68px,18vw,84px)', borderRadius:'50%',
                   background:'rgba(255,255,255,0.22)',
                   display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize:'clamp(26px,7vw,32px)',
-                  boxShadow:'0 10px 24px -8px rgba(0,0,0,0.25)',
+                  fontSize:'clamp(32px,8.5vw,40px)',
+                  boxShadow:'0 12px 28px -8px rgba(0,0,0,0.28)',
                   animation:st.anim,
                 }}>
                   {st.emoji}
                   <div style={{
                     position:'absolute', top:-5, left:-5,
-                    width:21, height:21, borderRadius:'50%',
+                    width:24, height:24, borderRadius:'50%',
                     background:'#1A1A1A', color:'#fff',
-                    fontSize:11, fontWeight:900,
+                    fontSize:12, fontWeight:900,
                     display:'flex', alignItems:'center', justifyContent:'center',
                     border:'2px solid #fff',
                   }}>{i + 1}</div>
                 </div>
-                <div style={{ fontWeight:800, fontSize:'clamp(12px,3.5vw,14px)', color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)' }}>{i === 0 && IS_IOS ? STRINGS.welcome.stepRotate : STRINGS.welcome.steps[i]}</div>
+                <div style={{ fontWeight:800, fontSize:'clamp(13px,3.8vw,15px)', color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)' }}>{i === 0 && IS_IOS ? STRINGS.welcome.stepRotate : STRINGS.welcome.steps[i]}</div>
               </div>
               {i < WELCOME_STEPS.length - 1 && (
                 <div style={{
-                  marginTop:'clamp(18px,5.5vw,26px)',
-                  fontSize:'clamp(15px,4.5vw,20px)', color:'rgba(255,255,255,0.65)', fontWeight:900, lineHeight:1,
+                  marginTop:'clamp(24px,6.5vw,32px)',
+                  fontSize:'clamp(16px,5vw,22px)', color:'rgba(255,255,255,0.65)', fontWeight:900, lineHeight:1,
                 }}>→</div>
               )}
             </React.Fragment>
           ))}
-        </div>
-
-        {/* Tagline */}
-        <div style={{ fontSize:'clamp(10px,2.8vw,12px)', letterSpacing:'0.24em', color:'rgba(255,255,255,0.7)', textTransform:'uppercase', fontWeight:800 }}>
-          {IS_IOS ? STRINGS.welcome.taglineIos : STRINGS.welcome.tagline}
         </div>
       </div>
 
