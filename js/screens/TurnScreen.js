@@ -181,13 +181,15 @@ function ShakePrompt({ playerGrad, playerAnimal, onDraw }) {
 }
 
 function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange, onEmotionDrawn, onTurnEnd, onSceneUsed, usedScenes, onListOpen, onScoreOpen, onHome }) {
-  /* ── Durum: sahne + duygu açıkça tutulur ── */
+  /* ── Durum: yetişkin + genç sahne ayrı tutulur (toggle sabit kalsın) ── */
   const [phase, setPhase] = React.useState('idle'); // 'idle' | 'revealed'
-  const [scene, setScene] = React.useState(null);
+  const [sceneAdult, setSceneAdult] = React.useState(null);
+  const [sceneYouth, setSceneYouth] = React.useState(null);
   const [emo, setEmo] = React.useState(null);        // { emotion, group }
   const [animKey, setAnimKey] = React.useState(0);
   const emotion = emo && emo.emotion;
   const group = emo && emo.group;
+  const scene = isYouth ? sceneYouth : sceneAdult;
 
   /* ── Sayaç ── */
   const TOTAL = 90;
@@ -213,12 +215,14 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     finishTurn();
   }
 
-  /* ── Çekme: oyunda çıkmamış sahne + ona uygun duygu ── */
+  /* ── Çekme: çıkmamış sahne + ona uygun duygu; iki yaş için de sahne hazırla ── */
   function drawNew() {
-    const pool = isYouth ? SCENES_GENC : SCENES;
-    const sc = pickFreshScene(pool, usedScenes);
-    const e = pickEmotionForScene(sc.groups, null);
-    setScene(sc); setEmo(e);
+    const curPool = isYouth ? SCENES_GENC : SCENES;
+    const curScene = pickFreshScene(curPool, usedScenes);
+    const e = pickEmotionForScene(curScene.groups, null);
+    const adultSc = isYouth ? pickScene(SCENES, e.group.key, usedScenes, null) : curScene;
+    const youthSc = isYouth ? curScene : pickScene(SCENES_GENC, e.group.key, usedScenes, null);
+    setSceneAdult(adultSc); setSceneYouth(youthSc); setEmo(e);
     onEmotionDrawn({ emotion: e.emotion, group: e.group });
     setAnimKey(k => k + 1);
     setPhase('revealed');
@@ -229,36 +233,37 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
   /* ── Yeni tur: "Telefonu Döndür/Salla" ekranına geri dön ── */
   function backToIdle() {
     setPhase('idle');
-    setScene(null); setEmo(null);
+    setSceneAdult(null); setSceneYouth(null); setEmo(null);
     setStarted(false); setTimeLeft(TOTAL); setEnded(false);
   }
 
-  /* ── Sahneyi değiştir: duygu sabit, uyumlu/çıkmamış başka sahne ── */
+  /* ── Sahneyi değiştir: yalnız aktif yaşın sahnesi değişir (diğeri sabit) ── */
   function changeScene() {
     if (!emo) return;
-    const pool = isYouth ? SCENES_GENC : SCENES;
-    const sc = pickScene(pool, group.key, usedScenes, sceneKey(scene));
-    setScene(sc); setAnimKey(k => k + 1);
+    if (isYouth) {
+      setSceneYouth(pickScene(SCENES_GENC, group.key, usedScenes, sceneYouth && sceneKey(sceneYouth)));
+    } else {
+      setSceneAdult(pickScene(SCENES, group.key, usedScenes, sceneAdult && sceneKey(sceneAdult)));
+    }
+    setAnimKey(k => k + 1);
     haptic(25);
   }
 
-  /* ── Duyguyu değiştir: sahne sabit, sahneye uygun başka duygu ── */
+  /* ── Duyguyu değiştir: gösterilen sahne sabit; diğer yaşın sahnesi yeni duyguya uyarlanır ── */
   function changeEmotion() {
     if (!scene) return;
     const e = pickEmotionForScene(scene.groups, emotion);
     setEmo(e);
+    if (isYouth) setSceneAdult(pickScene(SCENES, e.group.key, usedScenes, null));
+    else setSceneYouth(pickScene(SCENES_GENC, e.group.key, usedScenes, null));
     onEmotionDrawn({ emotion: e.emotion, group: e.group });
     haptic(25);
   }
 
-  /* ── Yaş geçişi: duygu sabit, yeni havuzdan uyumlu sahne ── */
+  /* ── Yaş geçişi: sahne yeniden seçilmez, sadece saklanan sahne gösterilir ── */
   function handleAge(v) {
     onAgeChange(v);
-    if (phase === 'revealed' && emo) {
-      const pool = v ? SCENES_GENC : SCENES;
-      const sc = pickScene(pool, group.key, usedScenes, null);
-      setScene(sc); setAnimKey(k => k + 1);
-    }
+    if (phase === 'revealed') setAnimKey(k => k + 1);
   }
 
   /* ── Sallama algılama ── */

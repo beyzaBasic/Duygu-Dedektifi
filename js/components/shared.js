@@ -216,11 +216,11 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
   // Beyaz alan: sahne metnine göre dinamik tipografi (duygu bandı sabit kalır)
   const bodyLen = (scene && scene.body) ? scene.body.length : 0;
   const tier = bodyLen <= 35 ? 0 : bodyLen <= 60 ? 1 : bodyLen <= 95 ? 2 : 3;
-  const bodyFont   = ['clamp(24px,7vw,31px)','clamp(20px,5.9vw,26px)','clamp(17px,5vw,22px)','clamp(14.5px,4.2vw,18px)'][tier];
-  const bodyLH     = [1.5, 1.45, 1.4, 1.33][tier];
-  const contentGap = ['clamp(20px,5vw,26px)','clamp(16px,4vw,21px)','clamp(12px,3vw,16px)','clamp(9px,2.3vw,12px)'][tier];
-  const qFont      = ['clamp(17px,5.3vw,21px)','clamp(16px,4.9vw,20px)','clamp(15px,4.4vw,18px)','clamp(14px,4vw,16.5px)'][tier];
-  const qLH        = [1.56, 1.5, 1.45, 1.4][tier];
+  const bodyFont   = ['clamp(22px,6.4vw,28px)','clamp(19px,5.4vw,24px)','clamp(16px,4.6vw,20px)','clamp(13.5px,4vw,16.5px)'][tier];
+  const bodyLH     = [1.42, 1.36, 1.3, 1.26][tier];
+  const contentGap = ['clamp(15px,3.8vw,20px)','clamp(12px,3vw,15px)','clamp(9px,2.3vw,12px)','clamp(7px,1.8vw,9px)'][tier];
+  const qFont      = ['clamp(16px,5vw,20px)','clamp(15px,4.5vw,18px)','clamp(14px,4.1vw,16px)','clamp(13px,3.7vw,14.5px)'][tier];
+  const qLH        = [1.5, 1.44, 1.38, 1.34][tier];
 
   // Soru aynen kalır — sesli okunduğu için duygu adı yazılmaz (gizli kalsın).
   const questionText = (scene && scene.question) ? scene.question : '';
@@ -239,7 +239,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
       {/* ÜST band: duygu kartı — görünür, sola hizalı, sabit yükseklik */}
       <div style={{
         flex:'0 0 auto', position:'relative',
-        height:'clamp(116px,28vw,144px)',
+        height:'clamp(104px,25vw,128px)',
         background: group ? group.grad : '#F7F4EE',
         padding:'0 clamp(22px,6vw,30px)',
         borderRadius:'24px 24px 0 0',
@@ -269,8 +269,8 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
 
       {/* ALT beyaz alan: sahne metni + soru */}
       <div style={{
-        flex:1, position:'relative',
-        padding:'clamp(24px,5.5vw,30px) clamp(22px,6vw,30px) clamp(14px,3.5vw,18px)',
+        flex:1, position:'relative', minHeight:0, overflow:'hidden',
+        padding:'clamp(20px,4.5vw,26px) clamp(22px,6vw,30px) clamp(12px,3vw,16px)',
         display:'flex', flexDirection:'column',
       }}>
         <div style={{
@@ -314,7 +314,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
         </div>
 
         {/* Alt satır: renk noktaları (sol) + sahne ↻ (sağ, üstteki ↻ ile aynı sağ kenar) */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginTop:'clamp(10px,2.5vw,14px)', marginRight:'calc(clamp(10px,2.5vw,14px) - clamp(22px,6vw,30px))', flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginTop:'clamp(8px,2vw,12px)', marginRight:'calc(clamp(10px,2.5vw,14px) - clamp(22px,6vw,30px))', flexShrink:0 }}>
           <div style={{ display:'flex', gap:7, alignItems:'center' }}>
             {scene.groups && scene.groups.map(key => {
               const g = (typeof GROUPS !== 'undefined') && GROUPS.find(x => x.key === key);
