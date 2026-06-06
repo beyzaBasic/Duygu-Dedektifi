@@ -1,4 +1,4 @@
-function RoundResult({ players, currentPlayerIdx, onConfirm }) {
+function RoundResult({ players, currentPlayerIdx, onConfirm, onRetry }) {
   const [selected, setSelected] = React.useState(null);
 
   const others = [
@@ -6,6 +6,7 @@ function RoundResult({ players, currentPlayerIdx, onConfirm }) {
       .map((p, i) => ({ ...p, originalIdx: i }))
       .filter((_, i) => i !== currentPlayerIdx),
     { name: STRINGS.roundResult.nobody, originalIdx: 'none', isNone: true },
+    { name: STRINGS.roundResult.retry, originalIdx: 'retry', isRetry: true },
   ];
 
   const anlatanGrad = PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length];
@@ -37,6 +38,29 @@ function RoundResult({ players, currentPlayerIdx, onConfirm }) {
       <div style={{ flex:1, padding:'0 clamp(20px,5vw,28px)', overflowY:'auto', display:'flex', flexDirection:'column', justifyContent:'center' }}>
         <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
           {others.map((p) => {
+            if (p.isRetry) {
+              return (
+                <button
+                  key="retry"
+                  onClick={onRetry}
+                  aria-label={p.name}
+                  title={p.name}
+                  style={{
+                    width:'calc(50% - 5px)',
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    padding:'20px 14px 16px', borderRadius:24,
+                    background:'#FCFAF7',
+                    border:'1px solid rgba(0,0,0,0.08)', cursor:'pointer',
+                    boxShadow:'0 4px 14px -4px rgba(0,0,0,0.14)',
+                    transition:'all 0.2s cubic-bezier(0.2,0.8,0.2,1)',
+                  }}
+                >
+                  <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:34, lineHeight:1 }}>
+                    <span>🎲</span><span>🤞</span>
+                  </span>
+                </button>
+              );
+            }
             const isSel = selected === p.originalIdx;
             const bg = p.isNone ? '#1A1A1A' : PLAYER_GRADS[p.originalIdx % PLAYER_GRADS.length];
             const icon = p.isNone ? '🤷' : PLAYER_ANIMALS[p.originalIdx % PLAYER_ANIMALS.length];

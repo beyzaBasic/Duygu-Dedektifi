@@ -24,11 +24,31 @@ function ensureMotionPermission() {
     .catch(() => false);
 }
 
-// Titreşim (Android destekler; iOS Safari desteklemez — sessizce yok sayılır).
+// iOS haptik hile'si: <input type="checkbox" switch> toggle'ı sistem haptiği verir (iOS 17.4+).
+var _hapticSwitch = null;
+function iosHaptic() {
+  try {
+    if (!_hapticSwitch) {
+      var label = document.createElement('label');
+      label.setAttribute('aria-hidden', 'true');
+      label.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+      var inp = document.createElement('input');
+      inp.type = 'checkbox';
+      inp.setAttribute('switch', '');
+      label.appendChild(inp);
+      document.body.appendChild(label);
+      _hapticSwitch = inp;
+    }
+    _hapticSwitch.click(); // toggle → haptik
+  } catch (e) {}
+}
+
+// Titreşim — Android: Vibration API; iOS: switch haptik hile'si.
 function haptic(pattern) {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
     try { navigator.vibrate(pattern); } catch (e) {}
   }
+  if (IS_IOS) iosHaptic();
 }
 
 function sceneKey(s) { return s.title; }
@@ -68,6 +88,22 @@ var SHAKE_BUBBLES = [
   { c:'#B14AED', x:'74%', y:'84%', s:52, d:'1.5s', dur:'5.1s' },
 ];
 
+// Süzülen renk çemberleri — hem salla ekranı hem kart arka planı için (zIndex:0).
+function FloatingBubbles() {
+  return (
+    <React.Fragment>
+      {SHAKE_BUBBLES.map((b, i) => (
+        <span key={i} style={{
+          position:'absolute', left:b.x, top:b.y, width:b.s, height:b.s,
+          borderRadius:'50%', background:b.c, opacity:0.15, filter:'blur(1px)',
+          pointerEvents:'none', zIndex:0,
+          animation:`float-y ${b.dur} ease-in-out ${b.d} infinite`,
+        }}/>
+      ))}
+    </React.Fragment>
+  );
+}
+
 function ShakePrompt({ playerGrad, playerAnimal, onDraw }) {
   const [pressed, setPressed] = React.useState(false);
   const grad = playerGrad || 'linear-gradient(135deg,#B14AED,#3D5AFE)';
@@ -86,15 +122,8 @@ function ShakePrompt({ playerGrad, playerAnimal, onDraw }) {
         gap:'clamp(8px,2.5vw,16px)',
       }}
     >
-      {/* Süzülen renk baloncukları */}
-      {SHAKE_BUBBLES.map((b, i) => (
-        <span key={i} style={{
-          position:'absolute', left:b.x, top:b.y, width:b.s, height:b.s,
-          borderRadius:'50%', background:b.c, opacity:0.15, filter:'blur(1px)',
-          pointerEvents:'none',
-          animation:`float-y ${b.dur} ease-in-out ${b.d} infinite`,
-        }}/>
-      ))}
+      {/* Süzülen renk çemberleri */}
+      <FloatingBubbles />
 
       {/* Kahraman: oynayan telefon + genişleyen halkalar */}
       <div style={{
@@ -195,6 +224,13 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     setPhase('revealed');
     setStarted(false); setTimeLeft(TOTAL); setEnded(false);
     haptic([0, 45, 30, 60]); // çekiş titreşimi
+  }
+
+  /* ── Yeni tur: "Telefonu Döndür/Salla" ekranına geri dön ── */
+  function backToIdle() {
+    setPhase('idle');
+    setScene(null); setEmo(null);
+    setStarted(false); setTimeLeft(TOTAL); setEnded(false);
   }
 
   /* ── Sahneyi değiştir: duygu sabit, uyumlu/çıkmamış başka sahne ── */
@@ -311,9 +347,12 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
         </div>
       ) : (
         <React.Fragment>
-          <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(10px,3vw,16px) clamp(16px,5vw,24px)', gap:'clamp(10px,2.5vw,14px)', overflow:'hidden' }}>
-            <SceneCard scene={scene} animKey={animKey} displayNum={usedScenes.length + 1} onChangeScene={changeScene} onChangeEmotion={changeEmotion} group={group} dark={isYouth} emotion={emotion} />
-            <AgeToggle isYouth={isYouth} onChange={handleAge} />
+          <div style={{ flex:1, position:'relative', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'clamp(10px,3vw,16px) clamp(16px,5vw,24px)', gap:'clamp(10px,2.5vw,14px)', overflow:'hidden' }}>
+            <FloatingBubbles />
+            <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:'clamp(10px,2.5vw,14px)' }}>
+              <SceneCard scene={scene} animKey={animKey} displayNum={usedScenes.length + 1} onChangeScene={changeScene} onChangeEmotion={changeEmotion} group={group} dark={isYouth} emotion={emotion} />
+              <AgeToggle isYouth={isYouth} onChange={handleAge} />
+            </div>
           </div>
 
           <div style={{
@@ -324,7 +363,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
             <div style={{ width:cardW, display:'flex', gap:8, height:52 }}>
               {!started ? (
                 <button
-                  onClick={drawNew}
+                  onClick={backToIdle}
                   style={{
                     flex:1, height:'100%',
                     fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',

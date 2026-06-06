@@ -200,6 +200,7 @@ function App() {
           players={players}
           currentPlayerIdx={currentPlayerIdx}
           onConfirm={handleRoundResult}
+          onRetry={() => { setEmotionData(null); setScreen('turn'); }}
         />
       )}
       {screen === 'scoreboard' && (

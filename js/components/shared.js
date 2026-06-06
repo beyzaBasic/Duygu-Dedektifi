@@ -221,6 +221,9 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
   const contentGap = ['clamp(16px,4vw,20px)','clamp(13px,3.3vw,17px)','clamp(10px,2.6vw,13px)','clamp(8px,2.1vw,11px)'][tier];
   const qFont      = ['clamp(16px,4.8vw,19.5px)','clamp(15px,4.5vw,18px)','clamp(14.5px,4.2vw,16.5px)','clamp(13.5px,3.9vw,15.5px)'][tier];
   const qLH        = [1.5, 1.46, 1.42, 1.38][tier];
+
+  // Soru aynen kalır — sesli okunduğu için duygu adı yazılmaz (gizli kalsın).
+  const questionText = (scene && scene.question) ? scene.question : '';
   return (
     <div style={{
       width:'min(280px, 72vw)', aspectRatio:'5/8.4',
@@ -233,95 +236,13 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
       opacity: entered ? 1 : 0,
       transition:'transform 0.5s cubic-bezier(0.2,0.8,0.2,1), opacity 0.5s',
     }}>
-      <div style={{
-        position:'absolute', top:'clamp(14px,3.5vw,18px)', left:'clamp(16px,4vw,22px)',
-        fontSize:8, letterSpacing:'0.28em', color: dark ? 'rgba(255,255,255,0.2)' : '#D0D0D0', textTransform:'uppercase', fontWeight:700,
-      }}>
-        №{String(displayNum).padStart(2,'0')}
-      </div>
-
-      {onChangeScene && (
-        <IconChangeBtn
-          onClick={onChangeScene}
-          accentGrad={group && group.grad}
-          accentText={dark ? '#1A1A1A' : (group && group.text)}
-          invertPress={dark}
-          style={{ position:'absolute', top:'clamp(10px,2.5vw,14px)', right:'clamp(10px,2.5vw,14px)' }}
-        />
-      )}
-
-      <div style={{
-        flex:1,
-        padding:'clamp(24px,5.5vw,32px) clamp(22px,6vw,30px) clamp(12px,3vw,16px)',
-        display:'flex', flexDirection:'column', justifyContent:'center', gap:contentGap,
-      }}>
-        {/* Birincil okuma: sahne anlatısı */}
-        <p style={{
-          fontSize:bodyFont,
-          lineHeight:bodyLH,
-          color: dark ? '#fff' : '#1A1A1A',
-          fontWeight:700,
-          margin:0,
-          letterSpacing:'-0.015em',
-        }}>
-          {scene.body}
-        </p>
-        {/* Renk kodlu ayraç — sahneden soruya geçiş */}
-        <div style={{
-          width:30, height:3, borderRadius:3, flexShrink:0,
-          background: group ? group.grad : (dark ? 'rgba(255,255,255,0.25)' : '#E2DED6'),
-          opacity:0.9,
-        }}/>
-        {/* İkincil okuma: yansıtma sorusu */}
-        <p style={{
-          fontWeight:600,
-          fontStyle:'italic',
-          fontSize:qFont,
-          lineHeight:qLH,
-          letterSpacing:'0',
-          color: dark ? 'rgba(255,255,255,0.62)' : '#7C7C7C',
-          margin:0,
-        }}>
-          {scene.question}
-        </p>
-      </div>
-
-      {scene.groups && scene.groups.length > 0 && (
-        <div style={{
-          display:'flex', gap:7, alignItems:'center',
-          padding:'0 clamp(22px,6vw,30px) clamp(12px,3vw,16px)',
-          flex:'0 0 auto',
-        }}>
-          {scene.groups.map(key => {
-            const g = (typeof GROUPS !== 'undefined') && GROUPS.find(x => x.key === key);
-            if (!g) return null;
-            const active = group && key === group.key;
-            return <span key={key} style={{
-              width: active ? 15 : 11, height: active ? 15 : 11,
-              borderRadius:'50%', background:g.grad, flexShrink:0,
-              boxShadow: active
-                ? `0 0 0 2px ${dark ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.08)'}, 0 1px 3px rgba(0,0,0,0.22)`
-                : '0 1px 2px rgba(0,0,0,0.12)',
-              transition:'all 0.2s',
-            }}/>;
-          })}
-        </div>
-      )}
-
-      <div style={{
-        margin:'0 clamp(22px,6vw,30px)',
-        height:1,
-        background: dark ? 'rgba(0,0,0,0.07)' : 'rgba(0,0,0,0.08)',
-        flex:'0 0 auto',
-      }}/>
-
-      {/* Alt band: duygu kartı — görünür, sola hizalı, sabit yükseklik */}
+      {/* ÜST band: duygu kartı — görünür, sola hizalı, sabit yükseklik */}
       <div style={{
         flex:'0 0 auto', position:'relative',
         height:'clamp(116px,28vw,144px)',
         background: group ? group.grad : '#F7F4EE',
         padding:'0 clamp(22px,6vw,30px)',
-        borderRadius:'0 0 24px 24px',
+        borderRadius:'24px 24px 0 0',
         display:'flex', alignItems:'center', justifyContent:'flex-start',
       }}>
         <span style={{
@@ -337,6 +258,88 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
             style={{ position:'absolute', top:'clamp(10px,2.5vw,14px)', right:'clamp(10px,2.5vw,14px)' }}
           />
         )}
+      </div>
+
+      <div style={{
+        margin:'0 clamp(22px,6vw,30px)',
+        height:1,
+        background: dark ? 'rgba(0,0,0,0.07)' : 'rgba(0,0,0,0.08)',
+        flex:'0 0 auto',
+      }}/>
+
+      {/* ALT beyaz alan: sahne metni + soru */}
+      <div style={{
+        flex:1, position:'relative',
+        padding:'clamp(24px,5.5vw,30px) clamp(22px,6vw,30px) clamp(14px,3.5vw,18px)',
+        display:'flex', flexDirection:'column',
+      }}>
+        <div style={{
+          position:'absolute', top:'clamp(12px,3vw,16px)', left:'clamp(16px,4vw,22px)',
+          fontSize:8, letterSpacing:'0.28em', color: dark ? 'rgba(255,255,255,0.2)' : '#D0D0D0', textTransform:'uppercase', fontWeight:700,
+        }}>
+          №{String(displayNum).padStart(2,'0')}
+        </div>
+
+        {/* Ana içerik — dikey ortalı */}
+        <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:contentGap }}>
+          {/* Birincil okuma: sahne anlatısı */}
+          <p style={{
+            fontSize:bodyFont,
+            lineHeight:bodyLH,
+            color: dark ? '#fff' : '#1A1A1A',
+            fontWeight:700,
+            margin:0,
+            letterSpacing:'-0.015em',
+          }}>
+            {scene.body}
+          </p>
+          {/* Renk kodlu ayraç — sahneden soruya geçiş */}
+          <div style={{
+            width:30, height:3, borderRadius:3, flexShrink:0,
+            background: group ? group.grad : (dark ? 'rgba(255,255,255,0.25)' : '#E2DED6'),
+            opacity:0.9,
+          }}/>
+          {/* İkincil okuma: yansıtma sorusu */}
+          <p style={{
+            fontWeight:600,
+            fontStyle:'italic',
+            fontSize:qFont,
+            lineHeight:qLH,
+            letterSpacing:'0',
+            color: dark ? 'rgba(255,255,255,0.62)' : '#7C7C7C',
+            margin:0,
+          }}>
+            {questionText}
+          </p>
+        </div>
+
+        {/* Alt satır: renk noktaları (sol) + sahne ↻ (sağ, üstteki ↻ ile aynı sağ kenar) */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginTop:'clamp(10px,2.5vw,14px)', marginRight:'calc(clamp(10px,2.5vw,14px) - clamp(22px,6vw,30px))', flexShrink:0 }}>
+          <div style={{ display:'flex', gap:7, alignItems:'center' }}>
+            {scene.groups && scene.groups.map(key => {
+              const g = (typeof GROUPS !== 'undefined') && GROUPS.find(x => x.key === key);
+              if (!g) return null;
+              const active = group && key === group.key;
+              return <span key={key} style={{
+                width: active ? 15 : 11, height: active ? 15 : 11,
+                borderRadius:'50%', background:g.grad, flexShrink:0,
+                boxShadow: active
+                  ? `0 0 0 2px ${dark ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.08)'}, 0 1px 3px rgba(0,0,0,0.22)`
+                  : '0 1px 2px rgba(0,0,0,0.12)',
+                transition:'all 0.2s',
+              }}/>;
+            })}
+          </div>
+          {onChangeScene && (
+            <IconChangeBtn
+              onClick={onChangeScene}
+              accentGrad={group && group.grad}
+              accentText={dark ? '#1A1A1A' : (group && group.text)}
+              invertPress={dark}
+              style={{ flexShrink:0 }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

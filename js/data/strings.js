@@ -105,6 +105,7 @@ var STRINGS = {
     headerHL: 'buldu?',
     telling:  'anlatıyordu',
     nobody:   'Kimse bilemedi',
+    retry:    'Yeniden',
     confirm:  'Onayla →',
   },
 
