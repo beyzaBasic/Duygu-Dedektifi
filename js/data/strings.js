@@ -129,4 +129,18 @@ var STRINGS = {
     confirm: 'Ana Menüye Dön →',
   },
 
+  settings: {
+    title:      'Ayarlar',
+    modLabel:   'MOD',
+    modGroup:   'Grup',
+    modSolo:    'Bireysel',
+    soundLabel: 'Ses',
+    vibLabel:   'Titreşim',
+    ageLabel:   'OYUNCU',
+    ageAdult:   'Yetişkin',
+    ageMixed:   'Karma',
+    ageYouth:   'Genç',
+    timerLabel: 'SÜRE',
+  },
+
 };

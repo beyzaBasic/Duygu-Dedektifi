@@ -180,19 +180,21 @@ function ShakePrompt({ playerGrad, playerAnimal, onDraw }) {
   );
 }
 
-function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange, onEmotionDrawn, onTurnEnd, onSceneUsed, usedScenes, onListOpen, onScoreOpen, onHome }) {
+function TurnScreen({ playerName, playerGrad, playerAnimal, initialIsYouth, allowAgeSwitch, onEmotionDrawn, onTurnEnd, onSceneUsed, usedScenes, onListOpen, onScoreOpen, onHome, timerDuration, vibrationEnabled, settings, onSettingsChange, groupName }) {
   /* ── Durum: yetişkin + genç sahne ayrı tutulur (toggle sabit kalsın) ── */
+  const [isYouth, setIsYouth] = React.useState(!!initialIsYouth);
   const [phase, setPhase] = React.useState('idle'); // 'idle' | 'revealed'
   const [sceneAdult, setSceneAdult] = React.useState(null);
   const [sceneYouth, setSceneYouth] = React.useState(null);
   const [emo, setEmo] = React.useState(null);        // { emotion, group }
   const [animKey, setAnimKey] = React.useState(0);
+  const [timeUp, setTimeUp] = React.useState(false);
   const emotion = emo && emo.emotion;
   const group = emo && emo.group;
   const scene = isYouth ? sceneYouth : sceneAdult;
 
   /* ── Sayaç ── */
-  const TOTAL = 90;
+  const TOTAL = [60, 90, 120].includes(timerDuration) ? timerDuration : 90;
   const [started, setStarted] = React.useState(false);
   const [timeLeft, setTimeLeft] = React.useState(TOTAL);
   const [ended, setEnded] = React.useState(false);
@@ -208,7 +210,8 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
 
   function finishTurn() {
     if (scene) onSceneUsed(sceneKey(scene));
-    onTurnEnd();
+    setTimeUp(true);
+    if (vibrationEnabled !== false) haptic([80, 60, 100, 60, 150]);
   }
 
   React.useEffect(() => {
@@ -236,7 +239,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     setAnimKey(k => k + 1);
     setPhase('revealed');
     setStarted(false); setTimeLeft(TOTAL); setEnded(false); setCountdown(3);
-    haptic([0, 45, 30, 60]); // çekiş titreşimi
+    if (vibrationEnabled !== false) haptic([0, 45, 30, 60]);
   }
 
   /* ── Yeni tur: "Telefonu Döndür/Salla" ekranına geri dön ── */
@@ -261,7 +264,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
       setSceneAdult(pickScene(SCENES, group.key, usedScenes, sceneAdult && sceneKey(sceneAdult)));
     }
     setAnimKey(k => k + 1);
-    haptic(25);
+    if (vibrationEnabled !== false) haptic(25);
   }
 
   /* ── Duyguyu değiştir: gösterilen sahne sabit; diğer yaşın sahnesi yeni duyguya uyarlanır ── */
@@ -272,12 +275,12 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
     if (isYouth) setSceneAdult(pickScene(SCENES, e.group.key, usedScenes, null));
     else setSceneYouth(pickScene(SCENES_GENC, e.group.key, usedScenes, null));
     onEmotionDrawn({ emotion: e.emotion, group: e.group });
-    haptic(25);
+    if (vibrationEnabled !== false) haptic(25);
   }
 
   /* ── Yaş geçişi: sahne yeniden seçilmez, sadece saklanan sahne gösterilir ── */
   function handleAge(v) {
-    onAgeChange(v);
+    setIsYouth(v);
     if (phase === 'revealed') setAnimKey(k => k + 1);
   }
 
@@ -359,6 +362,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
         playerName={playerName}
         playerGrad={playerGrad}
         playerAnimal={playerAnimal}
+        groupName={groupName}
         onScoreOpen={onScoreOpen}
         onListOpen={onListOpen}
         onHome={handleBack}
@@ -374,7 +378,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
             <FloatingBubbles />
             <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:'clamp(10px,2.5vw,14px)' }}>
               <SceneCard scene={scene} animKey={animKey} displayNum={usedScenes.length + 1} onChangeScene={changeScene} onChangeEmotion={changeEmotion} group={group} dark={isYouth} emotion={emotion} />
-              <AgeToggle isYouth={isYouth} onChange={handleAge} />
+              {allowAgeSwitch && <AgeToggle isYouth={isYouth} onChange={handleAge} />}
             </div>
           </div>
 
@@ -383,46 +387,57 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
             display:'flex', alignItems:'center', justifyContent:'center',
             borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2', flexShrink:0,
           }}>
-            <div style={{ width:cardW, display:'flex', gap:8, height:52 }}>
+            <div style={{ width:cardW, height:52 }}>
               <div style={{
-                flex:1, height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:7,
-                background: isUrgent ? 'linear-gradient(135deg,#FF3B30,#FF6B35)' : '#1A1A1A',
+                width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10,
+                background: isUrgent ? 'linear-gradient(135deg,#FF3B30,#FF6B35)' : (group ? group.grad : '#1A1A1A'),
                 borderRadius:100,
-                transition:'background 0.4s',
-                boxShadow: isUrgent ? '0 6px 18px -4px rgba(255,59,48,0.55)' : 'none',
+                transition:'background 0.6s',
+                boxShadow: isUrgent ? '0 6px 18px -4px rgba(255,59,48,0.55)' : `0 6px 20px -6px ${overlayColor}99`,
               }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <circle cx="6" cy="6" r="5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none"/>
-                  <path
-                    d={`M 6 6 L 6 1 A 5 5 0 ${progress > 0.5 ? 1 : 0} 1 ${6 + 5*Math.sin(2*Math.PI*(1-progress))} ${6 - 5*Math.cos(2*Math.PI*(1-progress))} Z`}
-                    fill="rgba(255,255,255,0.65)"
-                  />
-                </svg>
+                <span style={{ fontSize:22, lineHeight:1 }}>⏳</span>
                 <span style={{
-                  fontFamily:'Nunito', fontWeight:900, fontSize:16, letterSpacing:'-0.01em',
+                  fontFamily:'Nunito', fontWeight:900, fontSize:20, letterSpacing:'-0.01em',
                   color:'#fff', fontVariantNumeric:'tabular-nums',
                 }}>{timeStr}</span>
               </div>
-
-              <button
-                onClick={handleEnd}
-                disabled={countdown > 0}
-                style={{
-                  flex:1, height:'100%',
-                  fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase',
-                  borderRadius:100,
-                  background:'linear-gradient(135deg,#FF8C42,#FF3B30)',
-                  color:'#fff', border:'none', cursor: countdown > 0 ? 'default' : 'pointer',
-                  boxShadow:'0 6px 18px -4px rgba(255,90,50,0.45)',
-                }}
-              >{STRINGS.scene.finish}</button>
             </div>
           </div>
         </React.Fragment>
       )}
 
-      {/* 3-2-1 geri sayım — tüm ekranın (sayaç + Tamamla dahil) üzerinde,
-          seçilen duygunun renginde örtü; alttaki butonlar bu sırada pasif */}
+      {/* Süre doldu örtüsü */}
+      {phase === 'revealed' && timeUp && (
+        <div style={{
+          position:'absolute', inset:0, zIndex:20,
+          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:28,
+          background: overlayColor + 'D9', backdropFilter:'blur(4px)', WebkitBackdropFilter:'blur(4px)',
+          pointerEvents:'auto',
+        }}>
+          <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:14 }}>
+            <span style={{ fontSize:80, lineHeight:1, animation:'count-pump 0.6s cubic-bezier(0.2,0.8,0.2,1) both' }}>⏳</span>
+            <span style={{
+              fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(30px,9vw,44px)',
+              color:'#fff', letterSpacing:'-0.02em',
+              textShadow:'0 4px 20px rgba(0,0,0,0.25)',
+              animation:'pop-in 0.5s cubic-bezier(0.2,0.8,0.2,1) both',
+            }}>Süre Doldu!</span>
+          </div>
+          <button
+            onClick={onTurnEnd}
+            style={{
+              fontFamily:'Nunito', fontWeight:900, fontSize:16, letterSpacing:'0.04em',
+              padding:'16px 52px', borderRadius:100,
+              background:'#fff', color:'#1A1A1A',
+              border:'none', cursor:'pointer',
+              boxShadow:'0 12px 32px -8px rgba(0,0,0,0.28)',
+              animation:'pop-in 0.5s 0.15s cubic-bezier(0.2,0.8,0.2,1) both',
+            }}
+          >Tahminleri Al →</button>
+        </div>
+      )}
+
+      {/* 3-2-1 geri sayım — tüm ekranın üzerinde, seçilen duygunun renginde örtü */}
       {phase === 'revealed' && countdown > 0 && (
         <div style={{
           position:'absolute', inset:0, zIndex:20,
@@ -451,6 +466,7 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, isYouth, onAgeChange
           </div>
         </div>
       )}
+
     </div>
   );
 }

@@ -86,15 +86,15 @@ function IconChangeBtn({ onClick, onMouseDown, onTouchStart, style, accentGrad, 
       onTouchStart={e => { setPressed(true); onTouchStart && onTouchStart(e); }}
       onTouchEnd={() => setPressed(false)}
       style={{
-        width:28, height:28, borderRadius:'50%', flexShrink:0,
+        width:42, height:42, borderRadius:'50%', flexShrink:0,
         background: bg,
         border: hasAccent ? 'none' : '1px solid rgba(0,0,0,0.1)',
         display:'flex', alignItems:'center', justifyContent:'center',
         cursor:'pointer', color: col,
-        boxShadow: hov ? '0 4px 12px -4px rgba(0,0,0,0.22)' : '0 2px 6px -3px rgba(0,0,0,0.1)',
+        boxShadow: hov ? '0 6px 16px -4px rgba(0,0,0,0.28)' : '0 3px 8px -3px rgba(0,0,0,0.14)',
         transition: 'transform 0.2s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.2s',
-        transform: pressed ? 'scale(0.82)' : hov ? 'scale(1.08)' : 'scale(1)',
-        fontSize:13, lineHeight:1,
+        transform: pressed ? 'scale(0.84)' : hov ? 'scale(1.06)' : 'scale(1)',
+        fontSize:17, lineHeight:1,
         ...style,
       }}
     >↻</button>
@@ -255,7 +255,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
         {onChangeEmotion && (
           <IconChangeBtn
             onClick={onChangeEmotion}
-            style={{ position:'absolute', top:'clamp(10px,2.5vw,14px)', right:'clamp(10px,2.5vw,14px)' }}
+            style={{ position:'absolute', top:'clamp(14px,3.5vw,20px)', right:'clamp(14px,3.5vw,20px)' }}
           />
         )}
       </div>
@@ -314,7 +314,7 @@ function SceneCard({ scene, animKey, displayNum, onChangeScene, onChangeEmotion,
         </div>
 
         {/* Alt satır: renk noktaları (sol) + sahne ↻ (sağ, üstteki ↻ ile aynı sağ kenar) */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginTop:'clamp(8px,2vw,12px)', marginRight:'calc(clamp(10px,2.5vw,14px) - clamp(22px,6vw,30px))', flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginTop:'clamp(8px,2vw,12px)', marginRight:'calc(clamp(14px,3.5vw,20px) - clamp(22px,6vw,30px))', flexShrink:0 }}>
           <div style={{ display:'flex', gap:7, alignItems:'center' }}>
             {scene.groups && scene.groups.map(key => {
               const g = (typeof GROUPS !== 'undefined') && GROUPS.find(x => x.key === key);
@@ -402,7 +402,7 @@ function AgeToggle({ isYouth, onChange }) {
 }
 
 /* ─── TURN HEADER (shared by EmotionScreen + SceneScreen) ───── */
-function TurnHeader({ playerName, playerGrad, playerAnimal, onScoreOpen, onListOpen, onHome }) {
+function TurnHeader({ playerName, playerGrad, playerAnimal, onScoreOpen, onListOpen, onHome, onSettingsOpen, groupName }) {
   return (
     <div style={{ padding:'clamp(10px,3vw,14px) clamp(16px,5vw,24px) 0', display:'flex', alignItems:'center', justifyContent:'space-between', position:'relative' }}>
       <button onClick={onHome} style={{
@@ -419,13 +419,20 @@ function TurnHeader({ playerName, playerGrad, playerAnimal, onScoreOpen, onListO
       {playerName && (
         <div style={{
           position:'absolute', left:'50%', transform:'translateX(-50%)',
-          display:'inline-flex', alignItems:'center', gap:8,
-          background: playerGrad, borderRadius:16, padding:'8px 14px 8px 10px',
+          display:'inline-flex', flexDirection:'column', alignItems:'center', gap:2,
+          background: playerGrad, borderRadius:16, padding:'7px 14px 8px 10px',
           boxShadow:'0 4px 14px -4px rgba(0,0,0,0.25)',
-          maxWidth:'55%',
+          maxWidth:'58%',
         }}>
-          <span style={{ fontSize:20, lineHeight:1, flexShrink:0 }}>{playerAnimal}</span>
-          <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(14px,4vw,17px)', letterSpacing:'-0.01em', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,0.15)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{playerName}</span>
+          {groupName && (
+            <span style={{ fontFamily:'Nunito', fontWeight:800, fontSize:9, letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.75)', lineHeight:1 }}>
+              {groupName}
+            </span>
+          )}
+          <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+            <span style={{ fontSize:18, lineHeight:1, flexShrink:0 }}>{playerAnimal}</span>
+            <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:'clamp(13px,3.8vw,16px)', letterSpacing:'-0.01em', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,0.15)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{playerName}</span>
+          </div>
         </div>
       )}
 
@@ -441,6 +448,18 @@ function TurnHeader({ playerName, playerGrad, playerAnimal, onScoreOpen, onListO
             <rect x="11" y="1" width="3" height="14" rx="1" fill="#1A1A1A"/>
           </svg>
         </button>
+        {onSettingsOpen && (
+          <button onClick={onSettingsOpen} style={{
+            width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
+            display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+            boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)', flexShrink:0,
+          }}>
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="2.4" stroke="#1A1A1A" strokeWidth="1.5"/>
+              <path d="M9 1.5V3M9 15v1.5M1.5 9H3M15 9h1.5M3.7 3.7l1.06 1.06M13.24 13.24l1.06 1.06M3.7 14.3l1.06-1.06M13.24 4.76l1.06-1.06" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </button>
+        )}
         <button onClick={onListOpen} style={{
           width:36, height:36, borderRadius:'50%', background:'#fff', border:'1px solid rgba(0,0,0,0.08)',
           display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',

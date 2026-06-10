@@ -1,5 +1,22 @@
 const RAINBOW_BONUS = 5;
 const SESSIONS_KEY = 'duyguAviSessions';
+const SETTINGS_KEY = 'duyguAviSettings';
+
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    const ageMode = s.ageMode || (s.isYouth === true ? 'youth' : 'adult');
+    return {
+      gameMode:      s.gameMode || 'group',
+      sound:         s.sound !== false,
+      vibration:     s.vibration !== false,
+      ageMode:       ['adult','mixed','youth'].includes(ageMode) ? ageMode : 'adult',
+      timerDuration: [60, 90, 120].includes(s.timerDuration) ? s.timerDuration : 90,
+    };
+  } catch {
+    return { gameMode: 'group', sound: true, vibration: true, ageMode: 'adult', timerDuration: 90 };
+  }
+}
 
 function loadAllSessions() {
   try { return JSON.parse(localStorage.getItem(SESSIONS_KEY) || '[]'); }
@@ -26,14 +43,24 @@ function App() {
   const [players, setPlayers] = React.useState([]);
   const [prevPlayers, setPrevPlayers] = React.useState(null);
   const [currentPlayerIdx, setCurrentPlayerIdx] = React.useState(0);
+  const pendingPlayerIdx = React.useRef(null);
   const [emotionData, setEmotionData] = React.useState(null);
-  const [isYouth, setIsYouth] = React.useState(false);
+  const [settings, setSettings] = React.useState(loadSettings);
+
+  function updateSettings(patch) {
+    setSettings(prev => {
+      const next = { ...prev, ...patch };
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
+      return next;
+    });
+  }
   const [showList, setShowList] = React.useState(false);
   const [showScoreboard, setShowScoreboard] = React.useState(false);
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
   const [sessionId, setSessionId] = React.useState(null);
   const [sessionName, setSessionName] = React.useState('');
   const [sessionStorageName, setSessionStorageName] = React.useState('');
+  const [sessionGameMode, setSessionGameMode] = React.useState('group');
   const [sessions, setSessions] = React.useState(loadAllSessions);
   const [usedScenes, setUsedScenes] = React.useState([]);
 
@@ -45,6 +72,7 @@ function App() {
       const session = {
         id: sessionId,
         name: sessionStorageName || sessionName,
+        gameMode: sessionGameMode,
         players,
         currentPlayerIdx,
         usedScenes,
@@ -61,24 +89,35 @@ function App() {
 
   function startGame(playerNames, gameName) {
     const id = Date.now().toString();
+    const flatNames = playerNames.map(e => typeof e === 'string' ? e : e.name);
     const storageName = gameName ||
-      (playerNames.length <= 3
-        ? playerNames.join(', ')
-        : playerNames.slice(0, 2).join(', ') + ' +' + (playerNames.length - 2));
-    const newPlayers = playerNames.map(name => ({
-      name, score: 0,
-      told: 0, successTold: 0, failTold: 0,
-      guessed: 0, guessedColors: [], rainbowBonus: false,
-    }));
+      (flatNames.length <= 3
+        ? flatNames.join(', ')
+        : flatNames.slice(0, 2).join(', ') + ' +' + (flatNames.length - 2));
+    const newPlayers = playerNames.map(entry => {
+      const playerName = typeof entry === 'string' ? entry : entry.name;
+      const isYouth = settings.ageMode === 'youth' ? true
+        : settings.ageMode === 'adult' ? false
+        : !!(entry.isYouth); // mixed: per-player
+      return {
+        name: playerName, score: 0,
+        told: 0, successTold: 0, failTold: 0,
+        guessed: 0, guessedColors: [], rainbowBonus: false,
+        isYouth,
+        groupName: entry.groupName || null,
+        groupIdx: entry.groupIdx != null ? entry.groupIdx : null,
+      };
+    });
     setSessionId(id);
     setSessionName(gameName);
     setSessionStorageName(storageName);
+    setSessionGameMode(settings.gameMode);
     setPlayers(newPlayers);
     setPrevPlayers(null);
     setCurrentPlayerIdx(0);
     setEmotionData(null);
     setUsedScenes([]);
-    persistSession({ id, name: storageName, players: newPlayers, currentPlayerIdx: 0, usedScenes: [], updatedAt: Date.now() });
+    persistSession({ id, name: storageName, gameMode: settings.gameMode, players: newPlayers, currentPlayerIdx: 0, usedScenes: [], updatedAt: Date.now() });
     setSessions(loadAllSessions());
     setScreen('playerList');
   }
@@ -86,7 +125,11 @@ function App() {
   function continueSession(session) {
     setSessionId(session.id);
     setSessionName(session.name);
-    setPlayers(session.players);
+    setSessionGameMode(session.gameMode || 'group');
+    setPlayers((session.players || []).map(p => ({
+      ...p,
+      isYouth: p.isYouth !== undefined ? p.isYouth : settings.isYouth,
+    })));
     setCurrentPlayerIdx(session.currentPlayerIdx);
     setUsedScenes(session.usedScenes || []);
     setPrevPlayers(null);
@@ -97,6 +140,10 @@ function App() {
   function deleteSession(id) {
     removeSession(id);
     setSessions(loadAllSessions());
+  }
+
+  function handlePlayerAgeChange(idx, value) {
+    setPlayers(prev => prev.map((p, i) => i === idx ? { ...p, isYouth: value } : p));
   }
 
   function handleHome() {
@@ -158,15 +205,28 @@ function App() {
       )}
       {screen === 'welcome' && (
         <WelcomeScreen
-          onStart={() => setScreen('setup')}
-          onListOpen={() => setShowList(true)}
+          onStart={() => setScreen('modeSelect')}
           sessions={sessions}
           onContinueSession={continueSession}
           onDeleteSession={deleteSession}
+          settings={settings}
+          onSettingsChange={updateSettings}
+        />
+      )}
+      {screen === 'modeSelect' && (
+        <ModeSelectScreen
+          onSelect={(mode) => { updateSettings({ gameMode: mode }); setScreen('ageSelect'); }}
+          onBack={() => setScreen('welcome')}
+        />
+      )}
+      {screen === 'ageSelect' && (
+        <AgeSelectScreen
+          onSelect={(ageMode) => { updateSettings({ ageMode }); setScreen('setup'); }}
+          onBack={() => setScreen('modeSelect')}
         />
       )}
       {screen === 'setup' && (
-        <PlayerSetup onStart={startGame} onBack={() => setScreen('welcome')} />
+        <PlayerSetup ageMode={settings.ageMode} gameMode={settings.gameMode} onStart={startGame} onBack={() => setScreen('ageSelect')} />
       )}
       {screen === 'playerList' && (
         <PlayerList
@@ -174,9 +234,20 @@ function App() {
           currentPlayerIdx={currentPlayerIdx}
           sessionName={sessionName}
           onPlayerTap={() => { ensureMotionPermission().finally(() => setScreen('turn')); }}
+          onGroupPlayerTap={(idx) => {
+            pendingPlayerIdx.current = idx;
+            ensureMotionPermission().finally(() => {
+              setCurrentPlayerIdx(pendingPlayerIdx.current);
+              setScreen('turn');
+            });
+          }}
           onHome={handleHome}
           onScoreOpen={() => setShowScoreboard(true)}
           onListOpen={() => setShowList(true)}
+          onPlayerAgeChange={handlePlayerAgeChange}
+          ageMode={settings.ageMode}
+          settings={settings}
+          onSettingsChange={updateSettings}
         />
       )}
       {screen === 'turn' && (
@@ -184,14 +255,19 @@ function App() {
           playerName={players[currentPlayerIdx]?.name}
           playerGrad={PLAYER_GRADS[currentPlayerIdx % PLAYER_GRADS.length]}
           playerAnimal={PLAYER_ANIMALS[currentPlayerIdx % PLAYER_ANIMALS.length]}
-          isYouth={isYouth}
-          onAgeChange={setIsYouth}
+          initialIsYouth={players[currentPlayerIdx]?.isYouth ?? (settings.ageMode === 'youth')}
+          allowAgeSwitch={settings.ageMode === 'mixed'}
+          groupName={players[currentPlayerIdx]?.groupName || null}
+          timerDuration={settings.timerDuration}
+          vibrationEnabled={settings.vibration}
           onEmotionDrawn={d => setEmotionData(d)}
           onTurnEnd={() => setScreen('roundResult')}
           usedScenes={usedScenes}
           onSceneUsed={markSceneUsed}
           onListOpen={() => setShowList(true)}
           onScoreOpen={() => setShowScoreboard(true)}
+          settings={settings}
+          onSettingsChange={updateSettings}
           {...homeProps}
         />
       )}

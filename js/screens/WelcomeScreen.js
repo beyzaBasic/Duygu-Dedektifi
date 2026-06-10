@@ -113,44 +113,94 @@ function SwipeableSessionCard({ session, index, onContinue, onDelete, formatDate
 }
 
 function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
+  const [activeTab, setActiveTab] = React.useState('group');
+
   function formatDate(ts) {
     if (!ts) return '';
     const d = new Date(ts);
     return d.toLocaleDateString('tr-TR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
   }
 
+  const groupCount = sessions.filter(s => (s.gameMode || 'group') === 'group').length;
+  const soloCount  = sessions.filter(s => (s.gameMode || 'group') === 'solo').length;
+  const filtered   = sessions.filter(s => (s.gameMode || 'group') === activeTab);
+
+  const tabs = [
+    { value: 'group', label: STRINGS.settings.modGroup, count: groupCount },
+    { value: 'solo',  label: STRINGS.settings.modSolo,  count: soloCount  },
+  ];
+
   return (
     <div style={{ position:'fixed', inset:0, zIndex:200, display:'flex', flexDirection:'column', overflow:'hidden', background:'#FAF7F2' }}>
+
       {/* Header */}
       <div style={{
-        padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 12px',
-        flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between',
+        padding:'clamp(14px,4vw,20px) clamp(16px,5vw,24px) 14px',
+        flexShrink:0, display:'flex', alignItems:'center', gap:14,
       }}>
-        <div>
-          <div style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:4 }}>{STRINGS.welcome.archiveLabel}</div>
-          <div style={{ fontWeight:900, fontSize:'clamp(22px,6vw,28px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>{STRINGS.welcome.archiveTitle}</div>
-        </div>
         <button onClick={onClose} style={{
           width:36, height:36, borderRadius:'50%', background:'#fff',
-          border:'1px solid rgba(0,0,0,0.08)', cursor:'pointer',
+          border:'1px solid rgba(0,0,0,0.08)', cursor:'pointer', flexShrink:0,
           display:'flex', alignItems:'center', justifyContent:'center',
           boxShadow:'0 4px 12px -4px rgba(0,0,0,0.1)',
         }}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M1 1l10 10M11 1L1 11" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"/>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M6 2L1 7L6 12" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <line x1="1" y1="7" x2="13" y2="7" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
+        <div>
+          <div style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'#A0A0A0', fontWeight:700, marginBottom:3 }}>{STRINGS.welcome.archiveLabel}</div>
+          <div style={{ fontWeight:900, fontSize:'clamp(20px,5.5vw,26px)', letterSpacing:'-0.025em', lineHeight:1, color:'#1A1A1A' }}>{STRINGS.welcome.archiveTitle}</div>
+        </div>
+      </div>
+
+      {/* Tab bar */}
+      <div style={{ padding:'0 clamp(16px,5vw,24px) 12px', flexShrink:0 }}>
+        <div style={{ display:'flex', background:'rgba(0,0,0,0.07)', borderRadius:100, padding:3, gap:2 }}>
+          {tabs.map(tab => {
+            const active = activeTab === tab.value;
+            return (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                style={{
+                  flex:1, padding:'10px 0', borderRadius:100, border:'none', cursor:'pointer',
+                  background: active
+                    ? 'linear-gradient(135deg,#FF6B7A 0%,#FF8C42 50%,#FFC93C 100%)'
+                    : 'transparent',
+                  color: active ? '#fff' : '#888',
+                  fontFamily:'Nunito', fontWeight:800, fontSize:13, letterSpacing:'-0.01em',
+                  display:'flex', alignItems:'center', justifyContent:'center', gap:6,
+                  boxShadow: active ? '0 4px 12px -4px rgba(255,100,60,0.4)' : 'none',
+                  transition:'background 0.18s, color 0.18s, box-shadow 0.18s',
+                }}
+              >
+                {tab.label}
+                {tab.count > 0 && (
+                  <span style={{
+                    fontSize:10, fontWeight:900, lineHeight:1,
+                    background: active ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.12)',
+                    color: active ? '#fff' : '#6A6A6A',
+                    borderRadius:100, padding:'2px 7px',
+                    transition:'background 0.18s, color 0.18s',
+                  }}>{tab.count}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* List */}
       <div style={{ flex:1, minHeight:0, overflowY:'auto', padding:'4px clamp(16px,5vw,24px) 32px', display:'flex', flexDirection:'column', gap:10 }}>
-        {sessions.length === 0 ? (
+        {filtered.length === 0 ? (
           <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:12, color:'#C8C0B8', paddingTop:60 }}>
             <div style={{ fontSize:44 }}>📂</div>
             <div style={{ fontSize:14, fontWeight:700 }}>{STRINGS.welcome.archiveEmpty}</div>
             <div style={{ fontSize:12, color:'#D0C8C0' }}>{STRINGS.welcome.archiveEmptySub}</div>
           </div>
-        ) : sessions.map((s, i) => (
+        ) : filtered.map((s, i) => (
           <SwipeableSessionCard
             key={s.id}
             session={s}
@@ -160,11 +210,177 @@ function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
             formatDate={formatDate}
           />
         ))}
-        {sessions.length > 0 && (
+        {filtered.length > 0 && (
           <div style={{ textAlign:'center', marginTop:4, fontSize:10, color:'#C8C0B8', fontWeight:600, letterSpacing:'0.08em' }}>
             {STRINGS.welcome.archiveSwipeHint}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Settings Panel Yardımcı Bileşenleri ─── */
+
+function SegControl({ options, value, onChange }) {
+  return (
+    <div style={{
+      display: 'flex', background: 'rgba(0,0,0,0.07)', borderRadius: 100, padding: 3, gap: 2,
+    }}>
+      {options.map(o => {
+        const active = value === o.value;
+        return (
+          <button
+            key={String(o.value)}
+            onClick={() => onChange(o.value)}
+            style={{
+              flex: 1, padding: '9px 0', borderRadius: 100,
+              background: active
+                ? 'linear-gradient(135deg,#FF6B7A 0%,#FF8C42 50%,#FFC93C 100%)'
+                : 'transparent',
+              color: active ? '#fff' : '#888',
+              border: 'none', cursor: 'pointer',
+              fontFamily: 'Nunito', fontWeight: 800, fontSize: 13,
+              letterSpacing: '-0.01em',
+              boxShadow: active ? '0 4px 12px -4px rgba(255,100,60,0.4)' : 'none',
+              transition: 'background 0.18s, color 0.18s, box-shadow 0.18s',
+              textShadow: active ? '0 1px 2px rgba(0,0,0,0.12)' : 'none',
+            }}
+          >{o.label}</button>
+        );
+      })}
+    </div>
+  );
+}
+
+function SettingsToggle({ value, onChange }) {
+  return (
+    <div
+      onClick={() => onChange(!value)}
+      style={{
+        width: 48, height: 26, borderRadius: 100,
+        background: value ? 'linear-gradient(135deg,#2ED573,#1DB954)' : 'rgba(0,0,0,0.15)',
+        position: 'relative', cursor: 'pointer', flexShrink: 0,
+        transition: 'background 0.22s',
+      }}
+    >
+      <div style={{
+        position: 'absolute', top: 3,
+        left: value ? 23 : 3,
+        width: 20, height: 20, borderRadius: '50%', background: '#fff',
+        boxShadow: '0 1px 6px rgba(0,0,0,0.22)',
+        transition: 'left 0.22s cubic-bezier(0.2,0.8,0.2,1)',
+      }} />
+    </div>
+  );
+}
+
+function SettingsPanel({ settings, onChange, onClose }) {
+  const S = STRINGS.settings;
+
+  function Row({ label, children }) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <span style={{ fontWeight: 800, fontSize: 15, color: '#1A1A1A', letterSpacing: '-0.01em' }}>{label}</span>
+        {children}
+      </div>
+    );
+  }
+
+  function SectionLabel({ label }) {
+    return (
+      <div style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6A6A6A', fontWeight: 800, marginBottom: 10 }}>
+        {label}
+      </div>
+    );
+  }
+
+  function Divider() {
+    return <div style={{ height: 1, background: 'rgba(0,0,0,0.1)', margin: '16px 0' }} />;
+  }
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 300,
+        background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '0 24px',
+        animation: 'fade-overlay 0.2s ease both',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: '100%', maxWidth: 340,
+          borderRadius: 28, overflow: 'hidden',
+          boxShadow: '0 32px 80px -16px rgba(0,0,0,0.5)',
+          animation: 'enter 0.3s cubic-bezier(0.2,0.8,0.2,1) both',
+        }}
+      >
+        {/* Gradient başlık */}
+        <div style={{
+          background: 'linear-gradient(135deg,#FF6B7A 0%,#FF8C42 35%,#FFC93C 65%,#2ED573 100%)',
+          padding: '20px 22px 18px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="2.4" stroke="#fff" strokeWidth="1.6"/>
+                <path d="M9 1.5V3M9 15v1.5M1.5 9H3M15 9h1.5M3.7 3.7l1.06 1.06M13.24 13.24l1.06 1.06M3.7 14.3l1.06-1.06M13.24 4.76l1.06-1.06" stroke="#fff" strokeWidth="1.6" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <span style={{ fontWeight: 900, fontSize: 20, color: '#fff', letterSpacing: '-0.02em', textShadow: '0 1px 4px rgba(0,0,0,0.12)' }}>
+              {S.title}
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              width: 32, height: 32, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.25)', border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1 1l8 8M9 1L1 9" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        {/* İçerik */}
+        <div style={{ background: '#FAF7F2', padding: '20px 22px 24px', display: 'flex', flexDirection: 'column' }}>
+
+          {/* SES & TİTREŞİM */}
+          <Row label={S.soundLabel}>
+            <SettingsToggle value={settings.sound} onChange={v => onChange({ sound: v })} />
+          </Row>
+          <div style={{ height: 14 }} />
+          <Row label={S.vibLabel}>
+            <SettingsToggle value={settings.vibration} onChange={v => onChange({ vibration: v })} />
+          </Row>
+
+          <Divider />
+
+          {/* SÜRE */}
+          <SectionLabel label={S.timerLabel} />
+          <SegControl
+            options={[
+              { value: 60,  label: '60 sn'  },
+              { value: 90,  label: '90 sn'  },
+              { value: 120, label: '120 sn' },
+            ]}
+            value={settings.timerDuration}
+            onChange={v => onChange({ timerDuration: v })}
+          />
+
+        </div>
       </div>
     </div>
   );
@@ -176,8 +392,10 @@ var WELCOME_STEPS = [
   { emoji:'🔍', grad:'linear-gradient(135deg,#5FB8FF,#B14AED)', shadow:'rgba(100,60,220,0.4)',  anim:'bob 2.2s ease-in-out 0.5s infinite' },
 ];
 
-function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDeleteSession }) {
+function WelcomeScreen({ onStart, sessions, onContinueSession, onDeleteSession, settings, onSettingsChange }) {
   const [showArchive, setShowArchive] = React.useState(false);
+  const [showList, setShowList] = React.useState(false);
+  const [showSettings, setShowSettings] = React.useState(false);
 
   const hasSessions = sessions && sessions.length > 0;
 
@@ -214,13 +432,25 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
           )}
         </button>
 
-        <button onClick={onListOpen} style={{
-          width:42, height:42, borderRadius:'50%', background:'#fff', border:'none',
-          display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
-          boxShadow:'0 6px 16px -6px rgba(0,0,0,0.3)', flexShrink:0,
-        }}>
-          <RainbowRings size={12} />
-        </button>
+        <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+          <button onClick={() => setShowSettings(true)} style={{
+            width:42, height:42, borderRadius:'50%', background:'rgba(255,255,255,0.92)', border:'none',
+            display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+            boxShadow:'0 6px 16px -6px rgba(0,0,0,0.3)', flexShrink:0,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="2.4" stroke="#1A1A1A" strokeWidth="1.5"/>
+              <path d="M9 1.5V3M9 15v1.5M1.5 9H3M15 9h1.5M3.7 3.7l1.06 1.06M13.24 13.24l1.06 1.06M3.7 14.3l1.06-1.06M13.24 4.76l1.06-1.06" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </button>
+          <button onClick={() => setShowList(true)} style={{
+            width:42, height:42, borderRadius:'50%', background:'rgba(255,255,255,0.92)', border:'none',
+            display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+            boxShadow:'0 6px 16px -6px rgba(0,0,0,0.3)', flexShrink:0,
+          }}>
+            <RainbowRings size={11} />
+          </button>
+        </div>
       </div>
 
       {/* Orta içerik — kartsız, tüm ekran renkli */}
@@ -311,6 +541,18 @@ function WelcomeScreen({ onStart, onListOpen, sessions, onContinueSession, onDel
           onDelete={onDeleteSession}
           onClose={() => setShowArchive(false)}
         />
+      )}
+
+      {showSettings && settings && (
+        <SettingsPanel
+          settings={settings}
+          onChange={onSettingsChange}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
+
+      {showList && (
+        <EmotionListOverlay onClose={() => setShowList(false)} />
       )}
     </div>
   );
