@@ -378,7 +378,6 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, initialIsYouth, allo
             <FloatingBubbles />
             <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:'clamp(10px,2.5vw,14px)' }}>
               <SceneCard scene={scene} animKey={animKey} displayNum={usedScenes.length + 1} onChangeScene={changeScene} onChangeEmotion={changeEmotion} group={group} dark={isYouth} emotion={emotion} />
-              {allowAgeSwitch && <AgeToggle isYouth={isYouth} onChange={handleAge} />}
             </div>
           </div>
 

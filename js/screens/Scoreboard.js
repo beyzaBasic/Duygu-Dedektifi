@@ -144,6 +144,55 @@ function ScoreCardView({ p, currentRank, rankDelta, scoreDelta, showMedal, inner
   );
 }
 
+// Kompakt üye satırı — grup modunda kalabalığı azaltır, eğlence öğelerini korur.
+function ScoreCardCompact({ p, gradOverride, scoreDelta }) {
+  const grad = gradOverride || PLAYER_GRADS[p.originalIdx % PLAYER_GRADS.length];
+  const anml = PLAYER_ANIMALS[p.originalIdx % PLAYER_ANIMALS.length];
+  const hasRainbow = p.rainbowBonus;
+  const colorCounts = {};
+  (p.guessedColors || []).forEach(k => { colorCounts[k] = (colorCounts[k] || 0) + 1; });
+
+  return (
+    <div style={{
+      display:'flex', alignItems:'center', gap:10,
+      background:'#fff', borderRadius:14, padding:'8px 12px',
+      boxShadow:'0 2px 8px -2px rgba(0,0,0,0.07)',
+    }}>
+      <div style={{
+        width:34, height:34, borderRadius:'50%', background:grad,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        fontSize:18, lineHeight:1, flexShrink:0,
+      }}>{anml}</div>
+
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:5 }}>
+          <span style={{ fontWeight:800, fontSize:14, color:'#1A1A1A', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</span>
+          {hasRainbow && <span style={{ fontSize:12, flexShrink:0 }}>🌈</span>}
+        </div>
+        <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:3 }}>
+          <span style={{ fontSize:10, fontWeight:700, color:'#9A9A9A' }}>🎭 {p.told || 0}</span>
+          <span style={{ fontSize:10, fontWeight:700, color:'#9A9A9A' }}>🎯 {p.guessed || 0}</span>
+          <div style={{ display:'flex', gap:2 }}>
+            {GROUPS.map(g => {
+              const collected = (colorCounts[g.key] || 0) > 0;
+              return <div key={g.key} style={{ width:8, height:8, borderRadius:'50%', background: collected ? g.grad : '#E4E1DC' }}/>;
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ flexShrink:0, textAlign:'right', display:'flex', alignItems:'center', gap:6 }}>
+        {scoreDelta !== null && scoreDelta !== 0 && (
+          <span style={{ fontSize:11, fontWeight:800, color: scoreDelta > 0 ? '#2ED573' : '#C8C0B8' }}>
+            {scoreDelta > 0 ? `+${scoreDelta}` : scoreDelta}
+          </span>
+        )}
+        <span style={{ fontWeight:900, fontSize:19, color:'#1A1A1A', lineHeight:1 }}>{p.score}</span>
+      </div>
+    </div>
+  );
+}
+
 function Scoreboard({ players, prevPlayers, onContinue, onClose }) {
   const isOverlay = !!onClose;
   const totalRounds = players.reduce((sum, p) => sum + (p.told || 0), 0);
@@ -266,39 +315,37 @@ function Scoreboard({ players, prevPlayers, onContinue, onClose }) {
         {isGroup ? (
           /* ── GRUP MODU: takımlara göre toplanmış ── */
           teams.map((t, ti) => (
-            <div key={t.idx} style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            <div key={t.idx} style={{ display:'flex', flexDirection:'column', gap:6 }}>
               {/* Takım başlığı */}
               <div style={{
                 display:'flex', alignItems:'center', gap:10,
                 background: SB_GRP_GRADS[t.idx % SB_GRP_GRADS.length],
-                borderRadius:16, padding:'10px 16px',
+                borderRadius:16, padding:'9px 14px',
                 boxShadow:'0 6px 18px -8px rgba(0,0,0,0.25)',
               }}>
                 <div style={{
-                  width:32, height:32, borderRadius:'50%', background:'rgba(255,255,255,0.22)',
+                  width:30, height:30, borderRadius:'50%', background:'rgba(255,255,255,0.22)',
                   display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize: ti < 3 ? 17 : 14, fontWeight:900, color:'#fff', lineHeight:1, flexShrink:0,
+                  fontSize: ti < 3 ? 16 : 13, fontWeight:900, color:'#fff', lineHeight:1, flexShrink:0,
                 }}>
                   {ti < 3 ? medals[ti] : (ti + 1)}
                 </div>
                 <span style={{
-                  flex:1, minWidth:0, fontFamily:'Nunito', fontWeight:900, fontSize:17, color:'#fff',
+                  flex:1, minWidth:0, fontFamily:'Nunito', fontWeight:900, fontSize:16, color:'#fff',
                   letterSpacing:'-0.02em', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
                   textShadow:'0 1px 4px rgba(0,0,0,0.15)',
                 }}>{t.name}</span>
-                <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:22, color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)', flexShrink:0 }}>{t.total}</span>
+                <span style={{ fontFamily:'Nunito', fontWeight:700, fontSize:10, color:'rgba(255,255,255,0.85)', letterSpacing:'0.06em', flexShrink:0 }}>{t.members.length} kişi</span>
+                <span style={{ fontFamily:'Nunito', fontWeight:900, fontSize:21, color:'#fff', textShadow:'0 1px 4px rgba(0,0,0,0.15)', flexShrink:0, marginLeft:2 }}>{t.total}</span>
               </div>
 
-              {/* Takım üyeleri */}
+              {/* Takım üyeleri — kompakt */}
               {t.members.map(m => (
-                <ScoreCardView
+                <ScoreCardCompact
                   key={m.originalIdx}
                   p={m}
-                  currentRank={sorted.findIndex(s => s.originalIdx === m.originalIdx)}
-                  rankDelta={null}
-                  scoreDelta={memberScoreDelta(m.originalIdx, m.score)}
-                  showMedal={false}
                   gradOverride={SB_GRP_GRADS[t.idx % SB_GRP_GRADS.length]}
+                  scoreDelta={memberScoreDelta(m.originalIdx, m.score)}
                 />
               ))}
             </div>
