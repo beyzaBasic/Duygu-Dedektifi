@@ -56,6 +56,9 @@ function PlayerSetup({ onStart, onBack, ageMode, gameMode }) {
       ...grp, players: grp.players.filter((_, j) => j !== pi),
     }));
   }
+  function setGroupName(gi, val) {
+    setGroups(g => g.map((grp, i) => i !== gi ? grp : { ...grp, name: val }));
+  }
   function setGVal(gi, val) {
     setGInputs(inp => inp.map((v, i) => i !== gi ? v : { ...v, value: val }));
   }
@@ -86,7 +89,7 @@ function PlayerSetup({ onStart, onBack, ageMode, gameMode }) {
     if (!canStart) return;
     if (isGroup) {
       const entries = groups.flatMap((g, gi) =>
-        g.players.map(p => ({ ...p, groupName: g.name, groupIdx: gi }))
+        g.players.map(p => ({ ...p, groupName: (g.name || '').trim() || `Takım ${gi + 1}`, groupIdx: gi }))
       );
       onStart(entries, gameName.trim());
     } else {
@@ -177,7 +180,21 @@ function PlayerSetup({ onStart, onBack, ageMode, gameMode }) {
                 }}>
                   {/* Başlık şeridi */}
                   <div style={{ background:col.grad, padding:'11px 16px', display:'flex', alignItems:'center', gap:10 }}>
-                    <span style={{ fontWeight:900, fontSize:15, color:'#fff', letterSpacing:'-0.01em', flex:1 }}>{g.name}</span>
+                    <input
+                      value={g.name}
+                      onChange={e => setGroupName(gi, e.target.value)}
+                      placeholder={`Takım ${gi + 1}`}
+                      maxLength={20}
+                      autoComplete="off"
+                      style={{
+                        flex:1, minWidth:0,
+                        fontFamily:'Nunito', fontWeight:900, fontSize:15, color:'#fff',
+                        letterSpacing:'-0.01em',
+                        background:'transparent', border:'none',
+                        borderBottom:'1.5px dashed rgba(255,255,255,0.45)',
+                        outline:'none', padding:'2px 0',
+                      }}
+                    />
                     <span style={{
                       fontSize:10, color:'rgba(255,255,255,0.85)', fontWeight:800, letterSpacing:'0.1em',
                       background:'rgba(255,255,255,0.22)', borderRadius:100, padding:'3px 9px',

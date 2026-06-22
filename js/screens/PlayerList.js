@@ -97,48 +97,64 @@ function PlayerList({ players, currentPlayerIdx, sessionName, onPlayerTap, onGro
 
                 <div style={{ height:1, background:'rgba(255,255,255,0.18)', margin:'0 20px' }} />
 
-                {/* Oyuncu butonları */}
+                {/* Oyuncu butonları — yalnız sırası gelen tıklanabilir, öne çıkar */}
                 <div style={{ padding:'8px 12px', display:'flex', flexDirection:'column', gap:6 }}>
                   {(currentGroup && currentGroup.members ? currentGroup.members : []).map(function(m, mi) {
                     var isCurrent = m.playerIdx === currentPlayerIdx;
+                    var animal = PLAYER_ANIMALS[m.playerIdx % PLAYER_ANIMALS.length];
+
+                    if (isCurrent) {
+                      return (
+                        <button
+                          key={mi}
+                          onClick={function() { onGroupPlayerTap(m.playerIdx); }}
+                          style={{
+                            display:'flex', alignItems:'center', gap:12,
+                            borderRadius:16, border:'none', cursor:'pointer',
+                            padding:'16px 18px',
+                            background:'#fff',
+                            boxShadow:'0 10px 26px -6px rgba(0,0,0,0.32)',
+                            transform:'scale(1.03)',
+                            transition:'transform 0.18s',
+                            width:'100%', textAlign:'left',
+                          }}
+                        >
+                          <span style={{ fontSize:32, lineHeight:1, flexShrink:0 }}>{animal}</span>
+                          <span style={{
+                            fontFamily:'Nunito', flex:1, fontWeight:900,
+                            fontSize:'clamp(17px,4.8vw,22px)', color:'#1A1A1A',
+                            letterSpacing:'-0.02em',
+                          }}>{m.name}</span>
+                          <span style={{
+                            fontSize:9, letterSpacing:'0.18em', textTransform:'uppercase',
+                            color:'#9A9A9A', fontWeight:800, flexShrink:0,
+                          }}>ANLATIYOR →</span>
+                        </button>
+                      );
+                    }
+
                     return (
-                      <button
+                      <div
                         key={mi}
-                        onClick={function() { onGroupPlayerTap(m.playerIdx); }}
                         style={{
                           display:'flex', alignItems:'center', gap:12,
-                          borderRadius:16, border:'none', cursor:'pointer',
-                          padding: isCurrent ? '14px 16px' : '10px 16px',
-                          background: isCurrent ? 'rgba(255,255,255,0.26)' : 'rgba(255,255,255,0.08)',
-                          boxShadow: isCurrent ? '0 4px 14px -4px rgba(0,0,0,0.15)' : 'none',
-                          transition:'background 0.18s',
-                          width:'100%', textAlign:'left',
+                          borderRadius:16,
+                          padding:'10px 18px',
+                          background:'rgba(255,255,255,0.08)',
+                          width:'100%', opacity:0.5,
                         }}
                       >
-                        <div style={{
-                          width: isCurrent ? 10 : 7, height: isCurrent ? 10 : 7,
-                          borderRadius:'50%', background:'#fff', flexShrink:0,
-                          opacity: isCurrent ? 1 : 0.45,
-                        }} />
+                        <span style={{ fontSize:20, lineHeight:1, flexShrink:0 }}>{animal}</span>
                         <span style={{
-                          fontFamily:'Nunito', flex:1,
-                          fontWeight: isCurrent ? 900 : 700,
-                          fontSize: isCurrent ? 'clamp(16px,4.5vw,20px)' : 'clamp(13px,3.5vw,16px)',
-                          color: isCurrent ? '#fff' : 'rgba(255,255,255,0.6)',
+                          fontFamily:'Nunito', flex:1, fontWeight:700,
+                          fontSize:'clamp(13px,3.5vw,16px)', color:'rgba(255,255,255,0.85)',
                           letterSpacing:'-0.01em',
                         }}>{m.name}</span>
-                        {isCurrent ? (
-                          <span style={{
-                            fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase',
-                            color:'rgba(255,255,255,0.75)', fontWeight:800, flexShrink:0,
-                          }}>ANLATIYOR →</span>
-                        ) : (
-                          <span style={{
-                            fontSize:9, letterSpacing:'0.15em', textTransform:'uppercase',
-                            color:'rgba(255,255,255,0.35)', fontWeight:700, flexShrink:0,
-                          }}>SEÇ</span>
-                        )}
-                      </button>
+                        <span style={{
+                          fontSize:9, letterSpacing:'0.15em', textTransform:'uppercase',
+                          color:'rgba(255,255,255,0.5)', fontWeight:700, flexShrink:0,
+                        }}>BEKLİYOR</span>
+                      </div>
                     );
                   })}
                 </div>

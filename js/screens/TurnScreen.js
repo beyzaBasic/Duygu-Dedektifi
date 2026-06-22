@@ -387,9 +387,9 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, initialIsYouth, allo
             display:'flex', alignItems:'center', justifyContent:'center',
             borderTop:'1px solid rgba(0,0,0,0.06)', background:'#FAF7F2', flexShrink:0,
           }}>
-            <div style={{ width:cardW, height:52 }}>
+            <div style={{ width:cardW, height:52, display:'flex', gap:10 }}>
               <div style={{
-                width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10,
+                flex:1, height:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10,
                 background: isUrgent ? 'linear-gradient(135deg,#FF3B30,#FF6B35)' : (group ? group.grad : '#1A1A1A'),
                 borderRadius:100,
                 transition:'background 0.6s',
@@ -401,6 +401,20 @@ function TurnScreen({ playerName, playerGrad, playerAnimal, initialIsYouth, allo
                   color:'#fff', fontVariantNumeric:'tabular-nums',
                 }}>{timeStr}</span>
               </div>
+              <button
+                onClick={handleEnd}
+                style={{
+                  height:'100%', flexShrink:0, padding:'0 22px',
+                  display:'flex', alignItems:'center', justifyContent:'center', gap:7,
+                  background:'#fff', color:'#1A1A1A',
+                  border:'1px solid rgba(0,0,0,0.08)', borderRadius:100, cursor:'pointer',
+                  fontFamily:'Nunito', fontWeight:900, fontSize:15, letterSpacing:'-0.01em',
+                  boxShadow:'0 6px 18px -8px rgba(0,0,0,0.25)',
+                }}
+              >
+                <span style={{ fontSize:16, lineHeight:1 }}>✓</span>
+                {STRINGS.turn.finishBtn}
+              </button>
             </div>
           </div>
         </React.Fragment>

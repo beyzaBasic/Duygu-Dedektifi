@@ -96,6 +96,7 @@ var STRINGS = {
     drawBtn:      'Salla ya da Seç →',
     titleReady:   'Sahneni Oyna.',
     reshakeHint:  'Yeniden çekmek için salla 🎲',
+    finishBtn:    'Tamamla',
   },
 
   roundResult: {

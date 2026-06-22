@@ -8,6 +8,26 @@ function SwipeableSessionCard({ session, index, onContinue, onDelete, formatDate
   const totalRounds = session.players.reduce((sum, p) => sum + (p.told || 0), 0);
   const grad = PLAYER_GRADS[index % PLAYER_GRADS.length];
 
+  const GRP_GRADS = [
+    'linear-gradient(135deg,#FF6B7A,#FF8C42)',
+    'linear-gradient(135deg,#3D5AFE,#B14AED)',
+    'linear-gradient(135deg,#2ED573,#2E9CFF)',
+    'linear-gradient(135deg,#FFC93C,#FF8C42)',
+  ];
+
+  // Grup oyununu takım olarak göster (üye isimleriyle)
+  const isGroup = session.players.some(p => p.groupIdx != null);
+  let groupArr = [];
+  if (isGroup) {
+    const gmap = {};
+    session.players.forEach(p => {
+      if (p.groupIdx == null) return;
+      if (!gmap[p.groupIdx]) gmap[p.groupIdx] = { idx: p.groupIdx, name: p.groupName || ('Takım ' + (p.groupIdx + 1)), members: [] };
+      gmap[p.groupIdx].members.push(p.name);
+    });
+    groupArr = Object.values(gmap).sort((a, b) => a.idx - b.idx);
+  }
+
   function setTransform(x, animate) {
     if (!cardRef.current) return;
     cardRef.current.style.transition = animate ? 'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)' : 'none';
@@ -84,36 +104,58 @@ function SwipeableSessionCard({ session, index, onContinue, onDelete, formatDate
           <div style={{ fontWeight:900, fontSize:14, color:'#1A1A1A', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
             {session.name}
           </div>
-          <div style={{ display:'flex', alignItems:'center', gap:4, marginTop:5 }}>
-            {session.players.slice(0, 5).map((_, i) => (
-              <div key={i} style={{
-                width:24, height:24, borderRadius:'50%',
-                background: PLAYER_GRADS[i % PLAYER_GRADS.length],
-                display:'flex', alignItems:'center', justifyContent:'center',
-                fontSize:12, lineHeight:1, flexShrink:0,
-              }}>
-                {PLAYER_ANIMALS[i % PLAYER_ANIMALS.length]}
-              </div>
-            ))}
-            {session.players.length > 5 && (
-              <div style={{
-                width:24, height:24, borderRadius:'50%', background:'#F0EDE8',
-                display:'flex', alignItems:'center', justifyContent:'center',
-                fontSize:8, fontWeight:800, color:'#8A8A8A', flexShrink:0,
-              }}>+{session.players.length - 5}</div>
-            )}
-            {totalRounds > 0 && (
-              <span style={{ fontSize:10, color:'#B0A8A0', fontWeight:600, marginLeft:2 }}>{totalRounds} tur</span>
-            )}
-          </div>
+          {isGroup ? (
+            <div style={{ display:'flex', flexDirection:'column', gap:5, marginTop:7 }}>
+              {groupArr.map(g => (
+                <div key={g.idx} style={{ display:'flex', alignItems:'center', gap:7, minWidth:0 }}>
+                  <span style={{
+                    flexShrink:0, fontSize:9, fontWeight:900, color:'#fff', letterSpacing:'-0.01em',
+                    background: GRP_GRADS[g.idx % GRP_GRADS.length],
+                    borderRadius:100, padding:'3px 9px', whiteSpace:'nowrap',
+                    maxWidth:120, overflow:'hidden', textOverflow:'ellipsis',
+                  }}>{g.name}</span>
+                  <span style={{
+                    flex:1, minWidth:0, fontSize:12, color:'#3A3A3A', fontWeight:700,
+                    overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+                  }}>{g.members.join(', ')}</span>
+                </div>
+              ))}
+              {totalRounds > 0 && (
+                <span style={{ fontSize:10, color:'#B0A8A0', fontWeight:600 }}>{totalRounds} tur</span>
+              )}
+            </div>
+          ) : (
+            <div style={{ display:'flex', alignItems:'center', gap:4, marginTop:5 }}>
+              {session.players.slice(0, 5).map((_, i) => (
+                <div key={i} style={{
+                  width:24, height:24, borderRadius:'50%',
+                  background: PLAYER_GRADS[i % PLAYER_GRADS.length],
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:12, lineHeight:1, flexShrink:0,
+                }}>
+                  {PLAYER_ANIMALS[i % PLAYER_ANIMALS.length]}
+                </div>
+              ))}
+              {session.players.length > 5 && (
+                <div style={{
+                  width:24, height:24, borderRadius:'50%', background:'#F0EDE8',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:8, fontWeight:800, color:'#8A8A8A', flexShrink:0,
+                }}>+{session.players.length - 5}</div>
+              )}
+              {totalRounds > 0 && (
+                <span style={{ fontSize:10, color:'#B0A8A0', fontWeight:600, marginLeft:2 }}>{totalRounds} tur</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function SessionsArchive({ sessions, onContinue, onDelete, onClose }) {
-  const [activeTab, setActiveTab] = React.useState('group');
+function SessionsArchive({ sessions, onContinue, onDelete, onClose, initialTab }) {
+  const [activeTab, setActiveTab] = React.useState(initialTab || 'group');
 
   function formatDate(ts) {
     if (!ts) return '';
@@ -392,8 +434,8 @@ var WELCOME_STEPS = [
   { emoji:'🔍', grad:'linear-gradient(135deg,#5FB8FF,#B14AED)', shadow:'rgba(100,60,220,0.4)',  anim:'bob 2.2s ease-in-out 0.5s infinite' },
 ];
 
-function WelcomeScreen({ onStart, sessions, onContinueSession, onDeleteSession, settings, onSettingsChange }) {
-  const [showArchive, setShowArchive] = React.useState(false);
+function WelcomeScreen({ onStart, sessions, onContinueSession, onDeleteSession, settings, onSettingsChange, initialShowArchive, initialArchiveTab }) {
+  const [showArchive, setShowArchive] = React.useState(!!initialShowArchive);
   const [showList, setShowList] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
 
@@ -540,6 +582,7 @@ function WelcomeScreen({ onStart, sessions, onContinueSession, onDeleteSession, 
           onContinue={(s) => { setShowArchive(false); onContinueSession(s); }}
           onDelete={onDeleteSession}
           onClose={() => setShowArchive(false)}
+          initialTab={initialArchiveTab}
         />
       )}
 
